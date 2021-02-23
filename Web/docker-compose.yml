@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+
+  favodemel:
+    container_name: favodemel
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
+    ports:
+      - '4201:4200'
+    networks:
+      - favodemel-network
+
+networks:
+  favodemel-network:
+    name: favodemel-network
+    external: true

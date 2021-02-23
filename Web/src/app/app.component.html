@@ -1,0 +1,9 @@
+<mat-toolbar color="primary" class="app-header">
+  <div></div>
+  <span class="nav-tool-items">
+    <a mat-button routerLink="home" routerLinkActive="active">Home</a>
+    <a mat-button mat-raised-button (click)="logout()">Sair</a>
+  </span>
+</mat-toolbar>
+
+<router-outlet></router-outlet>

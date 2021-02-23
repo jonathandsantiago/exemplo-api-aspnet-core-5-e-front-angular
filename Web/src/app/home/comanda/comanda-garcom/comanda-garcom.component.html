@@ -1,0 +1,42 @@
+﻿<div class="mat-elevation-z8">
+  <button type="button" mat-fab color="primary" [routerLink]="['cadastrar']">
+    <mat-icon class="fas fa-plus"></mat-icon>
+    Novo
+  </button>
+
+  <mat-paginator (page)="changeToPage($event)"
+                 [pageIndex]="paginacao.pageNumber"
+                 [pageSize]="paginacao.pageSize"
+                 [length]="total"
+                 [pageSizeOptions]="[5, 10, 20, 50]">
+  </mat-paginator>
+
+  <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort matSortDisableClear>
+    <ng-container matColumnDef="id">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>Id</th>
+      <td data-label="Id:" mat-cell *matCellDef="let element">
+        {{element.id}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="garcom">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>Garçom</th>
+      <td data-label="Garçom:" mat-cell *matCellDef="let element">
+        {{element.garcom.nome}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="totalAPagar">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>Total a Pagar</th>
+      <td data-label="Total a Pagar:" mat-cell *matCellDef="let element">
+        {{element.totalAPagar}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="gorjetaGarcom">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>Gorjeta Garçom</th>
+      <td data-label="Gorjeta Garçom:" mat-cell *matCellDef="let element">
+        {{element.gorjetaGarcom}}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

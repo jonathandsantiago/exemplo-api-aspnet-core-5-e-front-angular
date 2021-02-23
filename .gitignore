@@ -1,0 +1,89 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+/dist
+/node_modules
+/tmp
+/Api/.vs
+/out-tsc
+# Only exists if Bazel was run
+/bazel-out
+
+# dependencies
+/node_modules
+
+# profiling files
+chrome-profiler-events*.json
+speed-measure-plugin*.json
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+
+# Tests
+/coverage
+/.nyc_output
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+/Api/bin/Debug
+/Api/.idea
+/Api/FavoDeMel.Api/bin/Debug/netcoreapp3.0
+/Api/FavoDeMel.Domain/bin/Debug/netcoreapp3.0
+/Api/FavoDeMel.IoC/bin/Debug/netcoreapp3.0
+/Api/FavoDeMel.Repository/bin/Debug/netcoreapp3.0
+/Api/FavoDeMel.Service/bin/Debug/netcoreapp3.0
+/Api/db
+/Api/FavoDeMel.Api/bin
+/Api/FavoDeMel.Repository/obj
+/Api/src/FavoDeMel.EF.Repository/bin/Debug/netcoreapp3.1
+/Api/src/FavoDeMel.Framework/bin/Debug/netcoreapp3.1
+/Api/src/FavoDeMel.Framework/obj
+/Api/src/FavoDeMel.Messaging/bin/Debug/netcoreapp3.1
+/Api/src/FavoDeMel.Messaging/obj
+/Api/src/FavoDeMel.Redis.Repository/obj
+/Api/src/FavoDeMel.IoC/bin/Debug/netcoreapp3.1
+/Api/src/FavoDeMel.Service/bin/Debug/netcoreapp3.1

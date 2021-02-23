@@ -1,0 +1,55 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <div class="col">
+    <mat-form-field appearance="outline">
+      <mat-label>ID</mat-label>
+      <input matInput formControlName="id" placeholder="ID" readonly>
+    </mat-form-field>
+  </div>
+
+  <div class="col">
+    <mat-form-field appearance="outline">
+      <mat-label>Garçom</mat-label>
+      <input matInput formControlName="garcom" placeholder="Garçom" readonly>
+    </mat-form-field>
+  </div>
+
+  <div class="col">
+    <mat-form-field appearance="outline">
+      <mat-label>Total a Pagar</mat-label>
+      <input matInput formControlName="totalAPagar" placeholder="Total a Pagar" readonly>
+    </mat-form-field>
+  </div>
+
+  <div class="col">
+    <mat-form-field appearance="outline">
+      <mat-label>Gorjeta</mat-label>
+      <input matInput formControlName="gorjetaGarcom" placeholder="Gorjeta" readonly>
+    </mat-form-field>
+  </div>
+
+  <div formGroupName="pedidos">
+
+    <!--    <div class="col">-->
+    <!--      <mat-form-field appearance="outline">-->
+    <!--        <mat-label>Produto</mat-label>-->
+    <!--        <input #idInput="matInput" matInput placeholder="Produto" formControlName="produto" cdkFocusInitial/>-->
+    <!--      </mat-form-field>-->
+    <!--    </div>-->
+
+    <div class="col">
+      <mat-form-field appearance="outline">
+        <mat-label>Quantidade</mat-label>
+        <input matInput formControlName="quantidade" placeholder="Quantidade">
+      </mat-form-field>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col col-12">
+      <button type="submit" mat-raised-button color="primary" class="max-content" style="margin: 10px 10px 10px 0px">
+        Salvar
+      </button>
+    </div>
+  </div>
+</form>
