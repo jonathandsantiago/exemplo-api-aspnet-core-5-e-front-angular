@@ -1,7 +1,5 @@
-import {IModelBase} from './model-base';
-
-export class Produto implements IModelBase<number> {
-  id: number;
+export class Produto {
   nome: string;
-  preco: number;
+  preco: any;
+  ulrImage: string;
 }

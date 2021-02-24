@@ -1,4 +1,3 @@
-using FavoDeMel.Api.Dtos.Mappers;
 using FavoDeMel.Api.Extensions;
 using FavoDeMel.Api.Factories;
 using FavoDeMel.Domain.Configs;
@@ -26,7 +25,6 @@ namespace FavoDeMel.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            BaseMapper.Configure();
             var logger = SerilogFactory.GetLogger();    
             services
                .AddLogging(loggingBuilder =>
@@ -40,6 +38,7 @@ namespace FavoDeMel.Api
             services.AddControllers();
 
             services
+                  .AddAutoMapper()
                   .AddMySql(Configuration)
                   .AddJwtBearer(Configuration)
                   .AddServices()

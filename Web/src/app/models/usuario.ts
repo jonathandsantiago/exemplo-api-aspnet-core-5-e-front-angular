@@ -1,15 +1,15 @@
-﻿import {ModelBase} from './model-base';
-
-export class Usuario implements ModelBase {
-  id: number;
+export class Usuario {
+  id: any;
   nome: string;
   login: string;
   password: string;
-  setor: UsuarioSetor;
+  perfil: UsuarioPerfil;
+  ativo: boolean;
   token?: string;
 }
 
-export enum UsuarioSetor {
-  Garcon,
-  Cozinha
+export enum UsuarioPerfil {
+  Garcon = 1,
+  Cozinheiro = 2,
+  Administrador = 3,
 }

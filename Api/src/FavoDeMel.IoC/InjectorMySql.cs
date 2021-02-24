@@ -1,9 +1,11 @@
 ﻿using FavoDeMel.Domain.Usuarios;
 using FavoDeMel.EF.Repository.Common;
+using FavoDeMel.Framework.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Linq;
 
 namespace FavoDeMel.IoC
 {
@@ -25,31 +27,28 @@ namespace FavoDeMel.IoC
                 var context = services.GetService<TContext>();
                 context.Database.Migrate();
 #if (DEBUG)
-                InserirUsuariosDefault(context as BaseDbContext);
+                InserirUsuarioDefault(context as BaseDbContext);
 #endif
             }
 
             return host;
         }
-        private static void InserirUsuariosDefault(BaseDbContext baseDbContext)
+        private static void InserirUsuarioDefault(BaseDbContext baseDbContext)
         {
             var usuarioDbSet = baseDbContext.Set<Usuario>();
 
-            //if (usuarioDbSet.Count() == 0)
-            //{
-            //    usuarioDbSet.Add(new Usuario
-            //    {
-            //        Nome = "Administrador",
-            //        Login = "Admin",
-            //        Senha = StringHelper.CalculateMD5Hash("Admin"),
-            //        Email = "admin@ewave.com.br",
-            //        PessoaTipo = PessoaTipo.Juridica,
-            //        Perfil = UsuarioPerfil.Administrador,
-            //        Tipo = UsuarioTipo.Prestador,
-            //        Ativo = true
-            //    });
-            //    baseDbContext.SaveChanges();
-            //}
+            if (usuarioDbSet.Count() == 0)
+            {
+                usuarioDbSet.Add(new Usuario
+                {
+                    Nome = "Administrador",
+                    Login = "Admin",
+                    Password = StringHelper.CalculateMD5Hash("Admin"),
+                    Perfil = UsuarioPerfil.Administrador,
+                    Ativo = true
+                });
+                baseDbContext.SaveChanges();
+            }
         }
     }
 }

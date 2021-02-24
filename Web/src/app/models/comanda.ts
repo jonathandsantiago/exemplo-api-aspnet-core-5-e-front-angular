@@ -1,18 +1,17 @@
-import {ComandaPedido} from './comanda-pedido';
-import {Usuario} from './usuario';
-import {IModelBase} from './model-base';
-
-export class Comanda implements IModelBase<number> {
-  id: number;
-  garcom: Usuario;
+export class Comanda {
+  id: any;
+  garcomId: any;
   pedidos: ComandaPedido[];
-  totalAPagar: number;
-  gorjetaGarcom: number;
+  totalAPagar: any;
+  gorjetaGarcom: any;
+  situacao: ComandaSituacao;
+}
 
-  constructor(garcom: Usuario) {
-    this.garcom = garcom;
-    this.pedidos = [] as ComandaPedido[];
-    this.totalAPagar = 0;
-    this.gorjetaGarcom = 0;
-  }
+export class ComandaPedido {
+  id: any;
+}
+
+export enum ComandaSituacao {
+  Aberta = 1,
+  Fechada = 2
 }

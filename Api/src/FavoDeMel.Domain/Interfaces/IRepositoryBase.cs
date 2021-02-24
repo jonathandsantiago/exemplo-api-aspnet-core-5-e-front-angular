@@ -6,16 +6,25 @@ using System.Threading.Tasks;
 
 namespace FavoDeMel.Domain.Interfaces
 {
-    public interface IRepositoryBase<TId, TEntity> : IDisposable
-         where TEntity : Entity<TId>
+    public interface IRepositoryBase<TId, TEntity> : IRepositoryBase<TEntity>
+        where TEntity : Entity<TId>
     {
-        void Add(TEntity entity);
-        Task Delete(TEntity entidade);
-        Task Edit(TEntity entidade);
+        Task Editar(TEntity entidade);
+        Task Inserir(TEntity entity);
+        Task Excluir(TId id);
         bool Exists(TId id);
-        Task<TEntity> GetById(TId id);
-        Task<IEnumerable<TEntity>> GetAll();
-        Task Commit();
-        IQueryable<TEntity> GetQueryable();
+        Task<TEntity> ObterPorId(TId id);
+    }
+
+    public interface IRepositoryBase<TEntity> : IDisposable
+        where TEntity : Entity
+    {
+        IUnitOfWork InstanceUnitOfWork(IValidator validator);
+        void SetUnitOfWork(IUnitOfWork unitOfWork);
+        IUnitOfWork BeginTransaction(IValidator _validator);
+        Task Excluir<TId>(TId id);
+        Task<TEntity> ObterPorId<TId>(TId id);
+        Task<IEnumerable<TEntity>> ObterTodos();
+        IQueryable<TEntity> ObterAsQueryable();
     }
 }

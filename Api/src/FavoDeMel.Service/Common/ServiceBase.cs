@@ -7,80 +7,96 @@ using System.Threading.Tasks;
 
 namespace FavoDeMel.Service.Common
 {
-    public class ServiceBase<TId, TEntity, TRepository> : IServiceBase<TId, TEntity>
+    public class ServiceBase<TId, TEntity, TRepository> : ServiceBase<TEntity, TRepository>, IServiceBase<TId, TEntity>
         where TEntity : Entity<TId>
         where TRepository : IRepositoryBase<TId, TEntity>
     {
+        protected IValidator<TId, TEntity> _validador;
+
+        public IList<string> MensagensValidacao { get { return _validador?.Mensagens ?? new List<string>(); } }
+
+        public ServiceBase(TRepository repository) : base(repository)
+        {
+            UnitOfWork = _repository.InstanceUnitOfWork(_validador);
+        }
+
+        public ServiceBase(IUnitOfWork unitOfWork, TRepository repository)
+            : base(unitOfWork, repository)
+        { }
+
+        protected virtual TValidador ObterValidador<TValidador>()
+            where TValidador : IValidator<TId, TEntity>
+        {
+            return (TValidador)_validador;
+        }
+
+        public virtual async Task<TEntity> ObterPorId(TId id)
+        {
+            return await _repository.ObterPorId(id);
+        }
+
+        public virtual async Task<bool> Excluir(TId id)
+        {
+            using (var dbTransaction = _repository.BeginTransaction(_validador))
+            {
+                if (_validador != null && !await _validador.PermiteExcluir(id))
+                {
+                    return false;
+                }
+
+                await _repository.Excluir(id);
+                return true;
+            }
+        }
+
+        public bool Exists(TId id)
+        {
+            return _repository.Exists(id);
+        }
+    }
+
+    public class ServiceBase<TEntity, TRepository> : IServiceBase<TEntity>
+        where TEntity : Entity
+        where TRepository : IRepositoryBase<TEntity>
+    {
         protected TRepository _repository;
-        protected ValidatorBase<TId, TEntity, TRepository> _validator;
-        public Dictionary<string, string> Result { get { return _validator?.Messages ?? new Dictionary<string, string>(); } }
+        protected virtual IUnitOfWork UnitOfWork { get; set; }
 
         public ServiceBase(TRepository repository)
         {
             _repository = repository;
         }
 
-        public virtual async Task<TEntity> GetById(TId id)
+        public ServiceBase(IUnitOfWork unitOfWork, TRepository repository)
         {
-            return await _repository.GetById(id);
+            _repository = repository;
+            SetUnitOfWork(unitOfWork);
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetAll()
+        public virtual void SetUnitOfWork(IUnitOfWork unitOfWork)
         {
-            return await _repository.GetAll();
+            UnitOfWork = unitOfWork;
+            _repository.SetUnitOfWork(unitOfWork);
         }
 
-        public virtual async Task<bool> Add(TEntity entity)
+        public virtual async Task<TEntity> ObterPorId<TId>(TId id)
         {
-            if (_validator != null && !await _validator.Validate(entity))
-            {
-                return false;
-            }
-
-            _repository.Add(entity);
-            await _repository.Commit();
-            return true;
-
+            return await _repository.ObterPorId(id);
         }
 
-        public virtual async Task<bool> Edity(TEntity entity)
+        public virtual async Task<IEnumerable<TEntity>> ObterTodos()
         {
-            if (_validator != null && !await _validator.Validate(entity))
-            {
-                return false;
-            }
-
-            await _repository.Edit(entity);
-            await _repository.Commit();
-            return true;
+            return await _repository.ObterTodos();
         }
 
-        public virtual async Task<bool> Delete(TId id)
+        public virtual IQueryable<TEntity> ObterAsQueryable()
         {
-            var entity = await GetById(id);
-            if (_validator != null && !await _validator.AllowsRemove(entity))
-            {
-                return false;
-            }
-
-            await _repository.Delete(entity);
-            await _repository.Commit();
-            return true;
-        }
-
-        public virtual IQueryable<TEntity> GetQueryable()
-        {
-            return _repository.GetQueryable();
+            return _repository.ObterAsQueryable();
         }
 
         public virtual void Dispose()
         {
             _repository.Dispose();
-        }
-
-        public bool Exists(TId id)
-        {
-            return _repository.Exists(id);
         }
     }
 }

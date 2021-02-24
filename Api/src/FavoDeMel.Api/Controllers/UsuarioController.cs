@@ -1,10 +1,13 @@
-﻿using FavoDeMel.Api.Controllers.Common;
-using FavoDeMel.Api.Dtos;
-using FavoDeMel.Domain.Common;
+﻿using AutoMapper;
+using FavoDeMel.Api.Controllers.Common;
+using FavoDeMel.Domain.Dtos;
+using FavoDeMel.Domain.Models;
 using FavoDeMel.Domain.Usuarios;
+using FavoDeMel.Framework.Helpers;
 using FavoDeMel.IoC.Auth;
 using FavoDeMel.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -21,52 +24,93 @@ namespace FavoDeMel.Api.Controllers
         private readonly SigningConfiguration _signingConfiguration;
         private readonly TokenConfiguration _tokenConfiguration;
 
-        public UsuarioController(IUsuarioService service, SigningConfiguration signingConfiguration, TokenConfiguration tokenConfiguration)
-           : base(service)
+        public UsuarioController(IUsuarioService service,
+          IHttpContextAccessor httpContextAccessor,
+          SigningConfiguration signingConfiguration,
+          TokenConfiguration tokenConfiguration)
+          : base(service, httpContextAccessor)
         {
             _signingConfiguration = signingConfiguration;
             _tokenConfiguration = tokenConfiguration;
-        }
+        }       
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Cadatrar usuario
+        /// </summary>
+        /// 
+        /// <returns>Retorna o id do úsuario cadastrado</returns>
         [HttpPost]
-        public async Task<IActionResult> Create(UsuarioDto dto)
+        public async Task<IActionResult> Cadastrar(UsuarioDto dto)
         {
-            try
-            {
-                if (!string.IsNullOrEmpty(dto.Password))
-                {
-                    dto.Password = DomainHelper.CalculateMD5Hash(dto.Password);
-                }
-
-                return await ExecuteAction<int>(ActionType.Post, dto);
-            }
-            catch (Exception ex)
-            {
-                return Error(ex);
-            }
+            Func<Task<Usuario>> func = () => _appService.Inserir(Mapper.Map<Usuario>(dto));
+            return await ExecutarFuncaoAdminAsync<Usuario, UsuarioDto>(func);
         }
 
         /// <summary>
-        /// Autenticar usuário
+        /// Editar usuário
         /// </summary>
-        /// <returns>IList(Comanda)</returns>
+        /// 
+        /// <returns>Retorna o usuário editado</returns>
+        [HttpPut]
+        public async Task<IActionResult> Editar(UsuarioDto dto)
+        {
+            if (dto.Id != UsuarioLogadoId && UsuarioLogadoPerfil != UsuarioPerfil.Administrador)
+            {
+                return BadRequest("Usúario não possui permissão para executar essa ação.");
+            }
+
+            Func<Task<Usuario>> func = () => _appService.Inserir(Mapper.Map<Usuario>(dto));
+            return await ExecutarFuncaoAsync<Usuario, UsuarioDto>(func);
+        }
+
+        /// <summary>
+        /// Alterar Senha usuário
+        /// </summary>
+        /// 
+        /// <returns>Retorna um boleano definindo se deu certo ou não a ação</returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> AlterarSenha(int id, string password)
+        {
+
+            if (id != UsuarioLogadoId && UsuarioLogadoPerfil != UsuarioPerfil.Administrador)
+            {
+                return BadRequest("Usúario não possui permissão para executar essa ação.");
+            }
+
+            Func<Task<bool>> func = () => _appService.AlterarSenha(id, password);
+            return await ExecutarFuncaoAsync(func);
+        }
+
+        /// <summary>
+        /// Login usuário
+        /// </summary>
+        /// 
+        /// <returns>Retorna as informações do login</returns>
         [AllowAnonymous]
         [HttpPost]
-        [ProducesResponseType(typeof(object), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(object), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(object), (int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(object), (int)HttpStatusCode.RequestTimeout)]
-        [ProducesResponseType(typeof(object), (int)HttpStatusCode.GatewayTimeout)]
-        public async Task<IActionResult> Authenticate([FromBody]LoginDto loginDto)
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
             try
             {
-                Usuario user = await GetUser(loginDto.Login, loginDto.Password);
+                if (string.IsNullOrWhiteSpace(loginDto.Login))
+                {
+                    return BadRequest("Login é obrigatório.");
+                }
+
+                if (string.IsNullOrWhiteSpace(loginDto.Password))
+                {
+                    return BadRequest("Senha é obrigatório.");
+                }
+
+                Usuario user = await ObterUsuarioLogin(loginDto.Login, loginDto.Password);
 
                 if (user == null)
                 {
-                    return BadRequest("Usuário inválido.");
+                    return BadRequest("Usuário ou Senha inválido.");
+                }
+                else if (!user.Ativo)
+                {
+                    return BadRequest("Usuário encontra-se com a situação inativo, por favor entrar em contato com setor Administrativo.");
                 }
 
                 JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
@@ -78,15 +122,39 @@ namespace FavoDeMel.Api.Controllers
                     created = securityToken.ValidFrom.ToString("yyyy-MM-dd HH:mm:ss"),
                     dateExpiration = securityToken.ValidTo.ToString("yyyy-MM-dd HH:mm:ss"),
                     accessToken = handler.WriteToken(securityToken),
-                    UserId = user.Id,
-                    UserName = user.Nome,
-                    message = "OK"
+                    usuario = Mapper.Map<UsuarioDto>(user)
                 });
             }
             catch (Exception ex)
             {
                 return Error(ex);
             }
+        }
+
+        /// <summary>
+        /// Responsável obter usuario por id
+        /// </summary>
+        /// 
+        /// <returns>Retorna os usuario pro id</returns>
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(UsuarioDto), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> ObterPorId(int id)
+        {
+            Func<Task<Usuario>> func = () => _appService.ObterPorId(id);
+            return await ExecutarFuncaoAsync<Usuario, UsuarioDto>(func);
+        }
+
+        /// <summary>
+        /// Responsável obter os usuarios paginado
+        /// </summary>
+        /// 
+        /// <returns>Retorna os usuarios paginado</returns>
+        [HttpGet]
+        [ProducesResponseType(typeof(PaginacaoDto<UsuarioDto>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> ObterTodosPaginado([FromQuery] FiltroUsuario filtro)
+        {
+            Func<Task<PaginacaoDto<UsuarioDto>>> func = () => _appService.ObterTodosPaginado(filtro);
+            return await ExecutarFuncaoAdminAsync(func);
         }
 
         private SecurityToken GetSecurityToken(Usuario user, JwtSecurityTokenHandler handler)
@@ -96,8 +164,9 @@ namespace FavoDeMel.Api.Controllers
             ClaimsIdentity identity = new ClaimsIdentity(
                      new GenericIdentity(user.Login, "Login"),
                      new[] {
-                            new Claim(ClaimName.UserId, user.Id.ToString("N")),
+                            new Claim(ClaimName.UserId, Convert.ToString(user.Id)),
                             new Claim(ClaimName.UserName, user.Nome),
+                            new Claim(ClaimName.UserPerfil, Convert.ToString((int)user.Perfil)),
                      }
                  );
 
@@ -112,14 +181,10 @@ namespace FavoDeMel.Api.Controllers
             });
         }
 
-        private async Task<Usuario> GetUser(string login, string password)
+        private async Task<Usuario> ObterUsuarioLogin(string login, string password)
         {
-            if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password))
-            {
-                return null;
-            }
-
-            return await _appService.GetByLoginPassword(login, DomainHelper.CalculateMD5Hash(password));
+            return await _appService.Login(login, StringHelper.CalculateMD5Hash(password));
         }
+
     }
 }

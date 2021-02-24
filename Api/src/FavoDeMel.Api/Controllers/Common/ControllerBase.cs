@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
-using FavoDeMel.Api.Dtos;
 using FavoDeMel.Domain.Common;
+using FavoDeMel.Domain.Dtos;
+using FavoDeMel.Domain.Interfaces;
+using FavoDeMel.Domain.Usuarios;
 using FavoDeMel.IoC.Auth;
 using FavoDeMel.Service.Interfaces;
-using MassTransit;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -15,54 +16,67 @@ namespace FavoDeMel.Api.Controllers.Common
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public abstract class ControllerBase<TEntity, TId, TDto, TAppService> : ControllerBase
-      where TEntity : Entity<TId>
-      where TDto : DtoBase<TId>
-      where TAppService : IServiceBase<TId, TEntity>
+    public abstract class ControllerBase<TEntity, TId, TDto, TAppService> : ControllerBase<TEntity, TDto, TAppService>
+       where TEntity : Entity<TId>
+       where TDto : DtoBase<TId>
+       where TAppService : IServiceBase<TId, TEntity>
     {
-        protected readonly TAppService _appService;
+        public ControllerBase(TAppService appService, IHttpContextAccessor httpContextAccessor)
+            : base(appService, httpContextAccessor)
+        { }
 
-        protected readonly IBus _bus;
-
-        protected virtual Guid UserId
+        /// <summary>
+        /// Responsavel por enviar as mensagens de validação que produz um Microsoft.AspNetCore.Http.StatusCodes.Status 400
+        /// </summary>
+        /// 
+        /// <returns>Retorna as mensagens de validação serializada</returns>
+        protected virtual IActionResult BadRequest(string message = null)
         {
-            get
+            if (!string.IsNullOrEmpty(message))
             {
-                Claim claim = GetClaim(ClaimName.UserId);
-                return claim == null ? Guid.Empty : new Guid(claim.Value);
+                if (_appService.MensagensValidacao.Any())
+                {
+                    return StatusCode(400, $"{message}{"<br>"}{string.Join("<br>", _appService.MensagensValidacao)}");
+                }
+
+                return StatusCode(400, message);
             }
+
+            return StatusCode(400, string.Join("<br>", _appService.MensagensValidacao));
         }
 
-        protected virtual string UserName
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        protected new IActionResult Response(object result = null)
         {
-            get
+            if (_appService.MensagensValidacao.Any())
             {
-                return GetClaim(ClaimName.UserName)?.Value;
+                return BadRequest();
             }
+
+            if (result is string)
+            {
+                return Ok(new { result });
+            }
+
+            return Ok(result);
         }
 
-        public ControllerBase(TAppService appService)
-        {
-            _appService = appService;
-        }
-
-        public ControllerBase(TAppService appService, IBus bus)
-          : this(appService)
-        {
-            _bus = bus;
-        }
-
-        protected virtual async Task<IActionResult> ExecuteAction<TResult>(ActionType actionType, TDto entity)
+        /// <summary>
+        /// Executa uma ação, e retorna um IActionResult
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="funcao"></param>
+        /// <returns></returns>
+        protected async override Task<IActionResult> ExecutarFuncaoAsync<T>(Func<Task<T>> funcao)
         {
             try
             {
-                return actionType switch
-                {
-                    ActionType.Post => await ExecuteInsert<TResult>(entity),
-                    ActionType.Put => await ExecuteEdit<TResult>(entity),
-                    ActionType.Delete => await ExecuteDelete<TResult>(entity.Id),
-                    _ => throw new NotImplementedException(),
-                };
+                var retorno = await funcao();
+                return Response(retorno);
             }
             catch (Exception ex)
             {
@@ -70,92 +84,173 @@ namespace FavoDeMel.Api.Controllers.Common
             }
         }
 
-        protected virtual async Task<IActionResult> ExecuteInsert<TResult>(TDto dto)
+        /// <summary>
+        /// Executa uma ação, e retorna um IActionResult com automapper
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="funcao"></param>
+        /// <returns></returns>
+        protected async override Task<IActionResult> ExecutarFuncaoAsync<T, TResult>(Func<Task<T>> funcao)
         {
-            TEntity entity = OnSave(dto);
-
-            if (!await _appService.Add(entity))
+            try
             {
-                return BadRequest();
+                var retorno = await funcao();
+                return Response(Mapper.Map<TResult>(retorno));
+            }
+            catch (Exception ex)
+            {
+                return Error(ex);
+            }
+        }
+
+        /// <summary>
+        /// Executa uma ação somente para usuário administrador, e retorna um IActionResult
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="funcao"></param>
+        /// <returns></returns>
+        protected async Task<IActionResult> ExecutarFuncaoAdminAsync<T>(Func<Task<T>> funcao)
+        {
+            if (UsuarioLogadoPerfil != UsuarioPerfil.Administrador)
+            {
+                return BadRequest("Usúario não possui permissão para executar essa ação.");
             }
 
-            dto.Id = entity.Id;
-            return Ok(dto.Id);
+            return await ExecutarFuncaoAsync(funcao);
         }
 
-        protected virtual TEntity OnSave(TDto dto)
+        /// <summary>
+        /// Executa uma ação somente para usuário administrador, e retorna um IActionResult
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="funcao"></param>
+        /// <returns></returns>
+        protected async Task<IActionResult> ExecutarFuncaoAdminAsync<T, TResult>(Func<Task<T>> funcao)
         {
-            return Mapper.Map<TEntity>(dto);
-        }
-
-        protected virtual async Task<IActionResult> ExecuteEdit<TResult>(TDto dto)
-        {
-            var entity = await _appService.GetById(dto.Id);
-
-            if (!await _appService.Edity(OnUpdate(dto, entity)))
+            if (UsuarioLogadoPerfil != UsuarioPerfil.Administrador)
             {
-                return BadRequest();
+                return BadRequest("Usúario não possui permissão para executar essa ação.");
             }
 
-            return Ok(true);
+            return await ExecutarFuncaoAsync<T, TResult>(funcao);
         }
 
-        protected virtual async Task<IActionResult> ExecuteDelete<TResult>(TId id)
+        /// <summary>
+        /// Executa uma ação e retorna um FileResult
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="funcao"></param>
+        /// <returns></returns>
+        protected async Task<IActionResult> ExecutarFuncaoExportacaoZipAsync(Func<Task<byte[]>> funcao, string nomeArquivo)
         {
-            if (!await _appService.Delete(id))
+            try
             {
-                return BadRequest();
+                var resultado = await funcao();
+                return File(resultado.ToArray(), "application/octet-stream", nomeArquivo);
             }
-
-            return Ok(true);
+            catch (Exception ex)
+            {
+                return Error(ex);
+            }
         }
 
-        protected virtual TEntity OnUpdate(TDto dto, TEntity entity)
+        /// <summary>
+        /// Executa uma ação e retorna um FileResult
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="funcao"></param>
+        /// <returns></returns>
+        protected async Task<IActionResult> ExecutarFuncaoExportacaoExcelAsync(Func<Task<byte[]>> funcao, string nomeArquivo)
         {
-            return Mapper.Map(dto, entity);
+            try
+            {
+                var resultado = await funcao();
+                return File(resultado.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", nomeArquivo);
+            }
+            catch (Exception ex)
+            {
+                return Error(ex);
+            }
         }
+    }
 
-        protected virtual IActionResult Ok<TResultDto, TResult>(IList<TResult> value)
-            where TResultDto : DtoBase<TId>
-            where TResult : Entity<TId>
+    [Route("api/[controller]/[action]")]
+    [ApiController]
+    public abstract class ControllerBase<TEntity, TDto, TAppService> : ControllerBase
+      where TEntity : Entity
+      where TDto : IDtoBase
+      where TAppService : IServiceBase<TEntity>
+    {
+        protected readonly TAppService _appService;
+        protected HttpContext _httpContext;
+
+        /// <summary>
+        /// Responsavel por obter o id do usuario logado
+        /// </summary>
+        /// 
+        /// <returns>Id do usuário logado</returns>
+        protected virtual int UsuarioLogadoId
         {
-            return Ok(Mapper.Map<IList<TResultDto>>(value));
+            get
+            {
+                Claim claim = GetClaim(ClaimName.UserId);
+                return claim == null ? 0 : Convert.ToInt32(claim.Value);
+            }
         }
 
-        protected virtual IActionResult Ok<TResultDto, TResult>(TResult value)
-            where TResultDto : DtoBase<TId>
-            where TResult : Entity<TId>
+        /// <summary>
+        /// Responsavel por obter o nome do usuario logado
+        /// </summary>
+        /// 
+        /// <returns>Nome do usuário logado</returns>
+        protected virtual string UsuarioLogadoNome
         {
-            return Ok(Mapper.Map<TResultDto>(value));
+            get
+            {
+                return GetClaim(ClaimName.UserName)?.Value;
+            }
         }
 
-        protected virtual IActionResult Ok(IList<TEntity> entitys)
+        /// <summary>
+        /// Responsavel por obter o tipo de cadastro do usuario logado
+        /// </summary>
+        /// 
+        /// <returns>Nome do usuário logado</returns>
+        protected virtual UsuarioPerfil UsuarioLogadoPerfil
         {
-            return Ok(Mapper.Map<IList<TDto>>(entitys));
+            get
+            {
+                Claim claim = GetClaim(ClaimName.UserPerfil);
+                return claim == null ? UsuarioPerfil.Garcon : (UsuarioPerfil)Convert.ToInt32(claim.Value);
+            }
         }
 
-        protected virtual IActionResult Ok(TEntity entity)
+        public ControllerBase(TAppService appService,
+            IHttpContextAccessor httpContextAccessor)
         {
-            return Ok(Mapper.Map<TDto>(entity));
+            _appService = appService;
+            _httpContext = httpContextAccessor.HttpContext;
         }
 
+        /// <summary>
+        /// Responsavel por enviar o erro causado no servidor que produz um Microsoft.AspNetCore.Http.StatusCodes.Status 500
+        /// </summary>
+        /// 
+        /// <returns>Retorna a exceção causada no servidor</returns>
         protected virtual IActionResult Error(Exception ex)
         {
             return StatusCode(500, ex.Message);
         }
 
-        protected virtual IActionResult BadRequest(string message = null)
-        {
-            ModelState.AddModelError("message", message);
-
-            foreach (var error in _appService.Result)
-            {
-                ModelState.AddModelError(error.Key ?? string.Empty, error.Value);
-            }
-
-            return BadRequest(ModelState);
-        }
-
+        /// <summary>
+        /// Responsavel por converter o User.Identity ClaimsIdentity
+        /// </summary>
+        /// 
+        /// <returns>Retorna o primeiro Claim do usuario logado pelo tipo</returns>
         protected virtual Claim GetClaim(string claim)
         {
             if (User == null)
@@ -163,18 +258,57 @@ namespace FavoDeMel.Api.Controllers.Common
                 return null;
             }
 
-            ClaimsIdentity identity = (ClaimsIdentity)User.Identity;
+            ClaimsIdentity identity = (ClaimsIdentity)_httpContext.User.Identity;
             return identity?.Claims.FirstOrDefault(c => c.Type == claim);
         }
 
+        /// <summary>
+        /// Responsavel por converter o User.Identity ClaimsIdentity
+        /// </summary>
+        /// 
+        /// <returns>Retorna todos os Claims do usuario logado</returns>
         protected virtual ClaimsIdentity GetClaimsIdentity()
         {
             return (ClaimsIdentity)User.Identity;
         }
 
-        protected virtual string GetMessageValidator()
+        /// <summary>
+        /// Executa uma ação, e retorna um IActionResult
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="funcao"></param>
+        /// <returns></returns>
+        protected async virtual Task<IActionResult> ExecutarFuncaoAsync<T>(Func<Task<T>> funcao)
         {
-            return string.Join(Environment.NewLine, _appService.Result.Select(c => c.Value));
+            try
+            {
+                var retorno = await funcao();
+                return Ok(retorno);
+            }
+            catch (Exception ex)
+            {
+                return Error(ex);
+            }
+        }
+
+        /// <summary>
+        /// Executa uma ação, e retorna um IActionResult com automapper
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="funcao"></param>
+        /// <returns></returns>
+        protected async virtual Task<IActionResult> ExecutarFuncaoAsync<T, TResult>(Func<Task<T>> funcao)
+        {
+            try
+            {
+                var retorno = await funcao();
+                return Ok(Mapper.Map<TResult>(retorno));
+            }
+            catch (Exception ex)
+            {
+                return Error(ex);
+            }
         }
     }
 }

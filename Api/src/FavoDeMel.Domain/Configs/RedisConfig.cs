@@ -9,8 +9,8 @@ namespace FavoDeMel.Domain.Configs
 
         public RedisConfig(IConfiguration configuration)
         {
-            Connection = configuration["RabbitMq:Connection"];
-            Instance = configuration["RabbitMq:Instance"];
+            Connection = configuration["Redis:Connection"];
+            Instance = configuration["Redis:Instance"];
         }
     }
 }

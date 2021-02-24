@@ -1,47 +1,72 @@
-﻿using FavoDeMel.Api.Controllers.Common;
-using FavoDeMel.Api.Dtos;
+﻿using AutoMapper;
+using FavoDeMel.Api.Controllers.Common;
 using FavoDeMel.Domain.Comandas;
+using FavoDeMel.Domain.Dtos;
+using FavoDeMel.Domain.Models;
 using FavoDeMel.Service.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace FavoDeMel.Api.Controllers
 {
     public class ComandaController : ControllerBase<Comanda, int, ComandaDto, IComandaService>
     {
-        public ComandaController(IComandaService service)
-            : base(service)
+        public ComandaController(IComandaService service,
+            IHttpContextAccessor httpContextAccessor)
+            : base(service, httpContextAccessor)
         { }
 
         /// <summary>
-        /// Responsável por obter todos as comandas em aberta
+        /// Cadatrar comanda
         /// </summary>
-        /// <returns>Lista das comandas em amberto</returns>
-        [HttpGet("{pageNumber}/{pageSize}")]
-        public virtual async Task<IActionResult> ComandasAbertas(int pageNumber, int pageSize)
+        /// 
+        /// <returns>Retorna o id do comanda cadastrado</returns>
+        [HttpPost]
+        public async Task<IActionResult> Cadastrar(ComandaDto dto)
         {
-            try
-            {
-                var source = _appService.GetComandasAbertas();
-                int count = await source.CountAsync();
-                int TotalCount = count;
-                var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            Func<Task<Comanda>> func = () => _appService.InserirOuEditar(Mapper.Map<Comanda>(dto));
+            return await ExecutarFuncaoAsync<Comanda, ComandaDto>(func);
+        }
 
-                return Ok(new
-                {
-                    Items = items,
-                    Total = TotalCount,
-                    PageSize = pageSize,
-                    currentPage = pageNumber,
-                });
-            }
-            catch (Exception ex)
-            {
-                return Error(ex);
-            }
+        /// <summary>
+        /// Editar comanda
+        /// </summary>
+        /// 
+        /// <returns>Retorna o comanda editada</returns>
+        [HttpPut]
+        public async Task<IActionResult> Editar(ComandaDto dto)
+        {
+            Func<Task<Comanda>> func = () => _appService.InserirOuEditar(Mapper.Map<Comanda>(dto));
+            return await ExecutarFuncaoAsync<Comanda, ComandaDto>(func);
+        }
+
+        /// <summary>
+        /// Responsável obter comanda por id
+        /// </summary>
+        /// 
+        /// <returns>Retorna os comanda pro id</returns>
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(ComandaDto), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> ObterPorId(int id)
+        {
+            Func<Task<Comanda>> func = () => _appService.ObterPorId(id);
+            return await ExecutarFuncaoAsync<Comanda, ComandaDto>(func);
+        }
+
+        /// <summary>
+        /// Responsável obter os comandas paginado
+        /// </summary>
+        /// 
+        /// <returns>Retorna os comandas paginado</returns>
+        [HttpGet]
+        [ProducesResponseType(typeof(PaginacaoDto<ComandaDto>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> ObterTodosPaginado([FromQuery] FiltroComanda filtro)
+        {
+            Func<Task<PaginacaoDto<ComandaDto>>> func = () => _appService.ObterTodosPaginado(filtro);
+            return await ExecutarFuncaoAsync(func);
         }
     }
 }

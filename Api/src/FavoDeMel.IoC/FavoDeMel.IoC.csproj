@@ -24,6 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FavoDeMel.EF.Repository\FavoDeMel.EF.Repository.csproj" />
     <ProjectReference Include="..\FavoDeMel.Messaging\FavoDeMel.Messaging.csproj" />
+    <ProjectReference Include="..\FavoDeMel.Redis.Repository\FavoDeMel.Redis.Repository.csproj" />
     <ProjectReference Include="..\FavoDeMel.Service\FavoDeMel.Service.csproj" />
   </ItemGroup>
 

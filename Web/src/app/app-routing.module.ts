@@ -1,23 +1,29 @@
 import {NgModule} from '@angular/core';
-import {Routes, RouterModule} from '@angular/router';
-import {AuthGuard} from './helpers';
+import {RouterModule, Routes} from '@angular/router';
+import {AuthGuard} from './shared/auth.guard';
+
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'comanda',
     pathMatch: 'full'
   },
   {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
-    canActivate: [AuthGuard]
+    path: 'comanda',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./pages/comanda/comanda.module').then(m => m.ComandaModule)
   },
   {
-    path: 'login',
-    loadChildren: () => import('./login/login.module').then(m => m.LoginModule),
+    path: 'usuario',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./pages/usuario/usuario.module').then(m => m.UsuarioModule)
   },
-  {path: '**', redirectTo: ''}
+  {
+    path: 'produto',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./pages/produto/produto.module').then(m => m.ProdutoModule)
+  }
 ];
 
 @NgModule({

@@ -4,5 +4,6 @@
     {
         Garcon = 1,
         Cozinheiro = 2,
+        Administrador = 3,
     }
 }

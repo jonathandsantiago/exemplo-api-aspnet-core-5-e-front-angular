@@ -8,35 +8,32 @@ using System.Threading.Tasks;
 
 namespace FavoDeMel.EF.Repository.Common
 {
-    public class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEntity>
-      where TEntity : Entity<TId>
+    public class RepositoryBase<TId, TEntity> : RepositoryBase<TEntity>
+       where TEntity : Entity<TId>
     {
-        protected readonly BaseDbContext _dbContext;
-
-        protected DbSet<TEntity> _dbSet;
-
         public RepositoryBase(BaseDbContext dbContext)
+            : base(dbContext)
+        { }
+
+        public virtual async Task Excluir(TId id)
         {
-            _dbContext = dbContext;
-            _dbSet = dbContext.Set<TEntity>();
+            TEntity originalEntity = await ObterPorId(id);
+            DbContext.Remove(originalEntity);
         }
 
-        public virtual void Add(TEntity entity)
+        public virtual async Task Inserir(TEntity entity)
         {
-            entity.Id = _dbSet.Add(entity).Entity.Id;
+            TEntity entityAdd = _dbSet.Add(entity).Entity;
+            await DbContext.SaveChangesAsync();
+            entity.Id = entityAdd.Id;
         }
 
-        public virtual async Task Delete(TEntity entity)
+        public virtual async Task Editar(TEntity entity)
         {
-            TEntity originalEntity = await GetById(entity.Id);
-            _dbContext.Remove(originalEntity);
-        }
-
-        public virtual async Task Edit(TEntity entity)
-        {
-            _dbContext.Entry(await GetById(entity.Id))
-                .CurrentValues
-                .SetValues(entity);
+            var entityDb = await ObterPorId(entity.Id);
+            DbContext.Entry(entityDb).State = EntityState.Modified;
+            DbContext.Entry(entityDb).CurrentValues.SetValues(entity);
+            await DbContext.SaveChangesAsync();
         }
 
         public bool Exists(TId id)
@@ -44,22 +41,67 @@ namespace FavoDeMel.EF.Repository.Common
             return _dbSet.Any(e => e.Id.Equals(id));
         }
 
-        public virtual async Task<TEntity> GetById(TId id)
+        public virtual async Task<TEntity> ObterPorId(TId id)
+        {
+            return await _dbSet.FindAsync(id);
+        }
+    }
+
+    public class RepositoryBase<TEntity> : IRepositoryBase<TEntity>
+     where TEntity : Entity
+    {
+        public BaseDbContext DbContext { get; }
+
+        public IUnitOfWork UnitOfWork { get; private set; }
+
+        protected DbSet<TEntity> _dbSet;
+
+        public RepositoryBase(BaseDbContext dbContext)
+        {
+            DbContext = dbContext;
+            _dbSet = dbContext.Set<TEntity>();
+        }
+
+        public virtual IUnitOfWork InstanceUnitOfWork(IValidator validator)
+        {
+            UnitOfWork = new UnitOfWork(DbContext, validator);
+            return UnitOfWork;
+        }
+
+        public virtual void SetUnitOfWork(IUnitOfWork unitOfWork)
+        {
+            UnitOfWork = unitOfWork;
+        }
+
+        public virtual IUnitOfWork BeginTransaction(IValidator _validator)
+        {
+            if (UnitOfWork == null)
+            {
+                UnitOfWork = new UnitOfWork(DbContext, _validator);
+            }
+
+            UnitOfWork.SetValidator(_validator);
+            UnitOfWork.BeginTransaction().Wait();
+            return UnitOfWork;
+        }
+
+        public virtual async Task Excluir<TId>(TId id)
+        {
+            TEntity originalEntity = await ObterPorId(id);
+            DbContext.Remove(originalEntity);
+        }
+
+        public virtual async Task<TEntity> ObterPorId<TId>(TId id)
         {
             return await _dbSet.FindAsync(id);
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetAll()
+        public virtual async Task<IEnumerable<TEntity>> ObterTodos()
         {
             return await _dbSet.ToListAsync();
         }
 
-        public virtual async Task Commit()
-        {
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public virtual IQueryable<TEntity> GetQueryable()
+        public virtual IQueryable<TEntity> ObterAsQueryable()
         {
             return _dbSet.AsQueryable();
         }
@@ -74,9 +116,9 @@ namespace FavoDeMel.EF.Repository.Common
         {
             if (!disposing) return;
 
-            if (_dbContext == null) return;
+            if (DbContext == null) return;
 
-            _dbContext.Dispose();
+            DbContext.Dispose();
         }
     }
 }

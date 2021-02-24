@@ -1,6 +1,4 @@
-﻿using FavoDeMel.Domain.Comandas;
-using FavoDeMel.Domain.Produtos;
-using FavoDeMel.Domain.Usuarios;
+﻿using FavoDeMel.EF.Repository.Common.Mapping;
 using Microsoft.EntityFrameworkCore;
 
 namespace FavoDeMel.EF.Repository.Common
@@ -14,19 +12,12 @@ namespace FavoDeMel.EF.Repository.Common
             : base(options)
         { }
 
-        public DbSet<Produto> Produto { get; set; }
-        public DbSet<Usuario> Usuario { get; set; }
-        public DbSet<Comanda> Comanda { get; set; }
-        public DbSet<ComandaPedido> ComandaPedido { get; set; }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<Produto>();
-            builder.Entity<Usuario>();
-            builder.Entity<Comanda>()
-                .HasMany(c => c.Pedidos);
-            builder.Entity<ComandaPedido>();
+            builder.MapearUsuario();
+            builder.MapearProduto();
+            builder.MapearComanda();
         }
     }
 }

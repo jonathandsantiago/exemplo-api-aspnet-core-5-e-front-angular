@@ -5,7 +5,7 @@ namespace FavoDeMel.Domain.Usuarios
 {
     public interface IUsuarioRepository : IRepositoryBase<int, Usuario>
     {
-        Task<Usuario> GetByLoginPassword(string login, string password);
+        Task<Usuario> Login(string login, string password);
         Task<bool> ExistsLogin(string login);
     }
 }

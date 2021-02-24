@@ -1,14 +1,16 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {ErrorInterceptor, JwtInterceptor} from './helpers';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {ToolbarModule} from './components/toolbar/toolbar.module';
+import {FooterModule} from './components/footer/footer.module';
+import {LayoutModule} from './components/layout/layout.module';
 import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from '@stomp/ng2-stompjs';
-import {rxStompConfig} from './rx-stomp.config';
-import {MatToolbarModule} from '@angular/material/toolbar';
+import {rxStompConfig} from './shared/rx-stomp.config';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
+import {ErrorInterceptor} from './shared/error.interceptor';
+import {JwtInterceptor} from './shared/jwt.interceptor';
 
 @NgModule({
   declarations: [
@@ -17,9 +19,9 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
+    ToolbarModule,
+    FooterModule,
+    LayoutModule
   ],
   providers: [
     {provide: InjectableRxStompConfig, useValue: rxStompConfig},
@@ -27,8 +29,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
   ],
-  bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  bootstrap: [AppComponent]
 })
 export class AppModule {
 }

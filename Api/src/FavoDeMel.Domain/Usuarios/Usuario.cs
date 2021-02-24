@@ -8,5 +8,6 @@ namespace FavoDeMel.Domain.Usuarios
         public string Login { get; set; }
         public string Password { get; set; }
         public UsuarioPerfil Perfil { get; set; }
+        public bool Ativo { get; set; }
     }
 }

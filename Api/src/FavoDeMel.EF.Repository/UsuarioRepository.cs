@@ -15,7 +15,7 @@ namespace FavoDeMel.EF.Repository
             return await _dbSet.AnyAsync(c => c.Login == login);
         }
 
-        public async Task<Usuario> GetByLoginPassword(string login, string password)
+        public async Task<Usuario> Login(string login, string password)
         {
             return await _dbSet.FirstOrDefaultAsync(c => c.Login == login && c.Password == password);
         }
