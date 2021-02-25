@@ -1,6 +1,4 @@
 ﻿using FavoDeMel.Domain.Comandas;
-using FavoDeMel.Domain.Dtos;
-using FavoDeMel.Domain.Models;
 using FavoDeMel.Service.Common;
 using FavoDeMel.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -44,23 +42,12 @@ namespace FavoDeMel.Service.Services
             return await _repository.ObterComandasAbertas();
         }
 
-        public async Task<PaginacaoDto<ComandaDto>> ObterTodosPaginado(FiltroComanda filtro)
+        public async Task<IList<Comanda>> ObterTodosPorSituacao(ComandaSituacao situacao)
         {
-            int pagina = filtro.Pagina;
             var comandas = ObterAsQueryable()
-               .Where(c => !filtro.ComandasIds.Any() || filtro.ComandasIds.Contains(c.Id));
-            int total = await comandas.CountAsync();
-
-            if (total == 0)
-            {
-                return new PaginacaoDto<ComandaDto>();
-            }
-
-            var items = filtro.Limite > 0 && total >= filtro.Limite ? await comandas.Skip(pagina * filtro.Limite).Take(filtro.Limite).ToListAsync() :
-                await comandas.ToListAsync();
-
-            return new PaginacaoDto<ComandaDto>(total, filtro.Limite, pagina)
-                .SetItens(items.OrderByDescending(c => c.Id).ToList());
+               .Where(c => c.Situacao == situacao)
+               .OrderByDescending(c => c.Id);
+            return await comandas.ToListAsync();
         }
     }
 }

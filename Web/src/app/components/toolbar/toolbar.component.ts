@@ -1,5 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
+import {Router} from '@angular/router';
+import {UsuarioService} from '../../services/usuario.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -9,7 +11,8 @@ import {Subscription} from 'rxjs';
 export class ToolbarComponent implements OnInit, OnDestroy {
   subscription: Subscription = new Subscription();
 
-  constructor() {
+  constructor(public router: Router,
+              public usuarioService: UsuarioService) {
   }
 
   ngOnInit(): void {
@@ -17,5 +20,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  async sair() {
+    await this.usuarioService.sair();
   }
 }

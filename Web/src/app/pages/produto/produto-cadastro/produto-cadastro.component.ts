@@ -1,5 +1,5 @@
 import {Component, Injector, OnInit} from '@angular/core';
-import {FormBuilder, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, Validators} from '@angular/forms';
 import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
 import {CrudComponent} from '../../../components/common/crud.component';
@@ -22,9 +22,9 @@ export class ProdutoCadastroComponent extends CrudComponent implements OnInit {
 
   ngOnInit(): void {
     this.formGroup = this.formBuilder.group({
-      nome: ['', Validators.required],
-      preco: [null],
-      ulrImage: [null],
+      nome: new FormControl(null, Validators.required),
+      preco: new FormControl(null, Validators.required),
+      ulrImage: new FormControl(null),
     });
   }
 

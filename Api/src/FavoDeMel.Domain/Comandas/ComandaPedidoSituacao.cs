@@ -2,8 +2,8 @@
 {
     public enum ComandaPedidoSituacao
     {
-        Pedido,
-        Preparando,
-        Pronto
+        Pedido = 1,
+        Preparando = 2,
+        Pronto = 3
     }
 }

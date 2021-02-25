@@ -7,7 +7,6 @@ svg.material-icons:not(:last-child) {
   margin-right: 8px;
 }
 
-
 svg#rocket {
   width: 80px;
   position: absolute;
@@ -26,7 +25,6 @@ svg#rocket-smoke {
 svg#clouds {
   position: fixed;
   bottom: -160px;
-  left: -230px;
   z-index: -10;
   width: 1920px;
 }

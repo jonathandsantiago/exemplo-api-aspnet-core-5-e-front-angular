@@ -1,0 +1,37 @@
+<div class="container-fluid mt--6">
+  <div class="col">
+    <div class="card-wrapper">
+      <div class="card">
+        <div class="card-body">
+          <div class="form-row">
+            <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+              <div class="container">
+                <div class="row">
+                  <div class="col-xs-12 col-md-4 form-group">
+                    <label class="label-input">Nome</label>
+                    <div class="input-group mb-3">
+                      <input type="text"
+                             autofocus
+                             formControlName="nome"
+                             class="form-control form-input"
+                             [class.is-invalid]="submitted && formControl.nome.errors"/>
+                      <div class="invalid-feedback d-block"
+                           *ngIf="submitted && formControl.nome.errors">
+                        <div *ngIf="formControl.nome.errors.required">Nome é obrigatório</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div *ngIf="error" class="alert alert-danger mt-3 mb-0">
+                      <div [innerHTML]="error"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,11 +1,18 @@
 footer {
-  margin-top: 8px;
   display: flex;
-  align-items: center;
-  line-height: 20px;
+  position: absolute;
+  width: 100%;
+  bottom: 4px;
 }
 
 footer a {
   display: flex;
   align-items: center;
+}
+
+.conteudo-footer {
+  margin: 0 auto;
+  align-items: center;
+  line-height: 20px;
+  display: flex;
 }

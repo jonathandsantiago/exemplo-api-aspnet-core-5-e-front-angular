@@ -2,11 +2,11 @@
 using FavoDeMel.Api.Controllers.Common;
 using FavoDeMel.Domain.Comandas;
 using FavoDeMel.Domain.Dtos;
-using FavoDeMel.Domain.Models;
 using FavoDeMel.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -61,11 +61,11 @@ namespace FavoDeMel.Api.Controllers
         /// </summary>
         /// 
         /// <returns>Retorna os comandas paginado</returns>
-        [HttpGet]
-        [ProducesResponseType(typeof(PaginacaoDto<ComandaDto>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> ObterTodosPaginado([FromQuery] FiltroComanda filtro)
+        [HttpGet("{situacao}")]
+        [ProducesResponseType(typeof(IList<ComandaDto>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> ObterTodosPorSituao(ComandaSituacao situacao)
         {
-            Func<Task<PaginacaoDto<ComandaDto>>> func = () => _appService.ObterTodosPaginado(filtro);
+            Func<Task<IList<Comanda>>> func = () => _appService.ObterTodosPorSituacao(situacao);
             return await ExecutarFuncaoAsync(func);
         }
     }

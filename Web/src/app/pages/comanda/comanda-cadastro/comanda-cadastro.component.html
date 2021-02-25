@@ -1,0 +1,60 @@
+<div class="container-fluid mt--6">
+  <div class="col">
+    <div class="card-wrapper">
+      <div class="card">
+        <div class="card-header crud-actions">
+          <button type="button"
+                  tooltip="CTRL+ALT+S - Salvar"
+                  class="btn btn-primary"
+                  placement="bottom"
+                  (click)="onSubmit()">
+            Salvar
+          </button>
+        </div>
+        <div class="card-body table-responsive-sm">
+          <div class="form-row">
+            <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+              <div class="container">
+                <div class="row">
+                  <div class="col-xs-12 col-md-6 form-group">
+                    <label class="label-input">Garçom</label>
+                    <div class="input-group mb-3">
+                      <input type="text"
+                             formControlName="garcomId"
+                             class="form-control form-input"/>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="card card-body">
+                      <ng-template ngFor let-contrato [ngForOf]="pedidosForm.controls" let-i="index">
+                        <div class="row">
+                          <div class="col-11">
+                            <app-comanda-pedido [form]="contrato" [produtos]="produtos">
+                            </app-comanda-pedido>
+                          </div>
+                          <div class="col-1 pedido-action">
+                            <button type="button" class="btn btn-light" (click)="removerPedido(i)">
+                              <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </ng-template>
+                      <button type="button" class="col btn btn-outline-success" (click)="adicionarPedido()">
+                        Adicionar Novo Pedido
+                      </button>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div *ngIf="error" class="alert alert-danger mt-3 mb-0">
+                      <div [innerHTML]="error"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,3 +1,10 @@
 @import "~src/assets/styles/vars";
 
+.pedido-action {
+  align-items: center;
+  padding: 36px 0 0 0px;
 
+  button {
+    border: 1px solid #888;
+  }
+}

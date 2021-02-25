@@ -18,9 +18,6 @@ export class UsuarioService extends BaseService<Usuario> implements OnDestroy {
   private usuarioLogadoSubject$: BehaviorSubject<Usuario>;
   usuarioLogado$: Observable<Usuario>;
 
-  private menusSubject$ = new BehaviorSubject<any>([]);
-  menus$ = this.menusSubject$.asObservable();
-
   private usuariosSubject$ = new BehaviorSubject<any>([]);
   usuarios$ = this.usuariosSubject$.asObservable();
 
@@ -127,9 +124,5 @@ export class UsuarioService extends BaseService<Usuario> implements OnDestroy {
 
   ngOnDestroy(): void {
     this.usuarioLogadoSubject$.unsubscribe();
-  }
-
-  setMenusUsuario(menus: any) {
-    this.menusSubject$.next(menus);
   }
 }

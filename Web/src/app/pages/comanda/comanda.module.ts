@@ -5,23 +5,28 @@ import {ComandaComponent} from './comanda.component';
 import {SharedModule} from '../../shared/shared.module';
 import {ComandaCadastroComponent} from './comanda-cadastro/comanda-cadastro.component';
 import {ComandaEdicaoComponent} from './comanda-edicao/comanda-edicao.component';
+import {ComandaRoutingModule} from './comanda-routing.module';
+import {CardModule} from '../../components/card/card.module';
+import {ModalModule} from 'ngx-bootstrap/modal';
+import {ComandaPedidoComponent} from './companda-pedido/comanda-pedido.component';
 
 @NgModule({
   imports: [
+    ComandaRoutingModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    CardModule,
+    ModalModule.forRoot(),
   ],
   declarations: [
     ComandaComponent,
     ComandaCadastroComponent,
-    ComandaEdicaoComponent
+    ComandaEdicaoComponent,
+    ComandaPedidoComponent
   ],
   exports: [
-    ComandaComponent,
-    ComandaCadastroComponent,
-    ComandaEdicaoComponent
   ],
   providers: []
 })

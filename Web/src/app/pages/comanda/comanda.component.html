@@ -1,0 +1,109 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <button type="button"
+            class="btn btn-primary"
+            (click)="abrirModal(templateCadastro)">Novo</button>
+  </ol>
+</nav>
+
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-md-4 border-primary">
+      <div class="card card-comanda border-primary">
+        <div class="card-header text-center text-white bg-primary">Aberto</div>
+        <div class="card-body text-primary">
+          <ng-template ngFor let-comandaFechada [ngForOf]="comandasFechada" let-i="index">
+            <div class="card border-primary mb-3">
+              <div class="card-header">{{comandaFechada.id}}</div>
+              <div class="card-body text-primary">
+                <ng-template ngFor let-pedido [ngForOf]="comandaFechada.pedidos" let-i="index">
+                  <p class="card-text">Produto: {{pedido.produtoId}} - {{pedido.produtoNome}} Qtd: {{pedido.quantidade}}</p>
+                </ng-template>
+              </div>
+              <div class="card-footer bg-transparent border-primary">
+                <button type="button" class="btn btn-light">Editar</button>
+                <button type="button" class="btn btn-primary">Confirmar</button>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-4 border-secondary">
+      <div class="card card-comanda border-secondary">
+        <div class="card-header text-center text-white bg-secondary">Em Andamento</div>
+        <div class="card-body text-secondary">
+          <ng-template ngFor let-comandaFechada [ngForOf]="comandasFechada" let-i="index">
+            <div class="card border-secondary mb-3">
+              <div class="card-header">{{comandaFechada.id}}</div>
+              <div class="card-body text-secondary">
+                <ng-template ngFor let-pedido [ngForOf]="comandaFechada.pedidos" let-i="index">
+                  <p class="card-text">Produto: {{pedido.produtoId}} - {{pedido.produtoNome}} Qtd: {{pedido.quantidade}}</p>
+                </ng-template>
+              </div>
+              <div class="card-footer bg-transparent border-secondary">
+                <button type="button" class="btn btn-secondary">Fechar</button>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-4 border-success">
+      <div class="card card-comanda border-success">
+        <div class="card-header text-center text-white bg-success">Fechados</div>
+        <div class="card-body text-success">
+          <ng-template ngFor let-comandaFechada [ngForOf]="comandasFechada" let-i="index">
+            <div class="card border-success mb-3">
+              <div class="card-header">{{comandaFechada.id}}</div>
+              <div class="card-body text-success">
+                <ng-template ngFor let-pedido [ngForOf]="comandaFechada.pedidos" let-i="index">
+                  <p class="card-text">Produto: {{pedido.produtoId}} - {{pedido.produtoNome}} Qtd: {{pedido.quantidade}}</p>
+                </ng-template>
+              </div>
+              <div class="card-footer bg-transparent border-success">
+                <button type="button" class="btn btn-light">Visualizar</button>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #templateCadastro>
+  <div class="modal-header">
+    <h5 class="modal-title pull-left">Nova Comanda</h5>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-comanda-cadastro [modalRef]="modalRef"></app-comanda-cadastro>
+  </div>
+</ng-template>
+
+<ng-template #templateEdicao>
+  <div class="modal-header">
+    <h5 class="modal-title pull-left">Editar Comanda</h5>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-comanda-edicao [isVisualizacao]="false" [modalRef]="modalRef"></app-comanda-edicao>
+  </div>
+</ng-template>
+
+<ng-template #templateDetalhe>
+  <div class="modal-header">
+    <h5 class="modal-title pull-left">Detalhe Comanda</h5>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-comanda-edicao [isVisualizacao]="true" [modalRef]="modalRef"></app-comanda-edicao>
+  </div>
+</ng-template>

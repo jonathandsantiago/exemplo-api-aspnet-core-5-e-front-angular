@@ -1,5 +1,5 @@
 import {Component, Injector, OnInit} from '@angular/core';
-import {FormBuilder, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, Validators} from '@angular/forms';
 import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
 import {Location} from '@angular/common';
@@ -25,10 +25,10 @@ export class ProdutoEdicaoComponent extends CrudComponent implements OnInit {
 
   ngOnInit(): void {
     this.formGroup = this.formBuilder.group({
-      id: [null],
-      nome: ['', Validators.required],
-      preco: [null],
-      ulrImage: [null],
+      id: new FormControl(null, Validators.required),
+      nome: new FormControl(null, Validators.required),
+      preco: new FormControl(null, Validators.required),
+      ulrImage: new FormControl(null),
     });
 
     this.subscription.add(this.nagivate$.subscribe(customData => {

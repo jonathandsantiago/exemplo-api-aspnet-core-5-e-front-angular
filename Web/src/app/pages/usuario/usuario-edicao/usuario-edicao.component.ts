@@ -1,5 +1,5 @@
 import {Component, Injector, OnInit} from '@angular/core';
-import {FormBuilder, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, Validators} from '@angular/forms';
 import {UsuarioService} from '../../../services/usuario.service';
 import {UsuarioPerfil} from '../../../models/usuario';
 import {ToastrService} from 'ngx-toastr';
@@ -33,11 +33,12 @@ export class UsuarioEdicaoComponent extends CrudComponent implements OnInit {
 
   ngOnInit(): void {
     this.formGroup = this.formBuilder.group({
-      id: [null],
-      nome: ['', Validators.required],
-      login: ['', Validators.required],
-      perfil: [String(UsuarioPerfil.Garcon), Validators.required],
-      ativo: [true, Validators.required],
+      id: new FormControl(null, Validators.required),
+      nome: new FormControl(null, Validators.required),
+      login: new FormControl(null, Validators.required),
+      password: new FormControl(null, Validators.required),
+      perfil: new FormControl(UsuarioPerfil.Garcon, Validators.required),
+      Ativo: new FormControl(true, Validators.required),
     });
 
     this.subscription.add(this.nagivate$.subscribe(customData => {

@@ -7,10 +7,11 @@ import {Injector, Input, OnDestroy} from '@angular/core';
 import {BsLocaleService} from 'ngx-bootstrap/datepicker';
 
 export abstract class CrudComponent implements OnDestroy {
+  @Input() isVisualizacao: boolean;
+
   formGroup: FormGroup;
   submitted = false;
   error = '';
-  @Input() isVisualizacao: boolean;
   id = null;
   nagivate$ = null;
 

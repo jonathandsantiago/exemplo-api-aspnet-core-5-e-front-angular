@@ -6,24 +6,29 @@ import {AuthGuard} from './shared/auth.guard';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'comanda',
+    redirectTo: 'comandas',
     pathMatch: 'full'
   },
   {
-    path: 'comanda',
+    path: 'comandas',
     canActivate: [AuthGuard],
     loadChildren: () => import('./pages/comanda/comanda.module').then(m => m.ComandaModule)
   },
   {
-    path: 'usuario',
+    path: 'usuarios',
     canActivate: [AuthGuard],
     loadChildren: () => import('./pages/usuario/usuario.module').then(m => m.UsuarioModule)
   },
   {
-    path: 'produto',
+    path: 'produtos',
     canActivate: [AuthGuard],
     loadChildren: () => import('./pages/produto/produto.module').then(m => m.ProdutoModule)
-  }
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule)
+  },
+  {path: '**', redirectTo: ''}
 ];
 
 @NgModule({

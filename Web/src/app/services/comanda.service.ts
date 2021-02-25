@@ -1,4 +1,4 @@
-import {Injectable, OnDestroy} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {NgxSpinnerService} from 'ngx-spinner';
@@ -9,7 +9,7 @@ import {convertToInt} from '../shared/util';
 import {Comanda} from '../models/comanda';
 
 @Injectable({providedIn: 'root'})
-export class ComandaService extends BaseService<Comanda> implements OnDestroy {
+export class ComandaService extends BaseService<Comanda> {
 
   protected urlApi = `${environment.apiUrl}/api/Comanda`;
 
@@ -25,6 +25,7 @@ export class ComandaService extends BaseService<Comanda> implements OnDestroy {
     return params;
   }
 
-  ngOnDestroy(): void {
+  obterTodosPorSituao(situacao: any) {
+    return this.http.get<any>(`${this.urlApi}/ObterTodosPorSituao/${situacao}`);
   }
 }

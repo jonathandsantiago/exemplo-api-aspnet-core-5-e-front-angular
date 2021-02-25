@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "favodemel",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -20,11 +20,15 @@
     "@angular/platform-browser-dynamic": "~9.1.11",
     "@angular/router": "~9.1.11",
     "@stomp/ng2-stompjs": "^8.0.0",
+    "@types/jquery": "^3.5.5",
     "bootstrap": "^4.5.3",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.5.1",
     "moment": "^2.29.1",
     "ngx-bootstrap": "^5.6.1",
     "ngx-spinner": "^10.0.1",
     "ngx-toastr": "^13.2.0",
+    "popper.js": "^1.16.1",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"

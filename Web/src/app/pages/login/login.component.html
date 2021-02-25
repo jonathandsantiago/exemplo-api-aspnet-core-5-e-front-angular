@@ -1,0 +1,48 @@
+<div class="content" role="main">
+  <div class="wrapper fade-in-down">
+    <div class="form-content">
+
+      <div class="form-input first">
+        <img src="assets/images/logo.fw.png" class="login-logo" alt="User Icon"/>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 form-group">
+              <input type="text"
+                     formControlName="login"
+                     placeholder="Usuário"
+                     class="form-input second"
+                     [ngClass]="{ 'is-invalid': submitted && formControl.login.errors }"/>
+              <div class="invalid-feedback d-block"
+                   *ngIf="submitted && formControl.login.errors">
+                <div *ngIf="formControl.login.errors.required">Usuário é obrigatório</div>
+              </div>
+            </div>
+            <div class="col-12 form-group">
+              <input type="password"
+                     placeholder="Senha"
+                     formControlName="password"
+                     class="form-input third"
+                     [ngClass]="{ 'is-invalid': submitted && formControl.senha.errors }"/>
+              <div class="invalid-feedback d-block"
+                   *ngIf="submitted && formControl.senha.errors">
+                <div *ngIf="formControl.senha.errors.required">Senha é obrigatório</div>
+              </div>
+            </div>
+            <div class="col-12 form-group">
+              <input type="submit" class="form-input fourth" value="Entrar"/>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <div *ngIf="error" class="alert alert-danger mt-3 mb-0">
+        <div [innerHTML]="error"></div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
