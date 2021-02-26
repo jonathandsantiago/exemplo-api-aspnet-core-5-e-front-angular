@@ -8,6 +8,8 @@ import {ComandaService} from '../../../services/comanda.service';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {Produto} from '../../../models/produto';
 import {ProdutoService} from '../../../services/produto.service';
+import {Usuario, UsuarioPerfil} from '../../../models/usuario';
+import {UsuarioService} from '../../../services/usuario.service';
 
 @Component({
   selector: 'app-comanda-cadastro',
@@ -16,13 +18,16 @@ import {ProdutoService} from '../../../services/produto.service';
 })
 export class ComandaCadastroComponent extends CrudComponent implements OnInit {
   @Input() modalRef: BsModalRef;
+  id = null;
   pedidosForm = new FormArray([]);
   produtos: Produto[];
+  garcons: Usuario[];
 
   constructor(injector: Injector,
               protected formBuilder: FormBuilder,
               protected toastrService: ToastrService,
               protected produtoService: ProdutoService,
+              protected usuarioService: UsuarioService,
               protected router: Router,
               protected comandaService: ComandaService) {
     super(injector);
@@ -30,6 +35,7 @@ export class ComandaCadastroComponent extends CrudComponent implements OnInit {
 
   ngOnInit(): void {
     this.formGroup = this.formBuilder.group({
+      id: new FormControl(this.id),
       garcomId: new FormControl(null, Validators.required),
       totalAPagar: new FormControl(null),
       gorjetaGarcom: new FormControl(null),
@@ -37,6 +43,8 @@ export class ComandaCadastroComponent extends CrudComponent implements OnInit {
     });
 
     this.subscription.add(this.produtoService.obterTodos().subscribe((produtos: any) => this.produtos = produtos));
+    this.subscription.add(this.usuarioService.obterTodosPorPerfil(UsuarioPerfil.Garcon)
+      .subscribe((garcons: any) => this.garcons = garcons));
     this.adicionarPedido();
   }
 
@@ -48,7 +56,7 @@ export class ComandaCadastroComponent extends CrudComponent implements OnInit {
       return;
     }
 
-    this.subscription.add(this.comandaService.cadastrar(comanda).subscribe(response => {
+    this.subscription.add(this.comandaService.inserirOuEditar(comanda, {id: this.id}).subscribe(response => {
       this.toastrService.success(`Comanda registrado com sucesso.`, null, {
         positionClass: 'toast-bottom-right',
         disableTimeOut: false,

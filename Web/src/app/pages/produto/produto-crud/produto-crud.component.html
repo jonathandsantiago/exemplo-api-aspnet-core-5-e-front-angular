@@ -1,0 +1,54 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <a type="button" class="btn btn-primary" routerLink="..">Voltar</a>
+  </ol>
+</nav>
+
+<div class="container-fluid mt--6">
+  <div class="col">
+    <div class="card">
+      <div class="card-header crud-actions">
+        <button type="button"
+                tooltip="CTRL+ALT+S - Salvar"
+                class="btn btn-primary"
+                placement="bottom"
+                (click)="onSubmit()">
+          Salvar
+        </button>
+      </div>
+      <div class="card-body table-responsive-sm">
+        <div class="form-row">
+          <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+            <div class="container">
+              <div class="row">
+                <div class="col-xs-12 col-md-6 form-group">
+                  <label class="label-input">Nome</label>
+                  <div class="input-group mb-3">
+                    <input type="text"
+                           formControlName="nome"
+                           class="form-control form-input"
+                           [class.is-invalid]="submitted && formControl.nome.errors"/>
+                  </div>
+                </div>
+                <div class="col-xs-12 col-md-6 form-group">
+                  <label class="label-input">Preço</label>
+                  <div class="input-group mb-3">
+                    <input type="number"
+                           formControlName="preco"
+                           class="form-control form-input"
+                           [class.is-invalid]="submitted && formControl.preco.errors"/>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div *ngIf="error" class="alert alert-danger mt-3 mb-0">
+                    <div [innerHTML]="error"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
