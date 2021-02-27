@@ -18,10 +18,10 @@ namespace FavoDeMel.Redis.Repository
             _produtoRepository = produtoRepository;
         }
 
-        public async Task Editar(Produto usuario)
+        public async Task Editar(Produto comanda)
         {
-            await _produtoRepository.Editar(usuario);
-            await base.Salvar($"{usuario.Id}", usuario, 7200);
+            await _produtoRepository.Editar(comanda);
+            await base.Salvar($"{comanda.Id}", comanda, 7200);
         }
 
         public async Task Excluir(int id)
@@ -35,10 +35,10 @@ namespace FavoDeMel.Redis.Repository
             return _produtoRepository.Exists(id);
         }
 
-        public async Task Inserir(Produto usuario)
+        public async Task Inserir(Produto comanda)
         {
-            await _produtoRepository.Inserir(usuario);
-            await base.Salvar($"{usuario.Id}", usuario, 7200);
+            await _produtoRepository.Inserir(comanda);
+            await base.Salvar($"{comanda.Id}", comanda, 7200);
         }
 
         public async Task<bool> NomeJaCadastrado(int id, string nome)
@@ -48,19 +48,19 @@ namespace FavoDeMel.Redis.Repository
 
         public async Task<Produto> ObterPorId(int id)
         {
-            var usuario = await base.Obter($"{id}");
+            var comanda = await base.Obter($"{id}");
 
-            if (usuario == null)
+            if (comanda == null)
             {
-                usuario = await _produtoRepository.ObterPorId(id);
+                comanda = await _produtoRepository.ObterPorId(id);
 
-                if (usuario != null)
+                if (comanda != null)
                 {
-                    await base.Salvar($"{id}", usuario, 7200);
+                    await base.Salvar($"{id}", comanda, 7200);
                 }
             }
 
-            return usuario;
+            return comanda;
         }
     }
 }

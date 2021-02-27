@@ -3,9 +3,10 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UsuarioComponent} from './usuario.component';
 import {SharedModule} from '../../shared/shared.module';
-import {UsuarioCadastroComponent} from './usuario-cadastro/usuario-cadastro.component';
-import {UsuarioEdicaoComponent} from './usuario-edicao/usuario-edicao.component';
+import {UsuarioCrudComponent} from './usuario-crud/usuario-crud.component';
 import {UsuarioRoutingModule} from './usuario-routing.module';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {PaginacaoModule} from '../../shared/paginacao/paginacao.module';
 
 @NgModule({
   imports: [
@@ -13,12 +14,13 @@ import {UsuarioRoutingModule} from './usuario-routing.module';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    TooltipModule.forRoot(),
+    PaginacaoModule
   ],
   declarations: [
     UsuarioComponent,
-    UsuarioCadastroComponent,
-    UsuarioEdicaoComponent
+    UsuarioCrudComponent,
   ],
   exports: [
   ],

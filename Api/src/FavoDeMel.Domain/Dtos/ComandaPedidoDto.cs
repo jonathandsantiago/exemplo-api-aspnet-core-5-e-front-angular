@@ -6,8 +6,10 @@ namespace FavoDeMel.Domain.Dtos
     {
         public int ComandaId { get; set; }
         public int ProdutoId { get; set; }
-        public int ProdutoNome { get; set; }
+        public string ProdutoNome { get; set; }
+        public decimal ProdutoPreco { get; set; }
         public int Quantidade { get; set; }
+        public decimal Total { get { return ProdutoPreco * Quantidade; } }
         public ComandaPedidoSituacao Situacao { get; set; }
     }
 }

@@ -8,6 +8,7 @@ import {BsLocaleService} from 'ngx-bootstrap/datepicker';
 
 export abstract class CrudComponent implements OnDestroy {
   @Input() isVisualizacao: boolean;
+  @Input() isEdicao: boolean;
 
   formGroup: FormGroup;
   submitted = false;
@@ -33,6 +34,9 @@ export abstract class CrudComponent implements OnDestroy {
     this.localeService = injector.get(BsLocaleService);
 
     this.localeService.use('pt-br');
+    this.isEdicao = this.router.url.includes('/editar');
+    this.isVisualizacao = this.router.url.includes('/visualizar');
+
     const nagivate = this.router.events.pipe(filter(event => event instanceof NavigationEnd));
     const paramsRoute = this.activatedRoute.params;
     this.nagivate$ = merge(nagivate, paramsRoute).pipe(map(() => {

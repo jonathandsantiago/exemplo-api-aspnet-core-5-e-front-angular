@@ -16,9 +16,9 @@ services:
     networks:
       - favodemel-api-network
     depends_on:
-      - favodemel-api-db
+      - mysql
 
-  favodemel-api-db:
+  mysql:
     image: mysql:5.7
     container_name: favodemel-api-db
     restart: always
@@ -36,7 +36,7 @@ services:
     volumes:
       - favodemel-api-mysql-data:/var/lib/mysql
 
-  favodemel-api-redis:
+  redis:
     image: redis:4.0.11
     container_name: favodemel-api-redis
     ports:
@@ -46,7 +46,7 @@ services:
     networks:
       - favodemel-api-network
 
-  favodemel-api-redis-commander:
+  redis-commander:
     image: rediscommander/redis-commander
     container_name: favodemel-api-redis-commander
     ports:
@@ -56,11 +56,11 @@ services:
         no1:redis:6379:0,no2:redis:6379:1,no3:redis:6379:2
       USE_SCAN: "true"
     depends_on:
-      - favodemel-api-redis
+      - redis
     networks:
       - favodemel-api-network
 
-  favodemel-api-minio:
+  minio:
     container_name: favodemel-api-minio
     image: minio/minio
     volumes:
@@ -74,7 +74,7 @@ services:
     networks:
       - favodemel-api-network
   
-  favodemel-api-rabbitmq:
+  rabbitmq:
     image: "rabbitmq:3.8-management"
     container_name: favodemel-api-rabbitmq
     environment:

@@ -1,24 +1,21 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {LayoutComponent} from './layout.component';
-import {SharedModule} from '../../shared/shared.module';
+import {PaginacaoComponent} from './paginacao.component';
+import {PaginationModule} from 'ngx-bootstrap/pagination';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    SharedModule
+    PaginationModule.forRoot(),
   ],
   declarations: [
-    LayoutComponent
+    PaginacaoComponent
   ],
   exports: [
-    LayoutComponent
+    PaginacaoComponent
   ],
   providers: []
 })
-export class LayoutModule {
+export class PaginacaoModule {
 
 }

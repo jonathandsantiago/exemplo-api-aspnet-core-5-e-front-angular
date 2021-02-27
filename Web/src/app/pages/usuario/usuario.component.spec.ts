@@ -19,7 +19,7 @@ describe('UsuarioComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should main-comanda-cadastro', () => {
+  it('should main-comanda-crud', () => {
     expect(component).toBeTruthy();
   });
 });

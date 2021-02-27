@@ -1,63 +1,23 @@
-import {FormGroup} from '@angular/forms';
-import {merge, Subscription} from 'rxjs';
-import {Location} from '@angular/common';
-import {filter, map} from 'rxjs/operators';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {Injector, Input, OnDestroy} from '@angular/core';
-import {BsLocaleService} from 'ngx-bootstrap/datepicker';
+import {BehaviorSubject, Subscription} from 'rxjs';
+import {Injector, OnDestroy} from '@angular/core';
+import {PageInfo} from '../../models/pageinfo';
 
-export abstract class CrudComponent implements OnDestroy {
-  @Input() isVisualizacao: boolean;
-  @Input() isEdicao: boolean;
-
-  formGroup: FormGroup;
-  submitted = false;
-  error = '';
-  id = null;
-  nagivate$ = null;
-
+export abstract class ListComponent implements OnDestroy {
   subscription: Subscription = new Subscription();
-
-  get formControl() {
-    return this.formGroup.controls;
-  }
-
-  protected router: Router;
-  protected activatedRoute: ActivatedRoute;
-  protected location: Location;
-  protected localeService: BsLocaleService;
+  mudancaPagina$ = new BehaviorSubject<PageInfo>({page: 1, itemsPerPage: 10} as PageInfo);
+  pageNumber = 0;
+  totalItens = 0;
 
   constructor(injector: Injector) {
-    this.router = injector.get(Router);
-    this.activatedRoute = injector.get(ActivatedRoute);
-    this.location = injector.get(Location);
-    this.localeService = injector.get(BsLocaleService);
-
-    this.localeService.use('pt-br');
-    const nagivate = this.router.events.pipe(filter(event => event instanceof NavigationEnd));
-    const paramsRoute = this.activatedRoute.params;
-    this.nagivate$ = merge(nagivate, paramsRoute).pipe(map(() => {
-      let child = this.activatedRoute.firstChild;
-      while (child) {
-        if (child.firstChild) {
-          child = child.firstChild;
-        } else if (child.snapshot.data) {
-          return child.snapshot.data;
-        } else {
-          return null;
-        }
-      }
-      return null;
-    }));
-  }
-
-  abstract onSubmit();
-
-  voltar() {
-    this.location.back();
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+
+  mudarPagina(event) {
+    this.pageNumber = event.page;
+    this.mudancaPagina$.next(event);
   }
 }

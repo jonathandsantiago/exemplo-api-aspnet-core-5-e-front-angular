@@ -5,6 +5,7 @@ using FavoDeMel.Framework.Helpers;
 using FavoDeMel.Service.Common;
 using FavoDeMel.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,7 +34,7 @@ namespace FavoDeMel.Service.Services
 
                 usuario.Prepare();
                 await _repository.Inserir(usuario);
-                return await _repository.ObterPorId(usuario.Id);
+                return usuario;
             }
         }
 
@@ -41,18 +42,19 @@ namespace FavoDeMel.Service.Services
         {
             using (var dbTransaction = _repository.BeginTransaction(_validador))
             {
-                Usuario usuarioDb = await _repository.ObterPorId(usuario.Id);
-                usuario.Login = usuarioDb.Login;
-                usuario.Password = usuarioDb.Password;
-
                 if (_validador != null && !await ObterValidador<UsuarioValidator>().Validar(usuario))
                 {
                     return null;
                 }
 
                 usuario.Prepare();
+
+                Usuario usuarioDb = await _repository.ObterPorId(usuario.Id);
+                usuario.Login = usuarioDb.Login;
+                usuario.Password = usuarioDb.Password;
+
                 await _repository.Editar(usuario);
-                return await _repository.ObterPorId(usuario.Id);
+                return usuario;
             }
         }
 
@@ -91,6 +93,11 @@ namespace FavoDeMel.Service.Services
 
             return new PaginacaoDto<UsuarioDto>(total, filtro.Limite, pagina)
                 .SetItens(items.OrderBy(c => c.Nome).ToList());
-        }        
+        }
+
+        public async Task<IEnumerable<Usuario>> ObterTodosPorPerfil(UsuarioPerfil perfil)
+        {
+            return await _repository.ObterTodosPorPerfil(perfil);
+        }
     }
 }

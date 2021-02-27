@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
@@ -19,6 +20,7 @@ using System.Threading.Tasks;
 
 namespace FavoDeMel.Api.Controllers
 {
+    [Authorize("Bearer")]
     public class UsuarioController : ControllerBase<Usuario, int, UsuarioDto, IUsuarioService>
     {
         private readonly SigningConfiguration _signingConfiguration;
@@ -32,29 +34,17 @@ namespace FavoDeMel.Api.Controllers
         {
             _signingConfiguration = signingConfiguration;
             _tokenConfiguration = tokenConfiguration;
-        }       
-
-        /// <summary>
-        /// Cadatrar usuario
-        /// </summary>
-        /// 
-        /// <returns>Retorna o id do úsuario cadastrado</returns>
-        [HttpPost]
-        public async Task<IActionResult> Cadastrar(UsuarioDto dto)
-        {
-            Func<Task<Usuario>> func = () => _appService.Inserir(Mapper.Map<Usuario>(dto));
-            return await ExecutarFuncaoAdminAsync<Usuario, UsuarioDto>(func);
         }
 
         /// <summary>
-        /// Editar usuário
+        /// Inserir usuário
         /// </summary>
         /// 
-        /// <returns>Retorna o usuário editado</returns>
-        [HttpPut]
-        public async Task<IActionResult> Editar(UsuarioDto dto)
+        /// <returns>Retorna a usuário</returns>
+        [HttpPost]
+        public async Task<IActionResult> Cadastrar(UsuarioDto dto)
         {
-            if (dto.Id != UsuarioLogadoId && UsuarioLogadoPerfil != UsuarioPerfil.Administrador)
+            if (dto.Id > 0 && dto.Id != UsuarioLogadoId && UsuarioLogadoPerfil != UsuarioPerfil.Administrador)
             {
                 return BadRequest("Usúario não possui permissão para executar essa ação.");
             }
@@ -64,11 +54,28 @@ namespace FavoDeMel.Api.Controllers
         }
 
         /// <summary>
+        /// Editar usuário
+        /// </summary>
+        /// 
+        /// <returns>Retorna a usuário</returns>
+        [HttpPut]
+        public async Task<IActionResult> Editar(UsuarioDto dto)
+        {
+            if (dto.Id > 0 && dto.Id != UsuarioLogadoId && UsuarioLogadoPerfil != UsuarioPerfil.Administrador)
+            {
+                return BadRequest("Usúario não possui permissão para executar essa ação.");
+            }
+
+            Func<Task<Usuario>> func = () => _appService.Editar(Mapper.Map<Usuario>(dto));
+            return await ExecutarFuncaoAsync<Usuario, UsuarioDto>(func);
+        }
+
+        /// <summary>
         /// Alterar Senha usuário
         /// </summary>
         /// 
         /// <returns>Retorna um boleano definindo se deu certo ou não a ação</returns>
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> AlterarSenha(int id, string password)
         {
 
@@ -122,7 +129,12 @@ namespace FavoDeMel.Api.Controllers
                     created = securityToken.ValidFrom.ToString("yyyy-MM-dd HH:mm:ss"),
                     dateExpiration = securityToken.ValidTo.ToString("yyyy-MM-dd HH:mm:ss"),
                     accessToken = handler.WriteToken(securityToken),
-                    usuario = Mapper.Map<UsuarioDto>(user)
+                    usuario = new UsuarioDto
+                    {
+                        Id = user.Id,
+                        Nome = user.Nome,
+                        Perfil = user.Perfil
+                    }
                 });
             }
             catch (Exception ex)
@@ -136,7 +148,7 @@ namespace FavoDeMel.Api.Controllers
         /// </summary>
         /// 
         /// <returns>Retorna os usuario pro id</returns>
-        [HttpGet("{id}")]
+        [HttpGet]
         [ProducesResponseType(typeof(UsuarioDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> ObterPorId(int id)
         {
@@ -155,6 +167,24 @@ namespace FavoDeMel.Api.Controllers
         {
             Func<Task<PaginacaoDto<UsuarioDto>>> func = () => _appService.ObterTodosPaginado(filtro);
             return await ExecutarFuncaoAdminAsync(func);
+        }
+
+        /// <summary>
+        /// Responsável obter os usuarios por perfil
+        /// </summary>
+        /// 
+        /// <returns>Retorna os usuarios por perfil</returns>
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<UsuarioDto>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> ObterTodosPorPerfil(UsuarioPerfil perfil)
+        {
+            if (perfil == UsuarioPerfil.Administrador && UsuarioLogadoPerfil != UsuarioPerfil.Administrador)
+            {
+                return BadRequest("Usúario não possui permissão para executar essa ação.");
+            }
+
+            Func<Task<IEnumerable<Usuario>>> func = () => _appService.ObterTodosPorPerfil(perfil);
+            return await ExecutarFuncaoAsync<IEnumerable<Usuario>, IEnumerable<UsuarioDto>>(func);
         }
 
         private SecurityToken GetSecurityToken(Usuario user, JwtSecurityTokenHandler handler)
@@ -185,6 +215,5 @@ namespace FavoDeMel.Api.Controllers
         {
             return await _appService.Login(login, StringHelper.CalculateMD5Hash(password));
         }
-
     }
 }

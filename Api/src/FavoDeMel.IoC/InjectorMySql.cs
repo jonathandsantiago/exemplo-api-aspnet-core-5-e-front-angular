@@ -1,4 +1,6 @@
-﻿using FavoDeMel.Domain.Usuarios;
+﻿using FavoDeMel.Domain.Fake;
+using FavoDeMel.Domain.Produtos;
+using FavoDeMel.Domain.Usuarios;
 using FavoDeMel.EF.Repository.Common;
 using FavoDeMel.Framework.Helpers;
 using Microsoft.EntityFrameworkCore;
@@ -27,29 +29,40 @@ namespace FavoDeMel.IoC
                 var context = services.GetService<TContext>();
                 context.Database.Migrate();
 #if (DEBUG)
-                InserirUsuarioDefault(context as BaseDbContext);
+                InserirUsuariosDefault(context as BaseDbContext);
+                InserirProdutosDefault(context as BaseDbContext);
 #endif
             }
 
             return host;
         }
-        private static void InserirUsuarioDefault(BaseDbContext baseDbContext)
+
+        private static void InserirUsuariosDefault(BaseDbContext baseDbContext)
         {
             var usuarioDbSet = baseDbContext.Set<Usuario>();
 
             if (usuarioDbSet.Count() == 0)
             {
-                usuarioDbSet.Add(new Usuario
+                foreach (var usuario in EntityFake.ObterListaDeUsuarios())
                 {
-                    Nome = "Administrador",
-                    Login = "Admin",
-                    Password = StringHelper.CalculateMD5Hash("Admin"),
-                    Perfil = UsuarioPerfil.Administrador,
-                    Ativo = true
-                });
-                baseDbContext.SaveChanges();
+                    usuarioDbSet.Add(usuario);
+                    baseDbContext.SaveChanges();
+                }
+            }
+        }
+
+        private static void InserirProdutosDefault(BaseDbContext baseDbContext)
+        {
+            var produtoDbSet = baseDbContext.Set<Produto>();
+
+            if (produtoDbSet.Count() == 0)
+            {
+                foreach (var produto in EntityFake.ObterListaDeProdutos())
+                {
+                    produtoDbSet.Add(produto);
+                    baseDbContext.SaveChanges();
+                }
             }
         }
     }
 }
-

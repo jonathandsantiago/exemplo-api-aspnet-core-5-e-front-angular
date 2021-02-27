@@ -3,7 +3,6 @@ using FavoDeMel.Redis.Repository.Abstractions;
 using FavoDeMel.Redis.Repository.Interfaces;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FavoDeMel.Redis.Repository
@@ -20,10 +19,10 @@ namespace FavoDeMel.Redis.Repository
             _comandaRepository = comandaRepository;
         }
 
-        public async Task Editar(Comanda usuario)
+        public async Task Editar(Comanda comanda)
         {
-            await _comandaRepository.Editar(usuario);
-            await base.Salvar($"{usuario.Id}", usuario, 7200);
+            await _comandaRepository.Editar(comanda);
+            await base.Salvar($"{comanda.Id}", comanda, 7200);
         }
 
         public async Task Excluir(int id)
@@ -37,37 +36,47 @@ namespace FavoDeMel.Redis.Repository
             return _comandaRepository.Exists(id);
         }
 
-        public async Task<Comanda> FecharConta(int comandaId)
+        public async Task<Comanda> Fechar(int comandaId)
         {
-            return await _comandaRepository.FecharConta(comandaId);
+            var comanda = await _comandaRepository.Fechar(comandaId);
+            await base.Salvar($"{comanda.Id}", comanda, 7200);
+            return comanda;
         }
 
-        public async Task Inserir(Comanda usuario)
+        public async Task Inserir(Comanda comanda)
         {
-            await _comandaRepository.Inserir(usuario);
-            await base.Salvar($"{usuario.Id}", usuario, 7200);
-        }
-
-        public async Task<IEnumerable<Comanda>> ObterComandasAbertas()
-        {
-            return await _comandaRepository.ObterComandasAbertas();
+            await _comandaRepository.Inserir(comanda);
+            await base.Salvar($"{comanda.Id}", comanda, 7200);
         }
 
         public async Task<Comanda> ObterPorId(int id)
         {
-            var usuario = await base.Obter($"{id}");
+            var comanda = await base.Obter($"{id}");
 
-            if (usuario == null)
+            if (comanda == null)
             {
-                usuario = await _comandaRepository.ObterPorId(id);
+                comanda = await _comandaRepository.ObterPorId(id);
 
-                if (usuario != null)
+                if (comanda != null)
                 {
-                    await base.Salvar($"{id}", usuario, 7200);
+                    await base.Salvar($"{id}", comanda, 7200);
                 }
             }
 
-            return usuario;
+            return comanda;
+        }
+
+        public async Task<IEnumerable<Comanda>> ObterTodosPorSituacao(ComandaSituacao situacao)
+        {
+            return await _comandaRepository.ObterTodosPorSituacao(situacao);
+        }
+
+        public async Task<Comanda> Confirmar(int comandaId)
+        {
+            Comanda comanda = await _comandaRepository.Confirmar(comandaId);
+            comanda.Situacao = ComandaSituacao.EmAndamento;
+            await base.Salvar($"{comanda.Id}", comanda, 7200);
+            return comanda;
         }
     }
 }

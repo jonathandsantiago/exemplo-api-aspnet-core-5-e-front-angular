@@ -5,7 +5,7 @@ import {finalize, map} from 'rxjs/operators';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {NgxSpinnerService} from 'ngx-spinner';
 
-import {Usuario} from '../models/usuario';
+import {Usuario, UsuarioPerfil} from '../models/usuario';
 import {environment} from '../../environments/environment';
 import {BaseService, prepare} from '../shared/services/base.service';
 import {convertToInt} from '../shared/util';
@@ -122,7 +122,15 @@ export class UsuarioService extends BaseService<Usuario> implements OnDestroy {
     this.usuarioLogadoSubject$.next(usuario);
   }
 
+  atualizarLista(usuarios: any) {
+    this.usuariosSubject$.next(usuarios);
+  }
+
   ngOnDestroy(): void {
     this.usuarioLogadoSubject$.unsubscribe();
+  }
+
+  obterTodosPorPerfil(perfil: UsuarioPerfil) {
+    return this.http.get<any>(`${this.urlApi}/obterTodosPorPerfil/?perfil=${perfil}`);
   }
 }

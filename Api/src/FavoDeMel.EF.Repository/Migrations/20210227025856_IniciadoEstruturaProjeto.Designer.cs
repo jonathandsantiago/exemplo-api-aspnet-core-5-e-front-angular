@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FavoDeMel.EF.Repository.Migrations
 {
     [DbContext(typeof(BaseDbContext))]
-    [Migration("20210223145616_IniciarEstruturaProjeto")]
-    partial class IniciarEstruturaProjeto
+    [Migration("20210227025856_IniciadoEstruturaProjeto")]
+    partial class IniciadoEstruturaProjeto
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -52,10 +52,10 @@ namespace FavoDeMel.EF.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ComandaId")
+                    b.Property<int>("ComandaId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProdutoId")
+                    b.Property<int>("ProdutoId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantidade")
@@ -104,6 +104,9 @@ namespace FavoDeMel.EF.Repository.Migrations
                     b.Property<bool>("Ativo")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<decimal>("Comissao")
+                        .HasColumnType("decimal(65,30)");
+
                     b.Property<string>("Login")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
@@ -136,13 +139,17 @@ namespace FavoDeMel.EF.Repository.Migrations
 
             modelBuilder.Entity("FavoDeMel.Domain.Comandas.ComandaPedido", b =>
                 {
-                    b.HasOne("FavoDeMel.Domain.Comandas.Comanda", "Comanda")
+                    b.HasOne("FavoDeMel.Domain.Comandas.Comanda", null)
                         .WithMany("Pedidos")
-                        .HasForeignKey("ComandaId");
+                        .HasForeignKey("ComandaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("FavoDeMel.Domain.Produtos.Produto", "Produto")
                         .WithMany()
-                        .HasForeignKey("ProdutoId");
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

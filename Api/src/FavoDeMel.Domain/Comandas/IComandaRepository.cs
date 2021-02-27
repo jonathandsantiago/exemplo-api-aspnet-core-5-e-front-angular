@@ -6,7 +6,8 @@ namespace FavoDeMel.Domain.Comandas
 {
     public interface IComandaRepository : IRepositoryBase<int, Comanda>
     {
-        Task<IEnumerable<Comanda>> ObterComandasAbertas();
-        Task<Comanda> FecharConta(int comandaId);
+        Task<IEnumerable<Comanda>> ObterTodosPorSituacao(ComandaSituacao situacao);
+        Task<Comanda> Fechar(int comandaId);
+        Task<Comanda> Confirmar(int comandaId);
     }
 }

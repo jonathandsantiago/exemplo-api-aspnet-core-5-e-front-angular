@@ -13,3 +13,9 @@ export enum UsuarioPerfil {
   Cozinheiro = 2,
   Administrador = 3,
 }
+
+export const DescricaoPerfil = {
+  1: 'Garçom',
+  2: 'Cozinheiro(a)',
+  3: 'Administrador(a)'
+};

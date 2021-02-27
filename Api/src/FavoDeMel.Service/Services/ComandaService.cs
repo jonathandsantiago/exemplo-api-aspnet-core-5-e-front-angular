@@ -1,9 +1,7 @@
 ﻿using FavoDeMel.Domain.Comandas;
 using FavoDeMel.Service.Common;
 using FavoDeMel.Service.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FavoDeMel.Service.Services
@@ -13,7 +11,7 @@ namespace FavoDeMel.Service.Services
         public ComandaService(IComandaRepository repository) : base(repository)
         { }
 
-        public async Task<Comanda> InserirOuEditar(Comanda comanda)
+        public async Task<Comanda> Inserir(Comanda comanda)
         {
             using (var dbTransaction = _repository.BeginTransaction(_validador))
             {
@@ -23,31 +21,45 @@ namespace FavoDeMel.Service.Services
                 }
 
                 comanda.Prepare();
-
-                if (comanda.Id > 0)
-                {
-                    await _repository.Editar(comanda);
-                }
-                else
-                {
-                    await _repository.Inserir(comanda);
-                }
-
-                return await _repository.ObterPorId(comanda.Id);
+                await _repository.Inserir(comanda);
+                return comanda;
             }
         }
 
-        public async Task<IEnumerable<Comanda>> GetComandasAbertas()
+        public async Task<Comanda> Editar(Comanda comanda)
         {
-            return await _repository.ObterComandasAbertas();
+            using (var dbTransaction = _repository.BeginTransaction(_validador))
+            {
+                if (_validador != null && !await ObterValidador<ComandaValidator>().Validar(comanda))
+                {
+                    return null;
+                }
+
+                comanda.Prepare();
+                await _repository.Editar(comanda);
+                return comanda;
+            }
         }
 
-        public async Task<IList<Comanda>> ObterTodosPorSituacao(ComandaSituacao situacao)
+        public async Task<IEnumerable<Comanda>> ObterTodosPorSituacao(ComandaSituacao situacao)
         {
-            var comandas = ObterAsQueryable()
-               .Where(c => c.Situacao == situacao)
-               .OrderByDescending(c => c.Id);
-            return await comandas.ToListAsync();
+            return await _repository.ObterTodosPorSituacao(situacao);
+        }
+
+        public async Task<Comanda> Confirmar(int comandaId)
+        {
+            using (var dbTransaction = _repository.BeginTransaction(_validador))
+            {
+                return await _repository.Confirmar(comandaId);
+            }
+        }
+
+        public async Task<Comanda> Fechar(int comandaId)
+        {
+            using (var dbTransaction = _repository.BeginTransaction(_validador))
+            {
+                return await _repository.Fechar(comandaId);
+            }
         }
     }
 }

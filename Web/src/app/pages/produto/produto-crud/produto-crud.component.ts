@@ -4,25 +4,27 @@ import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
 import {CrudComponent} from '../../../components/common/crud.component';
 import {ProdutoService} from '../../../services/produto.service';
+import {Location} from '@angular/common';
 
 @Component({
-  selector: 'app-produto-cadastro',
-  templateUrl: './produto-cadastro.component.html',
-  styleUrls: ['./produto-cadastro.component.scss'],
+  selector: 'app-produto-crud',
+  templateUrl: './produto-crud.component.html',
+  styleUrls: ['./produto-crud.component.scss'],
 })
-export class ProdutoCadastroComponent extends CrudComponent implements OnInit {
-  id = null;
+export class ProdutoCrudComponent extends CrudComponent implements OnInit {
 
   constructor(injector: Injector,
               protected formBuilder: FormBuilder,
               protected toastrService: ToastrService,
               protected router: Router,
+              protected location: Location,
               protected produtoService: ProdutoService) {
     super(injector);
   }
 
   ngOnInit(): void {
     this.formGroup = this.formBuilder.group({
+      id: new FormControl(null),
       nome: new FormControl(null, Validators.required),
       preco: new FormControl(null, Validators.required),
       ulrImage: new FormControl(null),
@@ -35,13 +37,10 @@ export class ProdutoCadastroComponent extends CrudComponent implements OnInit {
       }
 
       const params = route.params;
-      const data = route.data;
-
       if (params.id == null || params.id === '') {
         return;
       }
 
-      this.isVisualizacao = data.isVisualizacao;
       this.id = params.id;
       this.produtoService.obterPorId(this.id).subscribe((produto) => {
         this.formGroup.reset(produto);
@@ -57,12 +56,18 @@ export class ProdutoCadastroComponent extends CrudComponent implements OnInit {
       return;
     }
 
-    this.subscription.add(this.produtoService.cadastrar(produto, {id: this.id}).subscribe(response => {
-      this.toastrService.success(`Produto registrado com sucesso.`, null, {
+    const action = this.isEdicao ?
+      this.produtoService.editar(produto, {id: this.id}) :
+      this.produtoService.cadastrar(produto, {id: this.id});
+
+    this.subscription.add(action.subscribe(response => {
+      this.toastrService.success(`Produto ${this.id > 0 ? 'atualizado' : 'registrado'} com sucesso.`, null, {
         positionClass: 'toast-bottom-right',
         disableTimeOut: false,
         progressBar: true
       });
+
+      this.location.back();
     }, error => this.error = error));
   }
 }

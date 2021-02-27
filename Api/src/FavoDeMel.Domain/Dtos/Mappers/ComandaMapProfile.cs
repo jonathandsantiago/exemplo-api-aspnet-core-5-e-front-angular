@@ -7,8 +7,11 @@ namespace FavoDeMel.Domain.Dtos
     {
         public ComandaMapProfile()
         {
-            CreateMap<Comanda, ComandaDto>().ReverseMap();
-            CreateMap<ComandaPedido, ComandaPedidoDto>().ReverseMap();
+            CreateMap<Comanda, ComandaDto>()
+                .ReverseMap();
+            CreateMap<ComandaPedido, ComandaPedidoDto>()
+                .ForMember(c => c.Total, c => c.Ignore())
+                .ReverseMap();
         }
     }
 }

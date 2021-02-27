@@ -1,1 +1,53 @@
-<p>Usuário</p>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <a type="button" class="btn btn-primary" routerLink="cadastrar">Novo</a>
+  </ol>
+</nav>
+
+<div class="card">
+  <div class="card-body table-responsive-sm">
+    <div class="container-table">
+      <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+          <ng-container *ngFor="let column of columns">
+            <td class="column-header"
+                [style.text-align]="column.textAlign"
+            >{{column.titulo}}</td>
+          </ng-container>
+        </tr>
+        </thead>
+        <tbody>
+        <ng-container *ngFor="let produto of (usuarios$ | async)">
+          <tr>
+            <td style="text-align: center;">{{produto.id}}</td>
+            <td style="text-align: left;">{{produto.nome}}</td>
+            <td style="text-align: left;">{{descricaoPerfil[produto.perfil]}}</td>
+            <td style="text-align: center; min-width: 10%">
+              <div class="action-grid">
+                <a class="btn-floating btn-sm btn-primary"
+                   tooltip="Editar"
+                   placement="bottom"
+                   routerLink="{{produto.id}}/editar">
+                  <i class="fa fa-pencil"></i>
+                </a>
+                <a class="btn-floating btn-sm btn-info"
+                   tooltip="Visualizar"
+                   placement="bottom"
+                   routerLink="{{produto.id}}/visualizar">
+                  <i class="fa fa-eye"></i>
+                </a>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        </tbody>
+      </table>
+    </div>
+    <app-paginacao [totalItens]="totalItens"
+                   [totalItensPagina]="(usuarios$ | async).length"
+                   [totalPorPagina]="(mudancaPagina$ | async).itemsPerPage"
+                   (pageChanged)="mudarPagina($event)">
+    </app-paginacao>
+  </div>
+</div>

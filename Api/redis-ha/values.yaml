@@ -1,0 +1,19 @@
+fullnameOverride: "redis-ha"
+
+securityContext:
+  runAsUser: 0
+  fsGroup: 0
+  runAsNonRoot: false
+hostPath:
+  # if chown is true, an init-container with root permissions is launched to
+  # change the owner of the hostPath folder to the user defined in the
+  # security context
+  chown: false
+persistentVolume:
+  enabled: false
+redis:
+  resources:
+    requests:
+      memory: 500Mi
+    limits:
+      memory: 8Gi

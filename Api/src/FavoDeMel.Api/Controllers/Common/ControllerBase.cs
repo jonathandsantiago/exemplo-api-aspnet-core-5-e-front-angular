@@ -225,7 +225,7 @@ namespace FavoDeMel.Api.Controllers.Common
             get
             {
                 Claim claim = GetClaim(ClaimName.UserPerfil);
-                return claim == null ? UsuarioPerfil.Garcon : (UsuarioPerfil)Convert.ToInt32(claim.Value);
+                return claim == null ? UsuarioPerfil.Garcom : (UsuarioPerfil)Convert.ToInt32(claim.Value);
             }
         }
 

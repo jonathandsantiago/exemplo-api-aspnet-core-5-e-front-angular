@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FavoDeMel.EF.Repository.Migrations
 {
-    public partial class IniciarEstruturaProjeto : Migration
+    public partial class IniciadoEstruturaProjeto : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -32,6 +32,7 @@ namespace FavoDeMel.EF.Repository.Migrations
                     Login = table.Column<string>(nullable: true),
                     Password = table.Column<string>(nullable: true),
                     Perfil = table.Column<int>(nullable: false),
+                    Comissao = table.Column<decimal>(nullable: false),
                     Ativo = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -67,8 +68,8 @@ namespace FavoDeMel.EF.Repository.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ComandaId = table.Column<int>(nullable: true),
-                    ProdutoId = table.Column<int>(nullable: true),
+                    ComandaId = table.Column<int>(nullable: false),
+                    ProdutoId = table.Column<int>(nullable: false),
                     Quantidade = table.Column<int>(nullable: false),
                     Situacao = table.Column<int>(nullable: false)
                 },
@@ -80,13 +81,13 @@ namespace FavoDeMel.EF.Repository.Migrations
                         column: x => x.ComandaId,
                         principalTable: "Comanda",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ComandaPedido_Produto_ProdutoId",
                         column: x => x.ProdutoId,
                         principalTable: "Produto",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

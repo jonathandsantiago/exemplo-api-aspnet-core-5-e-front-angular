@@ -18,6 +18,7 @@ namespace FavoDeMel.EF.Repository.Common
             builder.MapearUsuario();
             builder.MapearProduto();
             builder.MapearComanda();
+            builder.MapearComandaPedido();
         }
     }
 }

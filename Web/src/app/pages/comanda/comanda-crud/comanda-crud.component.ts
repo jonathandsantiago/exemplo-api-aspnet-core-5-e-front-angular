@@ -1,4 +1,4 @@
-import {Component, Injector, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Injector, Input, OnInit, Output} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, Validators} from '@angular/forms';
 import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
@@ -13,11 +13,13 @@ import {UsuarioService} from '../../../services/usuario.service';
 
 @Component({
   selector: 'app-comanda-cadastro',
-  templateUrl: './comanda-cadastro.component.html',
-  styleUrls: ['./comanda-cadastro.component.scss'],
+  templateUrl: './comanda-crud.component.html',
+  styleUrls: ['./comanda-crud.component.scss'],
 })
-export class ComandaCadastroComponent extends CrudComponent implements OnInit {
+export class ComandaCrudComponent extends CrudComponent implements OnInit {
   @Input() modalRef: BsModalRef;
+  @Output() callbackEdicao: EventEmitter<any> = new EventEmitter<any>();
+  @Output() callbackCadastro: EventEmitter<any> = new EventEmitter<any>();
   id = null;
   pedidosForm = new FormArray([]);
   produtos: Produto[];
@@ -35,43 +37,78 @@ export class ComandaCadastroComponent extends CrudComponent implements OnInit {
 
   ngOnInit(): void {
     this.formGroup = this.formBuilder.group({
-      id: new FormControl(this.id),
-      garcomId: new FormControl(null, Validators.required),
-      totalAPagar: new FormControl(null),
-      gorjetaGarcom: new FormControl(null),
+      id: new FormControl(null),
+      garcomId: new FormControl(null),
+      totalAPagar: new FormControl(0),
+      gorjetaGarcom: new FormControl(0),
       situacao: new FormControl(ComandaSituacao.Aberta, Validators.required)
     });
+
+    if (this.modalRef.content) {
+      this.id = this.modalRef.content.id;
+      this.isEdicao = this.modalRef.content.isEdicao;
+      this.isVisualizacao = this.modalRef.content.isVisualizacao;
+    }
 
     this.subscription.add(this.produtoService.obterTodos().subscribe((produtos: any) => this.produtos = produtos));
     this.subscription.add(this.usuarioService.obterTodosPorPerfil(UsuarioPerfil.Garcon)
       .subscribe((garcons: any) => this.garcons = garcons));
-    this.adicionarPedido();
+
+    if (this.id > 0) {
+      this.comandaService.obterPorId(this.id).subscribe((comanda) => {
+        this.formGroup.reset(comanda);
+        comanda.pedidos.map(pedido => {
+          const formPedido = this.formControlPedido();
+          formPedido.reset(pedido);
+          this.pedidosForm.push(formPedido);
+        });
+      });
+    } else {
+      this.iniciarPedido();
+    }
   }
 
   onSubmit() {
     this.submitted = true;
     const comanda = this.formGroup.value;
 
-    if (this.formGroup.invalid && this.pedidosForm.invalid) {
+    if (this.formGroup.invalid || this.pedidosForm.invalid) {
       return;
     }
 
-    this.subscription.add(this.comandaService.inserirOuEditar(comanda, {id: this.id}).subscribe(response => {
-      this.toastrService.success(`Comanda registrado com sucesso.`, null, {
+    const pedidos = this.pedidosForm.value;
+
+    const action = this.isEdicao ?
+      this.comandaService.editar(comanda, {pedidos, id: this.id}) :
+      this.comandaService.cadastrar(comanda, {pedidos, id: this.id});
+
+    this.subscription.add(action.subscribe(response => {
+      this.toastrService.success(`Comanda ${this.id > 0 ? 'atualizada' : 'registrada'} com sucesso.`, null, {
         positionClass: 'toast-bottom-right',
         disableTimeOut: false,
         progressBar: true
       });
+      this.modalRef.hide();
+      if (this.isEdicao) {
+        this.callbackEdicao?.emit(response);
+      } else {
+        this.callbackCadastro?.emit(response);
+      }
     }, error => this.error = error));
   }
 
-  adicionarPedido() {
-    this.pedidosForm.push(this.formBuilder.group({
+  iniciarPedido() {
+    this.pedidosForm.push(this.formControlPedido());
+  }
+
+  formControlPedido() {
+    return this.formBuilder.group({
+      id: new FormControl(null),
       comandaId: new FormControl(null),
-      produtoId: new FormControl(null),
-      quantidade: new FormControl(0),
+      produtoId: new FormControl(null, Validators.required),
+      quantidade: new FormControl(1, [Validators.required, Validators.min(1)]),
       situacao: new FormControl(ComandaPedidoSituacao.Pedido),
-    }));
+    });
   }
 
   removerPedido(index: number) {

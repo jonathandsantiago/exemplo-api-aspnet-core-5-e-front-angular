@@ -19,6 +19,7 @@
       <input type="number"
              formControlName="quantidade"
              class="form-control form-input"
+             [attr.disabled]="isVisualizacao ? '' : null"
              [class.is-invalid]="formControl.quantidade.errors"/>
     </div>
   </div>

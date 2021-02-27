@@ -22,17 +22,20 @@ namespace FavoDeMel.Domain.Usuarios
                 AddMensagem("Perfil do usuário invalído.");
             }
 
-            if (string.IsNullOrEmpty(usuario.Password))
+            if (usuario.Id == 0)
             {
-                AddMensagem("Senha é obrigatória.");
-            }
-            else if (usuario.Password.Contains(" "))
-            {
-                AddMensagem("A senha não pode conter espaço em branco.");
-            }
-            else if (usuario.Password.Length < 6)
-            {
-                AddMensagem("A senha deve conter no mínimo 6 caracteres.");
+                if (string.IsNullOrEmpty(usuario.Password))
+                {
+                    AddMensagem("Senha é obrigatória.");
+                }
+                else if (usuario.Password.Contains(" "))
+                {
+                    AddMensagem("A senha não pode conter espaço em branco.");
+                }
+                else if (usuario.Password.Length < 6)
+                {
+                    AddMensagem("A senha deve conter no mínimo 6 caracteres.");
+                }
             }
 
             return await base.Validar(usuario);

@@ -7,7 +7,8 @@ namespace FavoDeMel.Service.Interfaces
 {
     public interface IProdutoService : IServiceBase<int, Produto>
     {
-        Task<Produto> InserirOuEditar(Produto produto);
+        Task<Produto> Inserir(Produto produto);
+        Task<Produto> Editar(Produto produto);
         Task<PaginacaoDto<ProdutoDto>> ObterTodosPaginado(FiltroProduto filtro);
     }
 }

@@ -127,3 +127,36 @@ body::-webkit-scrollbar-thumb {
   left: 10px;
   top: 60px;
 }
+
+.action-grid {
+  margin: -5px 0px 0px 0px !important;
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    margin: 2px;
+    width: 30px;
+    height: 30px;
+    padding: 2px;
+    text-align: center;
+    border-radius: 30px;
+  }
+
+  a {
+    margin: 2px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    border-radius: 30px;
+    color: white;
+  }
+}
+
+.button-header-table {
+  margin: 0 5px 0 0;
+}
+
+.left {
+  display: flex;
+  justify-content: flex-end;
+}

@@ -2,15 +2,6 @@
   <div class="col">
     <div class="card-wrapper">
       <div class="card">
-        <div class="card-header crud-actions">
-          <button type="button"
-                  tooltip="CTRL+ALT+S - Salvar"
-                  class="btn btn-primary"
-                  placement="bottom"
-                  (click)="onSubmit()">
-            Salvar
-          </button>
-        </div>
         <div class="card-body table-responsive-sm">
           <div class="form-row">
             <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
@@ -33,29 +24,35 @@
                               [attr.disabled]="isVisualizacao ? '' : null"
                               [class.is-invalid]="submitted && formControl.garcomId.errors">
                         <option [ngValue]="null"></option>
-                        <option *ngFor="let garcon of garcons;" [value]="garcon.id">
-                          {{garcon.id}} - {{garcon.nome}}
+                        <option *ngFor="let garcom of garcons;" [value]="garcom.id">
+                          {{garcom.id}} - {{garcom.nome}}
                         </option>
                       </select>
                     </div>
                   </div>
                   <div class="col-12">
                     <div class="card card-body">
-                      <ng-template ngFor let-contrato [ngForOf]="pedidosForm.controls" let-i="index">
+                      <ng-template ngFor let-pedido [ngForOf]="pedidosForm.controls" let-i="index">
                         <div class="row">
                           <div class="col-11">
-                            <app-comanda-pedido [form]="contrato" [produtos]="produtos">
+                            <app-comanda-pedido
+                              [isVisualizacao]="isVisualizacao"
+                              [form]="pedido"
+                              [produtos]="produtos">
                             </app-comanda-pedido>
                           </div>
-                          <div class="col-1 pedido-action">
+                          <div *ngIf="!isVisualizacao" class="col-1 pedido-action">
                             <button type="button" class="btn btn-light" (click)="removerPedido(i)">
                               <i class="fa fa-trash-o" aria-hidden="true"></i>
                             </button>
                           </div>
                         </div>
                       </ng-template>
-                      <button type="button" class="col btn btn-outline-success" (click)="adicionarPedido()">
-                        Adicionar Novo Pedido
+                      <button *ngIf="!isVisualizacao"
+                              type="button"
+                              class="col btn btn-outline-success"
+                              (click)="iniciarPedido()">
+                        Novo Pedido
                       </button>
                     </div>
                   </div>
@@ -68,6 +65,15 @@
               </div>
             </form>
           </div>
+        </div>
+        <div *ngIf="!isVisualizacao" class="card-footer left crud-actions">
+          <button type="button"
+                  tooltip="CTRL+ALT+S - Salvar"
+                  class="btn btn-primary"
+                  placement="bottom"
+                  (click)="onSubmit()">
+            Salvar
+          </button>
         </div>
       </div>
     </div>

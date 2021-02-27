@@ -6,67 +6,90 @@
   </ol>
 </nav>
 
-<div class="container">
-  <div class="row">
-    <div class="col-xs-12 col-md-4 border-primary">
-      <div class="card card-comanda border-primary">
-        <div class="card-header text-center text-white bg-primary">Aberto</div>
-        <div class="card-body text-primary">
-          <ng-template ngFor let-comandaFechada [ngForOf]="comandasFechada" let-i="index">
-            <div class="card border-primary mb-3">
-              <div class="card-header">{{comandaFechada.id}}</div>
-              <div class="card-body text-primary">
-                <ng-template ngFor let-pedido [ngForOf]="comandaFechada.pedidos" let-i="index">
-                  <p class="card-text">Produto: {{pedido.produtoId}} - {{pedido.produtoNome}} Qtd: {{pedido.quantidade}}</p>
-                </ng-template>
-              </div>
-              <div class="card-footer bg-transparent border-primary">
-                <button type="button" class="btn btn-light">Editar</button>
-                <button type="button" class="btn btn-primary">Confirmar</button>
-              </div>
+<div style="margin: 1%" class="row">
+  <div class="col-xs-12 col-md-4 border-primary">
+    <div class="card card-comanda border-primary">
+      <div class="card-header text-center text-white bg-primary">Aberto</div>
+      <div class="card-body text-primary">
+        <ng-template ngFor let-comanda [ngForOf]="comandasAberta" let-i="index">
+          <div class="card border-primary mb-3">
+            <div class="card-header"><strong>Comanda: {{comanda.id}}</strong></div>
+            <div class="card-body text-primary">
+              <ng-template ngFor let-pedido [ngForOf]="comanda.pedidos" let-i="index">
+                <div class="row">
+                  <div class="col-10"><strong>Produto:</strong> {{pedido.produtoId}}
+                    - {{pedido.produtoNome}}</div>
+                  <div class="col-2"><strong>Qtd: {{pedido.quantidade}}</strong></div>
+                </div>
+              </ng-template>
             </div>
-          </ng-template>
-        </div>
+            <div class="card-footer bg-transparent border-primary">
+              <button type="button" class="btn btn-light"
+                      *ngIf="usuarioLogado.perfil !== usuarioPerfil.Cozinheiro"
+                      (click)="abrirModal(templateCadastro, {id:comanda.id, isEdicao:true}, 'Edição Comanda - ' + comanda.id) ">Editar</button>
+              <button type="button" class="btn btn-light"
+                      (click)="abrirModal(templateCadastro, {id:comanda.id, isVisualizacao:true}, 'Nova Comanda')">
+                Visualizar
+              </button>
+              <button *ngIf="usuarioLogado.perfil === usuarioPerfil.Cozinheiro" type="button" class="btn btn-primary" (click)="confirmarPedido(comanda.id)">Confirmar</button>
+            </div>
+          </div>
+        </ng-template>
       </div>
     </div>
-    <div class="col-xs-12 col-md-4 border-secondary">
-      <div class="card card-comanda border-secondary">
-        <div class="card-header text-center text-white bg-secondary">Em Andamento</div>
-        <div class="card-body text-secondary">
-          <ng-template ngFor let-comandaFechada [ngForOf]="comandasFechada" let-i="index">
-            <div class="card border-secondary mb-3">
-              <div class="card-header">{{comandaFechada.id}}</div>
-              <div class="card-body text-secondary">
-                <ng-template ngFor let-pedido [ngForOf]="comandaFechada.pedidos" let-i="index">
-                  <p class="card-text">Produto: {{pedido.produtoId}} - {{pedido.produtoNome}} Qtd: {{pedido.quantidade}}</p>
-                </ng-template>
-              </div>
-              <div class="card-footer bg-transparent border-secondary">
-                <button type="button" class="btn btn-secondary">Fechar</button>
-              </div>
+  </div>
+  <div class="col-xs-12 col-md-4 border-secondary">
+    <div class="card card-comanda border-secondary">
+      <div class="card-header text-center text-white bg-secondary">Em Andamento</div>
+      <div class="card-body text-secondary">
+        <ng-template ngFor let-comanda [ngForOf]="comandasEmAndamento" let-i="index">
+          <div class="card border-secondary mb-3">
+            <div class="card-header"><strong>Comanda: {{comanda.id}}</strong></div>
+            <div class="card-body text-secondary">
+              <ng-template ngFor let-pedido [ngForOf]="comanda.pedidos" let-i="index">
+                <div class="row">
+                  <div class="col-10"><strong>Produto:</strong> {{pedido.produtoId}}
+                    - {{pedido.produtoNome}}</div>
+                  <div class="col-2"><strong>Qtd: {{pedido.quantidade}}</strong></div>
+                </div>
+              </ng-template>
             </div>
-          </ng-template>
-        </div>
+            <div class="card-footer bg-transparent border-secondary">
+              <button type="button" class="btn btn-secondary" *ngIf="usuarioLogado.perfil !== usuarioPerfil.Cozinheiro" (click)="fecharPedido(comanda.id)">Fechar</button>
+              <button type="button" class="btn btn-light"
+                      (click)="abrirModal(templateCadastro, {id:comanda.id, isVisualizacao:true}, 'Nova Comanda')">
+                Visualizar
+              </button>
+            </div>
+          </div>
+        </ng-template>
       </div>
     </div>
-    <div class="col-xs-12 col-md-4 border-success">
-      <div class="card card-comanda border-success">
-        <div class="card-header text-center text-white bg-success">Fechados</div>
-        <div class="card-body text-success">
-          <ng-template ngFor let-comandaFechada [ngForOf]="comandasFechada" let-i="index">
-            <div class="card border-success mb-3">
-              <div class="card-header">{{comandaFechada.id}}</div>
-              <div class="card-body text-success">
-                <ng-template ngFor let-pedido [ngForOf]="comandaFechada.pedidos" let-i="index">
-                  <p class="card-text">Produto: {{pedido.produtoId}} - {{pedido.produtoNome}} Qtd: {{pedido.quantidade}}</p>
-                </ng-template>
-              </div>
-              <div class="card-footer bg-transparent border-success">
-                <button type="button" class="btn btn-light">Visualizar</button>
-              </div>
+  </div>
+  <div class="col-xs-12 col-md-4 border-success">
+    <div class="card card-comanda border-success">
+      <div class="card-header text-center text-white bg-success">Fechados</div>
+      <div class="card-body text-success">
+        <ng-template ngFor let-comanda [ngForOf]="comandasFechada" let-i="index">
+          <div class="card border-success mb-3">
+            <div class="card-header"><strong>Comanda: {{comanda.id}}</strong></div>
+            <div class="card-body text-success">
+              <ng-template ngFor let-pedido [ngForOf]="comanda.pedidos" let-i="index">
+                <div class="row">
+                  <div class="col-10"><strong>Produto:</strong> {{pedido.produtoId}}
+                    - {{pedido.produtoNome}}</div>
+                  <div class="col-2"><strong>Qtd: {{pedido.quantidade}}</strong></div>
+                </div>
+              </ng-template>
             </div>
-          </ng-template>
-        </div>
+            <div class="card-footer bg-transparent border-success">
+              <button type="button" class="btn btn-light"
+                      (click)="abrirModal(templateCadastro, {id:comanda.id, isVisualizacao:true}, 'Nova Comanda')">
+                Visualizar
+              </button>
+            </div>
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>
@@ -74,36 +97,14 @@
 
 <ng-template #templateCadastro>
   <div class="modal-header">
-    <h5 class="modal-title pull-left">Nova Comanda</h5>
+    <h5 class="modal-title pull-left">{{tituloModal}}</h5>
     <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
-    <app-comanda-cadastro [modalRef]="modalRef"></app-comanda-cadastro>
-  </div>
-</ng-template>
-
-<ng-template #templateEdicao>
-  <div class="modal-header">
-    <h5 class="modal-title pull-left">Editar Comanda</h5>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <app-comanda-edicao [isVisualizacao]="false" [modalRef]="modalRef"></app-comanda-edicao>
-  </div>
-</ng-template>
-
-<ng-template #templateDetalhe>
-  <div class="modal-header">
-    <h5 class="modal-title pull-left">Detalhe Comanda</h5>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <app-comanda-edicao [isVisualizacao]="true" [modalRef]="modalRef"></app-comanda-edicao>
+    <app-comanda-cadastro [modalRef]="modalRef"
+                          (callbackCadastro)="inserirComanda($event)"
+                          (callbackEdicao)="atualizarComanda($event)"></app-comanda-cadastro>
   </div>
 </ng-template>

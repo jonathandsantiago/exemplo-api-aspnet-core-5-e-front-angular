@@ -12,8 +12,11 @@ namespace FavoDeMel.EF.Repository.Common.Mapping
             builder.Entity<Comanda>()
                 .HasIndex(c => c.Situacao);
 
-            builder.Entity<Comanda>().HasMany(c => c.Pedidos);
+            return builder;
+        }
 
+        public static ModelBuilder MapearComandaPedido(this ModelBuilder builder)
+        {
             builder.Entity<ComandaPedido>().ToTable("ComandaPedido");
             builder.Entity<ComandaPedido>();
 

@@ -8,6 +8,7 @@ namespace FavoDeMel.Domain.Dtos
         public string Login { get; set; }
         public string Password { get; set; }
         public UsuarioPerfil Perfil { get; set; }
+        public decimal Comissao { get; set; }
         public bool Ativo { get; set; }
     }
 }

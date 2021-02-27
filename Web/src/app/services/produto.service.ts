@@ -6,11 +6,14 @@ import {environment} from '../../environments/environment';
 import {BaseService} from '../shared/services/base.service';
 import {convertToInt} from '../shared/util';
 import {Produto} from '../models/produto';
+import {BehaviorSubject} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class ProdutoService extends BaseService<Produto> implements OnDestroy {
 
   protected urlApi = `${environment.apiUrl}/api/Produto`;
+  private produtosSubject$ = new BehaviorSubject<Produto[]>([] as Produto[]);
+  produtos$ = this.produtosSubject$.asObservable();
 
   constructor(protected router: Router,
               protected http: HttpClient,
@@ -25,5 +28,9 @@ export class ProdutoService extends BaseService<Produto> implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+  }
+
+  atualizarLista(produtos: any) {
+    this.produtosSubject$.next(produtos);
   }
 }

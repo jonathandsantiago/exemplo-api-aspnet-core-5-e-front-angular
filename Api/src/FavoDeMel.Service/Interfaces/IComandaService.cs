@@ -6,8 +6,10 @@ namespace FavoDeMel.Service.Interfaces
 {
     public interface IComandaService : IServiceBase<int, Comanda>
     {
-        Task<IEnumerable<Comanda>> GetComandasAbertas();
-        Task<Comanda> InserirOuEditar(Comanda comanda);
-        Task<IList<Comanda>> ObterTodosPorSituacao(ComandaSituacao situacao);
+        Task<Comanda> Inserir(Comanda comanda);
+        Task<Comanda> Editar(Comanda comanda);
+        Task<IEnumerable<Comanda>> ObterTodosPorSituacao(ComandaSituacao situacao);
+        Task<Comanda> Confirmar(int comandaId);
+        Task<Comanda> Fechar(int comandaId);
     }
 }

@@ -3,9 +3,10 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ProdutoComponent} from './produto.component';
 import {SharedModule} from '../../shared/shared.module';
-import {ProdutoCadastroComponent} from './produto-cadastro/produto-cadastro.component';
-import {ProdutoEdicaoComponent} from './produto-edicao/produto-edicao.component';
+import {ProdutoCrudComponent} from './produto-crud/produto-crud.component';
 import {ProdutoRoutingModule} from './produto-routing.module';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {PaginacaoModule} from '../../shared/paginacao/paginacao.module';
 
 @NgModule({
   imports: [
@@ -13,12 +14,13 @@ import {ProdutoRoutingModule} from './produto-routing.module';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    TooltipModule.forRoot(),
+    PaginacaoModule
   ],
   declarations: [
     ProdutoComponent,
-    ProdutoCadastroComponent,
-    ProdutoEdicaoComponent
+    ProdutoCrudComponent,
   ],
   exports: [
   ],

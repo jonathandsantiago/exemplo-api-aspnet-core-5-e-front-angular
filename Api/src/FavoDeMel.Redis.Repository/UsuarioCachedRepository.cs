@@ -2,6 +2,7 @@
 using FavoDeMel.Redis.Repository.Abstractions;
 using FavoDeMel.Redis.Repository.Interfaces;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FavoDeMel.Redis.Repository
@@ -66,6 +67,11 @@ namespace FavoDeMel.Redis.Repository
             }
 
             return usuario;
+        }
+
+        public async Task<IEnumerable<Usuario>> ObterTodosPorPerfil(UsuarioPerfil perfil)
+        {
+            return await _usuarioRepository.ObterTodosPorPerfil(perfil);
         }
     }
 }

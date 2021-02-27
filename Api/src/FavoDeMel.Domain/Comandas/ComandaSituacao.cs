@@ -3,6 +3,7 @@
     public enum ComandaSituacao
     {
         Aberta = 1,
-        Fechada = 2
+        EmAndamento = 2,
+        Fechada = 3
     }
 }

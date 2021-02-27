@@ -14,7 +14,7 @@ namespace FavoDeMel.Service.Services
         public ProdutoService(IProdutoRepository repository) : base(repository)
         { }
 
-        public async Task<Produto> InserirOuEditar(Produto produto)
+        public async Task<Produto> Inserir(Produto produto)
         {
             using (var dbTransaction = _repository.BeginTransaction(_validador))
             {
@@ -24,17 +24,23 @@ namespace FavoDeMel.Service.Services
                 }
 
                 produto.Prepare();
+                await _repository.Inserir(produto);
+                return produto;
+            }
+        }
 
-                if (produto.Id > 0)
+        public async Task<Produto> Editar(Produto produto)
+        {
+            using (var dbTransaction = _repository.BeginTransaction(_validador))
+            {
+                if (_validador != null && !await ObterValidador<ProdutoValidator>().Validar(produto))
                 {
-                    await _repository.Editar(produto);
-                }
-                else
-                {
-                    await _repository.Inserir(produto);
+                    return null;
                 }
 
-                return await _repository.ObterPorId(produto.Id);
+                produto.Prepare();
+                await _repository.Editar(produto);
+                return produto;
             }
         }
 

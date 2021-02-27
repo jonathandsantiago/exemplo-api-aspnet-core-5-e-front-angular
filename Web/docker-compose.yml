@@ -1,14 +1,14 @@
 version: '3.6'
 
 services:
-  ewave-gestor:
-    image: ewave.gestor
+  favo-de-mel:
+    image: favodemel.web
     build: .
     ports:
       - 8081:80
     networks:
-      - ewave-gestor-network
+      - favo-de-mel-network
 
 networks:
-  ewave-gestor-network:
-    name: ewave-gestor-network
+  favo-de-mel-network:
+    name: favo-de-mel-network

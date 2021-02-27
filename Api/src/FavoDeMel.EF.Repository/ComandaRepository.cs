@@ -13,6 +13,7 @@ namespace FavoDeMel.EF.Repository
     {
         private readonly IProdutoRepository _produtoRepository;
         private readonly IUsuarioRepository _usuarioRepository;
+        protected DbSet<ComandaPedido> _comandaPedidoSet { get { return DbContext.Set<ComandaPedido>(); } }
 
         public ComandaRepository(BaseDbContext dbContext,
             IProdutoRepository produtoRepository,
@@ -22,20 +23,71 @@ namespace FavoDeMel.EF.Repository
             _usuarioRepository = usuarioRepository;
         }
 
-        public async Task<IEnumerable<Comanda>> ObterComandasAbertas()
+        public async Task<IEnumerable<Comanda>> ObterTodosPorSituacao(ComandaSituacao situacao)
         {
             return await _dbSet
                 .Include(c => c.Garcom)
                 .Include(c => c.Pedidos)
                     .ThenInclude(c => c.Produto)
-                .Where(c => c.Situacao == ComandaSituacao.Aberta)
+                .Where(c => c.Situacao == situacao)
                 .ToListAsync();
         }
 
-        public async Task<Comanda> FecharConta(int comandaId)
+        public override async Task Inserir(Comanda comanda)
         {
-            Comanda comanda = _dbSet.Find(comandaId);
+            comanda.Garcom = comanda.Garcom == null ? null : await _usuarioRepository.ObterPorId(comanda.Garcom.Id);
 
+            foreach (var comandaPedido in comanda.Pedidos)
+            {
+                comandaPedido.Produto = await _produtoRepository.ObterPorId(comandaPedido.Produto.Id);
+                DbContext.Entry(comandaPedido).State = EntityState.Added;
+            }
+
+            DbContext.Entry(comanda).State = EntityState.Added;
+            Comanda comandaDb = _dbSet.Add(comanda).Entity;
+            await DbContext.SaveChangesAsync();
+            comanda.Id = comandaDb.Id;
+        }
+
+        public override async Task Editar(Comanda comanda)
+        {
+            Comanda comandaDb = await _dbSet.Where(c => c.Id == comanda.Id).Include(c => c.Pedidos).FirstOrDefaultAsync();
+
+            foreach (var comandaPedido in comanda.Pedidos)
+            {
+                comandaPedido.Produto = await _produtoRepository.ObterPorId(comandaPedido.Produto.Id);
+
+                if (comandaPedido.Id == 0)
+                {
+                    DbContext.Entry(comandaPedido).State = EntityState.Added;
+                }
+                else
+                {
+                    ComandaPedido comandaPedidoDb = await _comandaPedidoSet.FindAsync(comandaPedido.Id);
+                    DbContext.Entry(comandaPedidoDb).CurrentValues.SetValues(comandaPedido);
+                }
+            }
+
+            foreach (var comandaPedido in comandaDb.Pedidos.Where(c => !comanda.Pedidos.Any(b => b.Id == c.Id)))
+            {
+                DbContext.Entry(comandaPedido).State = EntityState.Deleted;
+            }
+
+            comanda.Garcom = comanda.Garcom != null ? await _usuarioRepository.ObterPorId(comanda.Garcom.Id) : null;
+
+            DbContext.Entry(comandaDb)
+                .CurrentValues
+                .SetValues(comanda);
+            await DbContext.SaveChangesAsync();
+        }
+
+        public async Task<Comanda> Fechar(int comandaId)
+        {
+            Comanda comanda = await _dbSet
+               .Include(c => c.Garcom)
+               .Include(c => c.Pedidos)
+                    .ThenInclude(c => c.Produto)
+               .Where(c => c.Id == comandaId).FirstOrDefaultAsync();
             comanda.FecharConta();
             DbContext.Entry(comanda)
                .CurrentValues.SetValues(comanda);
@@ -43,32 +95,18 @@ namespace FavoDeMel.EF.Repository
             return comanda;
         }
 
-        public override async Task Editar(Comanda comanda)
+        public async Task<Comanda> Confirmar(int comandaId)
         {
-            Comanda comandaAtual = await ObterPorId(comanda.Id);
-
-            foreach (var comandaPedido in comanda.Pedidos)
-            {
-                DbContext.Entry(comandaPedido).State = EntityState.Detached;
-                comandaPedido.Produto = await _produtoRepository.ObterPorId(comandaPedido.Produto.Id);
-
-                if (!comandaAtual.Pedidos.Any(c => c.Id == comandaPedido.Id))
-                {
-                    DbContext.Entry(comandaPedido).State = EntityState.Added;
-                }
-            }
-
-            foreach (var comandaPedido in comandaAtual.Pedidos.Where(c => !comanda.Pedidos.Any(b => b.Id == c.Id)))
-            {
-                DbContext.Entry(comandaPedido).State = EntityState.Deleted;
-            }
-
-            comanda.Garcom = comanda.Garcom != null ? await _usuarioRepository.ObterPorId(comanda.Garcom.Id) : null;
-
-            DbContext.Entry(comandaAtual)
-                .CurrentValues
-                .SetValues(comanda);
+            Comanda comanda = await _dbSet
+                .Include(c => c.Garcom)
+                .Include(c => c.Pedidos)
+                    .ThenInclude(c => c.Produto)
+                .Where(c => c.Id == comandaId).FirstOrDefaultAsync();
+            comanda.Confirmar();
+            DbContext.Entry(comanda)
+               .CurrentValues.SetValues(comanda);
             await DbContext.SaveChangesAsync();
+            return comanda;
         }
     }
 }
