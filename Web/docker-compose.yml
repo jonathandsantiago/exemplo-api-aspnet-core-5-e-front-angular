@@ -1,0 +1,14 @@
+version: '3.6'
+
+services:
+  ewave-gestor:
+    image: ewave.gestor
+    build: .
+    ports:
+      - 8081:80
+    networks:
+      - ewave-gestor-network
+
+networks:
+  ewave-gestor-network:
+    name: ewave-gestor-network
