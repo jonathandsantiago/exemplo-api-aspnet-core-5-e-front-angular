@@ -1,4 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using FavoDeMel.Api.Factories;
+using FavoDeMel.Domain.Configs;
+using FavoDeMel.IoC;
+using FavoDeMel.Tests.Mocks;
+using FavoDeMel.Tests.Mocks.Parameters;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace FavoDeMel.Tests
 {
@@ -12,18 +20,45 @@ namespace FavoDeMel.Tests
             {
                 if (_configuration == null)
                 {
-                    _configuration = new Startup().GetIConfigurationRoot();
+                    _configuration = new Startup().GetConfigurationRoot();
                 }
 
                 return _configuration;
             }
         }
 
-        public IConfigurationRoot GetIConfigurationRoot()
+        public IConfigurationRoot GetConfigurationRoot()
         {
             return new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.json")
                 .Build();
+        }
+
+        public static ServiceProvider GetServiceProvider(ServiceParameter serviceParameter)
+        {
+            var logger = SerilogFactory.GetLogger();
+            var services = new ServiceCollection();
+            services
+               .AddLogging(loggingBuilder =>
+               {
+                   loggingBuilder
+                   .ClearProviders()
+                   .AddConsole()
+                   .AddSerilog(logger, dispose: true);
+               });
+
+            services.AddControllers();
+
+            services
+                  .AddMySql(Configuration)
+                  .AddJwtBearer(Configuration)
+                  .AddServices()
+                  .AddHttpContextAccessor()
+                  .AddRepositoryMock(serviceParameter)
+                  .AddRabbitMq(new RabbitMqConfig(Configuration))
+                  .AddRedisMock()
+                  .AddMinio(new MinioConfig(Configuration));
+            return services.BuildServiceProvider();
         }
     }
 }

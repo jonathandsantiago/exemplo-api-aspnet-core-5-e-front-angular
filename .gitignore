@@ -87,3 +87,4 @@ lerna-debug.log*
 /Api/src/FavoDeMel.Redis.Repository/obj
 /Api/src/FavoDeMel.IoC/bin/Debug/netcoreapp3.1
 /Api/src/FavoDeMel.Service/bin/Debug/netcoreapp3.1
+/Api/TestResults

@@ -1,4 +1,5 @@
 ﻿using FavoDeMel.Domain.Common;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,11 +15,16 @@ namespace FavoDeMel.Domain.Comandas
         {
             if (!comanda.Pedidos.Any())
             {
-                AddMensagem("Pedido é obrigatório.");
+                AddMensagem(ComandaMessage.PedidoObrigatorio);
             }
             else if (comanda.Pedidos.Any(c => !ValidarPedido(c)))
             {
                 return false;
+            }
+
+            if (!Enum.IsDefined(typeof(ComandaSituacao), comanda.Situacao))
+            {
+                AddMensagem(ComandaMessage.SituacaoInvalida);
             }
 
             return await base.Validar(comanda);
@@ -28,12 +34,27 @@ namespace FavoDeMel.Domain.Comandas
         {
             if (pedido.Produto == null)
             {
-                AddMensagem("Produto é obrigatório.");
+                AddMensagem(ComandaMessage.ProdutoObrigatorio);
             }
 
             if (pedido.Quantidade <= 0)
             {
-                AddMensagem("Quantidade inválida.");
+                AddMensagem(ComandaMessage.QuantidadeInvalida);
+            }
+
+            if (!Enum.IsDefined(typeof(ComandaPedidoSituacao), pedido.Situacao))
+            {
+                AddMensagem(ComandaMessage.SituacaoInvalida);
+            }
+
+            return IsValido;
+        }
+
+        public bool PermiteAlterarSituacao(int comandaId)
+        {
+            if (comandaId <= 0 || !_repository.Exists(comandaId))
+            {
+                AddMensagem(ComandaMessage.ComandaInvalida);
             }
 
             return IsValido;

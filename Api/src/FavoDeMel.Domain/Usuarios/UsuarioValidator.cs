@@ -12,29 +12,45 @@ namespace FavoDeMel.Domain.Usuarios
 
         public override async Task<bool> Validar(Usuario usuario)
         {
+            if (usuario == null)
+            {
+                AddMensagem(UsuarioMessage.UsuarioNaoPodeSerNulo);
+                return false;
+            }
+
             if (await _repository.ExistsLogin(usuario.Login))
             {
-                AddMensagem("Login já cadastrado");
+                AddMensagem(UsuarioMessage.LoginJaCadastrado);
+            }
+
+            if (string.IsNullOrEmpty(usuario.Nome))
+            {
+                AddMensagem(UsuarioMessage.NomeObrigatorio);
+            }
+
+            if (string.IsNullOrWhiteSpace(usuario.Login))
+            {
+                AddMensagem(UsuarioMessage.LoginObrigatorio);
             }
 
             if (!Enum.IsDefined(typeof(UsuarioPerfil), usuario.Perfil))
             {
-                AddMensagem("Perfil do usuário invalído.");
+                AddMensagem(UsuarioMessage.PerfilInvalido);
             }
 
             if (usuario.Id == 0)
             {
                 if (string.IsNullOrEmpty(usuario.Password))
                 {
-                    AddMensagem("Senha é obrigatória.");
+                    AddMensagem(UsuarioMessage.SenhaObrigatoria);
                 }
                 else if (usuario.Password.Contains(" "))
                 {
-                    AddMensagem("A senha não pode conter espaço em branco.");
+                    AddMensagem(UsuarioMessage.SenhaNaoPodeConterEspacoEmBranco);
                 }
                 else if (usuario.Password.Length < 6)
                 {
-                    AddMensagem("A senha deve conter no mínimo 6 caracteres.");
+                    AddMensagem(UsuarioMessage.SenhaDeConterMinioCaracters(6));
                 }
             }
 
@@ -45,21 +61,21 @@ namespace FavoDeMel.Domain.Usuarios
         {
             if (senhaAtual == novaSenha)
             {
-                AddMensagem("Nova senha não pode ser igual a senha atual.");
+                AddMensagem(UsuarioMessage.NovaSenhaNaoPodeSerIgualAtual);
             }
             else
             {
                 if (string.IsNullOrEmpty(novaSenha))
                 {
-                    AddMensagem("Senha é obrigatória.");
+                    AddMensagem(UsuarioMessage.SenhaObrigatoria);
                 }
                 else if (novaSenha.Contains(" "))
                 {
-                    AddMensagem("A senha não pode conter espaço em branco.");
+                    AddMensagem(UsuarioMessage.SenhaNaoPodeConterEspacoEmBranco);
                 }
                 else if (novaSenha.Length < 6)
                 {
-                    AddMensagem("A senha deve conter no mínimo 6 caracteres.");
+                    AddMensagem(UsuarioMessage.SenhaDeConterMinioCaracters(6));
                 }
             }
 

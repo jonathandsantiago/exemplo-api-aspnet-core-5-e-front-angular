@@ -9,13 +9,15 @@ namespace FavoDeMel.Service.Services
     public class ComandaService : ServiceBase<int, Comanda, IComandaRepository>, IComandaService
     {
         public ComandaService(IComandaRepository repository) : base(repository)
-        { }
+        {
+            _validador = new ComandaValidator(repository);
+        }
 
         public async Task<Comanda> Inserir(Comanda comanda)
         {
             using (var dbTransaction = _repository.BeginTransaction(_validador))
             {
-                if (_validador != null && !await ObterValidador<ComandaValidator>().Validar(comanda))
+                if (!await ObterValidador<ComandaValidator>().Validar(comanda))
                 {
                     return null;
                 }
@@ -30,7 +32,7 @@ namespace FavoDeMel.Service.Services
         {
             using (var dbTransaction = _repository.BeginTransaction(_validador))
             {
-                if (_validador != null && !await ObterValidador<ComandaValidator>().Validar(comanda))
+                if (!await ObterValidador<ComandaValidator>().Validar(comanda))
                 {
                     return null;
                 }
@@ -50,6 +52,11 @@ namespace FavoDeMel.Service.Services
         {
             using (var dbTransaction = _repository.BeginTransaction(_validador))
             {
+                if (!ObterValidador<ComandaValidator>().PermiteAlterarSituacao(comandaId))
+                {
+                    return null;
+                }
+
                 return await _repository.Confirmar(comandaId);
             }
         }
@@ -58,6 +65,11 @@ namespace FavoDeMel.Service.Services
         {
             using (var dbTransaction = _repository.BeginTransaction(_validador))
             {
+                if (!ObterValidador<ComandaValidator>().PermiteAlterarSituacao(comandaId))
+                {
+                    return null;
+                }
+
                 return await _repository.Fechar(comandaId);
             }
         }

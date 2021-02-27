@@ -13,16 +13,16 @@ namespace FavoDeMel.Domain.Produtos
         {
             if (string.IsNullOrEmpty(produto.Nome))
             {
-                AddMensagem("Nome é obrigatório.");
+                AddMensagem(ProdutoMessage.NomeObrigatorio);
             }
             else if (await _repository.NomeJaCadastrado(produto.Id, produto.Nome))
             {
-                AddMensagem("Nome já cadastrado.");
+                AddMensagem(ProdutoMessage.NomeJaCadastrado);
             }
 
             if (produto.Preco <= 0)
             {
-                AddMensagem("Preço é obrigatório.");
+                AddMensagem(ProdutoMessage.PrecoObrigatorio);
             }
 
             return await base.Validar(produto);

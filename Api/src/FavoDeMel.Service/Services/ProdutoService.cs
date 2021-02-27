@@ -12,13 +12,15 @@ namespace FavoDeMel.Service.Services
     public class ProdutoService : ServiceBase<int, Produto, IProdutoRepository>, IProdutoService
     {
         public ProdutoService(IProdutoRepository repository) : base(repository)
-        { }
+        {
+            _validador = new ProdutoValidator(repository);
+        }
 
         public async Task<Produto> Inserir(Produto produto)
         {
             using (var dbTransaction = _repository.BeginTransaction(_validador))
             {
-                if (_validador != null && !await ObterValidador<ProdutoValidator>().Validar(produto))
+                if (!await ObterValidador<ProdutoValidator>().Validar(produto))
                 {
                     return null;
                 }
@@ -33,7 +35,7 @@ namespace FavoDeMel.Service.Services
         {
             using (var dbTransaction = _repository.BeginTransaction(_validador))
             {
-                if (_validador != null && !await ObterValidador<ProdutoValidator>().Validar(produto))
+                if (!await ObterValidador<ProdutoValidator>().Validar(produto))
                 {
                     return null;
                 }

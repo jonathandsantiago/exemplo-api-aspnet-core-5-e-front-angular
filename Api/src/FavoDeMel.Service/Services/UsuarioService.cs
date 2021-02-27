@@ -27,7 +27,7 @@ namespace FavoDeMel.Service.Services
         {
             using (var dbTransaction = _repository.BeginTransaction(_validador))
             {
-                if (_validador != null && !await ObterValidador<UsuarioValidator>().Validar(usuario))
+                if (!await ObterValidador<UsuarioValidator>().Validar(usuario))
                 {
                     return null;
                 }
@@ -42,7 +42,7 @@ namespace FavoDeMel.Service.Services
         {
             using (var dbTransaction = _repository.BeginTransaction(_validador))
             {
-                if (_validador != null && !await ObterValidador<UsuarioValidator>().Validar(usuario))
+                if (!await ObterValidador<UsuarioValidator>().Validar(usuario))
                 {
                     return null;
                 }
