@@ -94,17 +94,15 @@ Projeto estruturado distribuito por camadas:
 - [Web](http://localhost:4200)
 - [Redis](http://localhost:8081)
 - [RabbitMq](http://localhost:15672)
-
-  `
-  Login: guest
-  Senha: guest
-  `
+  ```
+    Username: guest
+    Password: guest
+  ```
 - [Minio](http://localhost:9000)
-
-    `
-    Login: minio
-    Senha: minio123
-    `
+  ```
+    Access Key: minio
+    Secrt Key: minio123
+  ```
 - Mysql
     ```
     server=localhost;
