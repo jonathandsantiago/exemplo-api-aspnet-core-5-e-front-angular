@@ -88,3 +88,16 @@ lerna-debug.log*
 /Api/src/FavoDeMel.IoC/bin/Debug/netcoreapp3.1
 /Api/src/FavoDeMel.Service/bin/Debug/netcoreapp3.1
 /Api/TestResults
+/favodemel-api/bin/Debug
+/favodemel-api/db/.system
+/favodemel-api/db/log
+/favodemel-api/TestResults
+/favodemel-api/src/FavoDeMel.EF.Repository/bin/Debug/netcoreapp3.1
+/favodemel-api/src/FavoDeMel.Framework/bin/Debug/netcoreapp3.1
+/favodemel-api/src/FavoDeMel.Framework/obj
+/favodemel-api/src/FavoDeMel.IoC/bin/Debug/netcoreapp3.1
+/favodemel-api/src/FavoDeMel.Messaging/bin/Debug/netcoreapp3.1
+/favodemel-api/src/FavoDeMel.Messaging/obj
+/favodemel-api/src/FavoDeMel.Redis.Repository/bin/Debug/netcoreapp3.1
+/favodemel-api/src/FavoDeMel.Redis.Repository/obj
+/favodemel-api/src/FavoDeMel.Service/bin/Debug/netcoreapp3.1

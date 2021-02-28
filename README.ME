@@ -1,0 +1,69 @@
+## Avaliação Arquitetura - Jonathan Dias Campos Santiago
+
+#Backend
+    ■ Projeto desenvolvido em C# .NET com ASP.NET Core 3.1;
+    ■ Entity Framework - com MySql; 
+    ■ Autenticação e autorização OAuth2 - JWT 
+    ■ Docker
+    ■ Messageria com RabbitMq
+    ■ Storage com Minio
+    ■ Controle de cache com Redis
+Docker 
+	■ Api
+	■ Banco de dados MySql
+	■ RabbitMq
+	■ Redis
+	■ Minio
+Projeto estruturado com a metodologia DDD e TDD 
+distribuito por camadas:
+	■ FavoDeMel.Api;
+	■ FavoDeMel.Domain;
+	■ FavoDeMel.EF.Repository;
+	■ FavoDeMel.Framework;
+	■ FavoDeMel.IoC;
+    ■ FavoDeMel.Messaging;    
+    ■ FavoDeMel.Redis.Repository;
+    ■ FavoDeMel.Service;    
+    ■ FavoDeMel.Tests;
+	
+#Frontend 
+    Projeto desenvolvido com Angular 9.1 (Typescript) utilizando programação Reativa (RxJS), Bootstrap e Docker
+Docker 
+	- Web
+	
+# Anotações
+A primeira execução do projeto backend, no docker será buildado a execução do script de estruturação do banco de dados,
+por padrão já irá vir incluso alguns produtos e usuários.
+Usuários com o tipo garçom e cozinha.
+Usuários:
+	Login: garcom
+	Password: garcom
+	--
+	Login: cozinha
+	Password: cozinha	
+
+
+# Sobre o sistema
+Projecto de controle de comandas:
+O sistema é executado conforme o tipo do cadastro do usuário.
+Garçom:
+	■ Home
+		Listando todas as comandas em aberto
+	■ Nova comanda 
+		Campos
+			- Garçom logado
+			- Produto
+			- Quantidade
+		Lista dos produtos adicionados	
+		Botões
+			Adicionar pedido
+			Salvar
+Cozinha:
+		■ Home
+			Kaban listando todas as comandas em aberto, sendo separado por novos pedidos, pedidos em execução e finalizados.
+		Ações:
+			- Novos pedidos: irá conter a ação Inicar e cancelar;
+			- Pedidos execução: irá conter a ação Finalizar e cancelar;
+			- Pedidos execução: Não contem ações.
+Cada novos pedidos adicionados por usuário do tipo garçom api irá enviar uma mensagen para a cozinha carregando o 'Json'
+do novo pedido criado.
