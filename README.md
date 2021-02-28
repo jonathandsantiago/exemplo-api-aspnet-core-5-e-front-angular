@@ -84,8 +84,10 @@ Projeto estruturado distribuito por camadas:
         `dotnet test	test/FavoDeMel.Tests`
 - Web:      
     - Acessar a pasta da solução do projeto e exucutar o seguinte comando:
-    
-        `npm start`
+
+      `ng s`
+      ou
+      `npm start`
       ou 
       `docker-compose up --build`
 
