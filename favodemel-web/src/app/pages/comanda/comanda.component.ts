@@ -53,7 +53,7 @@ export class ComandaComponent implements OnInit, OnDestroy {
         return comanda;
       })));
 
-    this.subscription.add(this.rxStompService.watch('/exchange/comandaEvent').subscribe((message: Message) => {
+    this.subscription.add(this.rxStompService.watch('/exchange/comandaComand').subscribe((message: Message) => {
       console.log(JSON.parse(message.body));
     }));
   }

@@ -2,7 +2,13 @@ version: '3.4'
 
 services:
   favodemel-web:
-    image: favodemel.web
+    image: favodemel-web
     build: .
     ports:
       - 4200:80
+    networks:
+      - favodemel-network
+
+networks:
+  favodemel-network:
+    external: true

@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package.json /app
 RUN npm install --silent
 COPY . .
-RUN npm run build
+RUN npm run build -- --aot=true --build-optimizer=true --optimization=true --prod --configuration=production --base-href=/ --output-path=/app/www
 
 FROM nginx:alpine
 VOLUME /var/cache/nginx
