@@ -2,13 +2,13 @@ import { InjectableRxStompConfig } from '@stomp/ng2-stompjs';
 
 export const rxStompConfig: InjectableRxStompConfig = {
   // Which server?
-  brokerURL: 'ws://127.0.0.1:15672/ws',
+  brokerURL: 'ws://host.docker.internal:5672/ws',
 
   // Headers
   // Typical keys: login, passcode, host
   connectHeaders: {
     login: 'guest',
-    passcode: 'guest'
+    passcode: 'guest',
   },
 
   // How often to heartbeat?
@@ -26,5 +26,5 @@ export const rxStompConfig: InjectableRxStompConfig = {
   // Skip this key to stop logging to console
   debug: (msg: string): void => {
     console.log(new Date(), msg);
-  }
+  },
 };

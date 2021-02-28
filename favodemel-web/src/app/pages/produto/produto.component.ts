@@ -3,6 +3,8 @@ import {combineLatest} from 'rxjs';
 import {FormBuilder} from '@angular/forms';
 import {ProdutoService} from '../../services/produto.service';
 import {ListComponent} from '../../components/common/list.component';
+import {Usuario, UsuarioPerfil} from '../../models/usuario';
+import {UsuarioService} from '../../services/usuario.service';
 
 @Component({
   selector: 'app-produto',
@@ -18,11 +20,17 @@ export class ProdutoComponent extends ListComponent implements OnInit {
   ];
 
   produtos$ = this.produtoService.produtos$;
+  usuarioLogado: Usuario;
+  usuarioPerfil = UsuarioPerfil;
 
   constructor(injector: Injector,
               protected formBuilder: FormBuilder,
+              protected usuarioService: UsuarioService,
               protected produtoService: ProdutoService) {
     super(injector);
+    this.subscription.add(this.usuarioService.usuarioLogado$.subscribe((usuario: Usuario) => {
+      this.usuarioLogado = usuario;
+    }));
   }
 
   ngOnInit(): void {

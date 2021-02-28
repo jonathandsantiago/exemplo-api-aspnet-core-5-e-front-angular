@@ -4,7 +4,6 @@ import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {ToolbarModule} from './components/toolbar/toolbar.module';
-import {FooterModule} from './components/footer/footer.module';
 import {LayoutModule} from './components/layout/layout.module';
 import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from '@stomp/ng2-stompjs';
 import {rxStompConfig} from './shared/rx-stomp.config';

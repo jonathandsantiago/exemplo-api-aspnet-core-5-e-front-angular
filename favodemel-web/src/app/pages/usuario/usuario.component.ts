@@ -2,7 +2,7 @@ import {Component, Injector, OnDestroy, OnInit} from '@angular/core';
 import {combineLatest} from 'rxjs';
 import {FormBuilder} from '@angular/forms';
 import {UsuarioService} from '../../services/usuario.service';
-import {DescricaoPerfil} from '../../models/usuario';
+import {DescricaoPerfil, Usuario, UsuarioPerfil} from '../../models/usuario';
 import {ListComponent} from '../../components/common/list.component';
 
 @Component({
@@ -21,11 +21,16 @@ export class UsuarioComponent extends ListComponent implements OnInit, OnDestroy
 
   descricaoPerfil = DescricaoPerfil;
   usuarios$ = this.usuarioService.usuarios$;
+  usuarioLogado: Usuario;
+  usuarioPerfil = UsuarioPerfil;
 
   constructor(injector: Injector,
               protected formBuilder: FormBuilder,
               protected usuarioService: UsuarioService) {
     super(injector);
+    this.subscription.add(this.usuarioService.usuarioLogado$.subscribe((usuario: Usuario) => {
+      this.usuarioLogado = usuario;
+    }));
   }
 
   ngOnInit(): void {

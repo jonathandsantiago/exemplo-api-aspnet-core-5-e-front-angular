@@ -27,10 +27,10 @@ export class ComandaComponent implements OnInit, OnDestroy {
 
   constructor(protected modalService: BsModalService,
               protected formBuilder: FormBuilder,
-              protected usuarioSerice: UsuarioService,
+              protected usuarioService: UsuarioService,
               protected comandaService: ComandaService,
               protected rxStompService: RxStompService) {
-    this.subscription.add(this.usuarioSerice.usuarioLogado$.subscribe((usuario: Usuario) => {
+    this.subscription.add(this.usuarioService.usuarioLogado$.subscribe((usuario: Usuario) => {
       this.usuarioLogado = usuario;
     }));
   }
@@ -53,9 +53,14 @@ export class ComandaComponent implements OnInit, OnDestroy {
         return comanda;
       })));
 
-    this.subscription.add(this.rxStompService.watch('/exchange/comandaComand').subscribe((message: Message) => {
+    this.subscription.add(this.rxStompService.watch('/exchange/FavoDeMel.Messaging.Commands.ComandaCommand').subscribe((message: Message) => {
       console.log(JSON.parse(message.body));
     }));
+  }
+
+  onSend() {
+    const message = `Message generated at ${new Date()}`;
+    this.rxStompService.publish({ destination: '/exchange/FavoDeMel.Messaging.Commands.ComandaCommand', body: message });
   }
 
   abrirModal(template: TemplateRef<any>, content?: any, titulo = null, largura = 'lg') {

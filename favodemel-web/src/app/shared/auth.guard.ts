@@ -28,8 +28,7 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    if (state.url.startsWith('/usuario') || state.url.startsWith('/produto')) {
-      this.router.navigate(['/']).then();
+    if (state.url.includes('editar')) {
       return false;
     }
 

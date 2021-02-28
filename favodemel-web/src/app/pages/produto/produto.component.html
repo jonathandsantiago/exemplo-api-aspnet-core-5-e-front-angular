@@ -25,7 +25,8 @@
             <td style="text-align: left;">{{produto.preco}}</td>
             <td style="text-align: center; min-width: 10%">
               <div class="action-grid">
-                <a class="btn-floating btn-sm btn-primary"
+                <a *ngIf="usuarioLogado.perfil === usuarioPerfil.Administrador"
+                   class="btn-floating btn-sm btn-primary"
                    tooltip="Editar"
                    placement="bottom"
                    routerLink="{{produto.id}}/editar">

@@ -13,8 +13,6 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-    networks:
-      - favodemel-network
     depends_on:
       - mysql
 
@@ -31,8 +29,6 @@ services:
       - '3306:3306'
     expose:
       - '3306'
-    networks:
-      - favodemel-network
     volumes:
       - favodemel-api-mysql-data:/var/lib/mysql
 
@@ -43,8 +39,6 @@ services:
       - "6379:6379"
     volumes:
       - "favodemel-api-redis-data:/data"
-    networks:
-      - favodemel-network
 
   redis-commander:
     image: rediscommander/redis-commander
@@ -57,8 +51,6 @@ services:
       USE_SCAN: "true"
     depends_on:
       - redis
-    networks:
-      - favodemel-network
 
   minio:
     container_name: favodemel-api-minio
@@ -71,8 +63,6 @@ services:
       MINIO_ACCESS_KEY: minio
       MINIO_SECRET_KEY: minio123
     command: server /favodemel-arquivos
-    networks:
-      - favodemel-network
   
   rabbitmq:
     image: "rabbitmq:3.8-management"
@@ -85,18 +75,10 @@ services:
         - "15672:15672"
         - "5672:5672"
     labels:
-        NAME: "rabbitmq1"
-    networks:
-      - favodemel-network
+        NAME: "rabbitmq"
 
 volumes:
   favodemel-api-rabbitmq-data:
   favodemel-api-mysql-data:
   favodemel-api-redis-data:
   favodemel-api-arquivos:
-
-networks: 
-  favodemel-network:
-    name: favodemel-network    
-    driver: bridge    
-    external: false
