@@ -91,15 +91,15 @@ Projeto estruturado distribuito por camadas:
 
 ### Acesso aplicação após a build
 - [Api](https://localhost:44300/swagger/index.html)
-- [Web](https://localhost:4200)
-- [Redis](https://localhost:8081)
-- [RabbitMq](https://localhost:15672)
+- [Web](http://localhost:4200)
+- [Redis](http://localhost:8081)
+- [RabbitMq](http://localhost:15672)
 
   `
   Login: guest
   Senha: guest
   `
-- [Minio](https://localhost:9000)
+- [Minio](http://localhost:9000)
 
     `
     Login: minio
