@@ -115,7 +115,7 @@ Projeto estruturado distribuito por camadas:
     ```
 
 ### Anotações
-Ao executar o sistema em modo debug, caso não contenha registro no banco de dados, o sistema irá gerar alguns dados para teste
+Ao executar a Api em modo debug pelo Visual Studio, caso não contenha registro no banco de dados, o sistema irá gerar alguns dados para teste
 cadastrando três usuários com os seguintes perfís:
 - Administrador:
     ```
