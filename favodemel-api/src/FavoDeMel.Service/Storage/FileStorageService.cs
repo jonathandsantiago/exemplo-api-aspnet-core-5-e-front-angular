@@ -1,6 +1,10 @@
 ﻿using FavoDeMel.Domain.Configs;
+using FavoDeMel.Domain.Models;
+using FavoDeMel.Framework.Helpers;
 using FavoDeMel.Service.Interfaces;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace FavoDeMel.Service.Storage
 {
@@ -19,34 +23,34 @@ namespace FavoDeMel.Service.Storage
             _minioConfig = minioConfig;
         }
 
-        //public async Task<ObterArquivoResultado> ObterArquivo(string caminhoDoArquivo)
-        //{
-        //    try
-        //    {
-        //        var arquivo = await _fileStorageClient.DownloadFile(_fileStorageServiceConfiguration.Bucket, caminhoDoArquivo);
+        public async Task<ArquivoResult<Arquivo>> ObterArquivo(string caminhoDoArquivo)
+        {
+            try
+            {
+                var arquivo = await _fileStorageClient.DownloadFile(_minioConfig.Bucket, caminhoDoArquivo);
 
-        //        var output = new ObterArquivoResultado()
-        //        {
-        //            Sucesso = true,
-        //            Arquivo = new Arquivo
-        //            {
-        //                Binario = arquivo,
-        //                ContentType = MimeTypeMap.GetMimeTypeFromFileName(caminhoDoArquivo),
-        //                Nome = caminhoDoArquivo
-        //            }
-        //        };
+                var result = new ArquivoResult<Arquivo>()
+                {
+                    Sucesso = true,
+                    Result = new Arquivo
+                    {
+                        Binario = arquivo,
+                        ContentType = MimeTypeMap.GetMimeTypeFromFileName(caminhoDoArquivo),
+                        Nome = caminhoDoArquivo
+                    }
+                };
 
-        //        return output;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Erro ao obter arquivo {bucket} {key}", _fileStorageServiceConfiguration.Bucket, caminhoDoArquivo);
-        //        return new ObterArquivoResultado
-        //        {
-        //            Sucesso = false,
-        //            Mensagem = ex.Message
-        //        };
-        //    }
-        //}
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao obter arquivo {bucket} {key}", _minioConfig.Bucket, caminhoDoArquivo);
+                return new ArquivoResult<Arquivo>
+                {
+                    Sucesso = false,
+                    Mensagem = ex.Message
+                };
+            }
+        }
     }
 }
