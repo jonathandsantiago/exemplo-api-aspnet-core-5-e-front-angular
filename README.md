@@ -75,15 +75,15 @@ Projeto estruturado distribuito por camadas:
 
 ### BUILD
 - Api:
-    - Acessar a pasta da solução do projeto api e exucutar o seguinte comando:
+    - Acessar a pasta da solução do projeto api e executar o seguinte comando:
       
       `docker-compose up --build`
 - Api - Teste:
-    - Acessar a pasta da solução do projeto api e exucutar o seguinte comando:
+    - Acessar a pasta da solução do projeto api e executar o seguinte comando:
     
         `dotnet test	test/FavoDeMel.Tests`
 - Web:      
-    - Acessar a pasta da solução do projeto e exucutar o seguinte comando:
+    - Acessar a pasta da solução do projeto e executar o seguinte comando:
       `ng build --prod`
       `ng s`
       ou
