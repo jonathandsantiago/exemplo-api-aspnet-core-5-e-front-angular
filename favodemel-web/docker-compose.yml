@@ -1,9 +1,0 @@
-version: '3.4'
-
-services:
-  favodemel-web:
-    image: favodemel-web
-    container_name: favodemel-web
-    build: .
-    ports:
-      - 4200:80
