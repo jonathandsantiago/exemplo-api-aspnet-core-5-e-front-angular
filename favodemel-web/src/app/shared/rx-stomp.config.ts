@@ -2,7 +2,7 @@ import { InjectableRxStompConfig } from '@stomp/ng2-stompjs';
 
 export const rxStompConfig: InjectableRxStompConfig = {
   // Which server?
-  brokerURL: 'ws://host.docker.internal:5672/ws',
+  brokerURL: 'ws://kafka:29092',
 
   // Headers
   // Typical keys: login, passcode, host

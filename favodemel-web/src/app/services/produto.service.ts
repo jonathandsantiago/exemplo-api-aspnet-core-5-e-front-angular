@@ -11,7 +11,7 @@ import {BehaviorSubject} from 'rxjs';
 @Injectable({providedIn: 'root'})
 export class ProdutoService extends BaseService<Produto> implements OnDestroy {
 
-  protected urlApi = `${environment.apiUrl}/api/Produto`;
+  protected urlApi = `${environment.apiUrl}/Produto`;
   private produtosSubject$ = new BehaviorSubject<Produto[]>([] as Produto[]);
   produtos$ = this.produtosSubject$.asObservable();
 

@@ -12,7 +12,7 @@ import {finalize} from 'rxjs/operators';
 @Injectable({providedIn: 'root'})
 export class ComandaService extends BaseService<Comanda>{
 
-  protected urlApi = `${environment.apiUrl}/api/Comanda`;
+  protected urlApi = `${environment.apiUrl}/Comanda`;
 
   constructor(protected router: Router,
               protected http: HttpClient,
