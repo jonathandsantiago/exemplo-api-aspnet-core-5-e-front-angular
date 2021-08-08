@@ -1,0 +1,119 @@
+networks:
+  net:
+    driver: bridge
+services:
+  favodemel.api:
+    build:
+      context: D:\Pessoal\Arquitetura\Novo\favodemel-api
+      dockerfile: src/FavoDeMel.Api/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTPS_PORT: '44300'
+      ASPNETCORE_URLS: https://+:443;http://+:80
+    image: favodemelapi
+    networks:
+      net: {}
+    ports:
+    - published: 8080
+      target: 80
+    - published: 44300
+      target: 443
+    volumes:
+    - C:\Users\40923\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
+    - C:\Users\40923\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+  flyway:
+    command: -url=jdbc:postgresql://postgres:5432/favodemel -schemas=migration -user=admin
+      -password=Password_1 migrate
+    depends_on:
+      favodemel.api:
+        condition: service_started
+      postgres:
+        condition: service_started
+    environment:
+      FLYWAY_EDITION: community
+    image: flyway/flyway:7
+    networks:
+      net: {}
+    restart: on-failure
+    volumes:
+    - D:\Pessoal\Arquitetura\Novo\favodemel-api\postgresdb\scripts:/flyway/sql:rw
+  kafdrop:
+    depends_on:
+      kafka:
+        condition: service_started
+    environment:
+      KAFKA_BROKERCONNECT: kafka:29092
+    image: obsidiandynamics/kafdrop:latest
+    networks:
+      net: {}
+    ports:
+    - published: 19000
+      target: 9000
+  kafka:
+    depends_on:
+      zookeeper:
+        condition: service_started
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_BROKER_ID: 1
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    image: confluentinc/cp-kafka:latest
+    networks:
+      net: {}
+    ports:
+    - published: 9092
+      target: 9092
+  postgres:
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: favodemel
+      POSTGRES_PASSWORD: Password_1
+      POSTGRES_USER: admin
+    image: postgres:11-alpine
+    networks:
+      net: {}
+    ports:
+    - published: 15432
+      target: 5432
+    volumes:
+    - postgres-data:/var/lib/postgresql/data:rw
+  redis:
+    image: redis:4.0.11
+    networks:
+      net: {}
+    ports:
+    - published: 6379
+      target: 6379
+    volumes:
+    - redis-data:/data:rw
+  redis-commander:
+    depends_on:
+      redis:
+        condition: service_started
+    environment:
+      REDIS_HOSTS: 'no1:redis:6379:0,no2:redis:6379:1,no3:redis:6379:2
+        '
+      USE_SCAN: "true"
+    image: rediscommander/redis-commander
+    networks:
+      net: {}
+    ports:
+    - published: 8081
+      target: 8081
+  zookeeper:
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    image: confluentinc/cp-zookeeper:latest
+    networks:
+      net: {}
+version: '2'
+volumes:
+  postgres-data: {}
+  redis-data: {}

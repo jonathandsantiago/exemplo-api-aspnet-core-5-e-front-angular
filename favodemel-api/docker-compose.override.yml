@@ -1,0 +1,111 @@
+version: '2'
+
+services:
+  favodemel.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=44300
+    ports:
+      - "8080:80"
+      - "44300:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+      - postgres
+    networks: 
+      - net
+
+  postgres:
+    image: postgres:11-alpine
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=Password_1
+      - POSTGRES_DB=favodemel
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+      - "15432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks: 
+      - net
+
+  flyway:
+    image: flyway/flyway:7
+    restart: on-failure
+    command: -url=jdbc:postgresql://postgres:5432/favodemel -schemas=migration -user=admin -password=Password_1 migrate
+    environment:
+      - FLYWAY_EDITION=community
+    volumes:
+      - ./postgresdb/scripts:/flyway/sql
+    depends_on:
+      - postgres
+      - favodemel.api
+    networks: 
+      - net
+
+  redis:
+    image: redis:4.0.11
+    ports:
+      - "6379:6379"
+    volumes:
+      - "redis-data:/data"
+    networks: 
+      - net
+
+  redis-commander:
+    image: rediscommander/redis-commander
+    ports:
+      - "8081:8081"
+    environment:
+      REDIS_HOSTS: |
+        no1:redis:6379:0,no2:redis:6379:1,no3:redis:6379:2
+      USE_SCAN: "true"
+    depends_on:
+      - redis
+    networks: 
+      - net
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks: 
+      - net
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks: 
+      - net
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:latest
+    ports:
+      - 19000:9000
+    environment:
+      KAFKA_BROKERCONNECT: kafka:29092
+    networks: 
+      - net
+    depends_on:
+      - kafka
+
+volumes:
+  postgres-data:
+  redis-data:
+
+networks: 
+  net:
+    driver: bridge
