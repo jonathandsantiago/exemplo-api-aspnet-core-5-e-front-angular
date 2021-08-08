@@ -1263,11 +1263,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\src\\FavoDeMel.Domain\\FavoDeMel.Domain.csproj",
+      "projectUniqueName": "D:\\Pessoal\\Arquitetura\\favodemel-api\\src\\FavoDeMel.Domain\\FavoDeMel.Domain.csproj",
       "projectName": "FavoDeMel.Domain",
-      "projectPath": "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\src\\FavoDeMel.Domain\\FavoDeMel.Domain.csproj",
+      "projectPath": "D:\\Pessoal\\Arquitetura\\favodemel-api\\src\\FavoDeMel.Domain\\FavoDeMel.Domain.csproj",
       "packagesPath": "C:\\Users\\40923\\.nuget\\packages\\",
-      "outputPath": "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\src\\FavoDeMel.Domain\\obj\\",
+      "outputPath": "D:\\Pessoal\\Arquitetura\\favodemel-api\\src\\FavoDeMel.Domain\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

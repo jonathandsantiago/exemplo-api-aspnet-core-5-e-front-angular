@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Puc8wZU4ZXl6fti02D46vob3wbanwlf7BNrVr9Dk1ICvBa43GO5iCov/LQ6bJ3AT3cEZ7RqG1EQxbHvUvXj7/Q==",
+  "dgSpecHash": "qPL0Q3KJh4/jxrVNnt5jfQ3OuoRvxlZeyz7XRogdpCAUSM+zDtKH6DM5OyoaxDqbcDWlbJGvLLOQgAfD7Z+WZg==",
   "success": true,
-  "projectFilePath": "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\test\\FavoDeMel.Tests\\FavoDeMel.Tests.csproj",
+  "projectFilePath": "D:\\Pessoal\\Arquitetura\\favodemel-api\\test\\FavoDeMel.Tests\\FavoDeMel.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\40923\\.nuget\\packages\\automapper\\10.1.1\\automapper.10.1.1.nupkg.sha512",
     "C:\\Users\\40923\\.nuget\\packages\\castle.core\\4.4.0\\castle.core.4.4.0.nupkg.sha512",

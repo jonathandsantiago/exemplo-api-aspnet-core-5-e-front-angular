@@ -4,7 +4,7 @@ networks:
 services:
   favodemel.api:
     build:
-      context: D:\Pessoal\Arquitetura\Novo\favodemel-api
+      context: D:\Pessoal\Arquitetura\favodemel-api
       dockerfile: src/FavoDeMel.Api/Dockerfile
     depends_on:
       postgres:
@@ -39,7 +39,7 @@ services:
       net: {}
     restart: on-failure
     volumes:
-    - D:\Pessoal\Arquitetura\Novo\favodemel-api\postgresdb\scripts:/flyway/sql:rw
+    - D:\Pessoal\Arquitetura\favodemel-api\postgresdb\scripts:/flyway/sql:rw
   kafdrop:
     depends_on:
       kafka:

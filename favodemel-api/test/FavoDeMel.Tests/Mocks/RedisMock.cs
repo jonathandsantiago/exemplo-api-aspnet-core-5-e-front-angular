@@ -14,10 +14,10 @@ namespace FavoDeMel.Tests.Mocks
             return services;
         }
 
-        public static IServiceCache<T> ObterServicoCache<T>()
+        public static IServiceCache ObterServicoCache<T>()
         {
-            var mock = new Mock<IServiceCache<T>>();
-            mock.Setup(c => c.ObterAsync(It.IsAny<string>()));
+            var mock = new Mock<IServiceCache>();
+            mock.Setup(c => c.ObterAsync<T>(It.IsAny<string>()));
             mock.Setup(c => c.SalvarAsync(It.IsAny<string>(), It.IsAny<T>(), It.IsAny<int>()));
             mock.Setup(c => c.RemoverAsync(It.IsAny<string>()));
 

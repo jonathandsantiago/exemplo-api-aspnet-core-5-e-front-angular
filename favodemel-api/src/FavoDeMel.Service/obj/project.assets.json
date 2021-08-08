@@ -1308,11 +1308,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\src\\FavoDeMel.Service\\FavoDeMel.Service.csproj",
+      "projectUniqueName": "D:\\Pessoal\\Arquitetura\\favodemel-api\\src\\FavoDeMel.Service\\FavoDeMel.Service.csproj",
       "projectName": "FavoDeMel.Service",
-      "projectPath": "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\src\\FavoDeMel.Service\\FavoDeMel.Service.csproj",
+      "projectPath": "D:\\Pessoal\\Arquitetura\\favodemel-api\\src\\FavoDeMel.Service\\FavoDeMel.Service.csproj",
       "packagesPath": "C:\\Users\\40923\\.nuget\\packages\\",
-      "outputPath": "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\src\\FavoDeMel.Service\\obj\\",
+      "outputPath": "D:\\Pessoal\\Arquitetura\\favodemel-api\\src\\FavoDeMel.Service\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -1332,8 +1332,8 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "projectReferences": {
-            "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\src\\FavoDeMel.Domain\\FavoDeMel.Domain.csproj": {
-              "projectPath": "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\src\\FavoDeMel.Domain\\FavoDeMel.Domain.csproj"
+            "D:\\Pessoal\\Arquitetura\\favodemel-api\\src\\FavoDeMel.Domain\\FavoDeMel.Domain.csproj": {
+              "projectPath": "D:\\Pessoal\\Arquitetura\\favodemel-api\\src\\FavoDeMel.Domain\\FavoDeMel.Domain.csproj"
             }
           }
         }

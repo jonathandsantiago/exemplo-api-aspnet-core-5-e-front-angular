@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\src\\FavoDeMel.Service\\FavoDeMel.Service.csproj": {}
+    "D:\\Pessoal\\Arquitetura\\favodemel-api\\src\\FavoDeMel.Service\\FavoDeMel.Service.csproj": {}
   },
   "projects": {
-    "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\src\\FavoDeMel.Domain\\FavoDeMel.Domain.csproj": {
+    "D:\\Pessoal\\Arquitetura\\favodemel-api\\src\\FavoDeMel.Domain\\FavoDeMel.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\src\\FavoDeMel.Domain\\FavoDeMel.Domain.csproj",
+        "projectUniqueName": "D:\\Pessoal\\Arquitetura\\favodemel-api\\src\\FavoDeMel.Domain\\FavoDeMel.Domain.csproj",
         "projectName": "FavoDeMel.Domain",
-        "projectPath": "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\src\\FavoDeMel.Domain\\FavoDeMel.Domain.csproj",
+        "projectPath": "D:\\Pessoal\\Arquitetura\\favodemel-api\\src\\FavoDeMel.Domain\\FavoDeMel.Domain.csproj",
         "packagesPath": "C:\\Users\\40923\\.nuget\\packages\\",
-        "outputPath": "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\src\\FavoDeMel.Domain\\obj\\",
+        "outputPath": "D:\\Pessoal\\Arquitetura\\favodemel-api\\src\\FavoDeMel.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -87,14 +87,14 @@
         }
       }
     },
-    "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\src\\FavoDeMel.Service\\FavoDeMel.Service.csproj": {
+    "D:\\Pessoal\\Arquitetura\\favodemel-api\\src\\FavoDeMel.Service\\FavoDeMel.Service.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\src\\FavoDeMel.Service\\FavoDeMel.Service.csproj",
+        "projectUniqueName": "D:\\Pessoal\\Arquitetura\\favodemel-api\\src\\FavoDeMel.Service\\FavoDeMel.Service.csproj",
         "projectName": "FavoDeMel.Service",
-        "projectPath": "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\src\\FavoDeMel.Service\\FavoDeMel.Service.csproj",
+        "projectPath": "D:\\Pessoal\\Arquitetura\\favodemel-api\\src\\FavoDeMel.Service\\FavoDeMel.Service.csproj",
         "packagesPath": "C:\\Users\\40923\\.nuget\\packages\\",
-        "outputPath": "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\src\\FavoDeMel.Service\\obj\\",
+        "outputPath": "D:\\Pessoal\\Arquitetura\\favodemel-api\\src\\FavoDeMel.Service\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -114,8 +114,8 @@
           "net5.0": {
             "targetAlias": "net5.0",
             "projectReferences": {
-              "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\src\\FavoDeMel.Domain\\FavoDeMel.Domain.csproj": {
-                "projectPath": "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\src\\FavoDeMel.Domain\\FavoDeMel.Domain.csproj"
+              "D:\\Pessoal\\Arquitetura\\favodemel-api\\src\\FavoDeMel.Domain\\FavoDeMel.Domain.csproj": {
+                "projectPath": "D:\\Pessoal\\Arquitetura\\favodemel-api\\src\\FavoDeMel.Domain\\FavoDeMel.Domain.csproj"
               }
             }
           }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "xKI7gLNqMKAG6BVPGAZxYZKuc025dooxubXZ3eDD2tQRTvl3amt6aT5RSbKOS2QWJXmQBmUMnU8+7F1ErffP7A==",
+  "dgSpecHash": "+vDPTUncvA8TSomo6oLswb/zHqKyEDPVQfJVaoJHOC8cw12W+/FjPz8OIy43puj7ijSmQuICf9UMnThU1msAvA==",
   "success": true,
-  "projectFilePath": "D:\\Pessoal\\Arquitetura\\Novo\\favodemel-api\\src\\FavoDeMel.Domain\\FavoDeMel.Domain.csproj",
+  "projectFilePath": "D:\\Pessoal\\Arquitetura\\favodemel-api\\src\\FavoDeMel.Domain\\FavoDeMel.Domain.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\40923\\.nuget\\packages\\automapper\\10.1.1\\automapper.10.1.1.nupkg.sha512",
     "C:\\Users\\40923\\.nuget\\packages\\confluent.kafka\\1.7.0\\confluent.kafka.1.7.0.nupkg.sha512",
