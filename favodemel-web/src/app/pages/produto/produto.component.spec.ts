@@ -19,7 +19,7 @@ describe('ComandaComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should main-comanda-crud', () => {
+  it('should main-comanda-edit', () => {
     expect(component).toBeTruthy();
   });
 });

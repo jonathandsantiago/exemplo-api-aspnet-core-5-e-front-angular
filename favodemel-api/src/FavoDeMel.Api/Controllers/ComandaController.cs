@@ -57,17 +57,17 @@ namespace FavoDeMel.Api.Controllers
         [HttpPost]
         [Route(ComandaApi.Confirmar)]
         [ProducesResponseType(typeof(ComandaDto), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Confirmar([FromBody] Guid comandaId)
+        public async Task<IActionResult> Confirmar([FromBody] DtoBase<Guid> dto)
         {
-            return await ExecutarFuncaoAsync(() => _service.Confirmar(comandaId));
+            return await ExecutarFuncaoAsync(() => _service.Confirmar(dto.Id));
         }
 
         [HttpPost]
         [Route(ComandaApi.Fechar)]
         [ProducesResponseType(typeof(ComandaDto), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Fechar([FromBody] Guid comandaId)
+        public async Task<IActionResult> Fechar([FromBody] DtoBase<Guid> dto)
         {
-            return await ExecutarFuncaoAsync(() => _service.Fechar(comandaId));
+            return await ExecutarFuncaoAsync(() => _service.Fechar(dto.Id));
         }
     }
 }

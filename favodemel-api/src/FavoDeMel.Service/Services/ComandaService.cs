@@ -67,6 +67,7 @@ namespace FavoDeMel.Service.Services
                 }
 
                 comanda.Prepare();
+                comanda.DataCadastro = DateTime.Now;
                 Comanda comandaDb = await _repository.Inserir(comanda);
                 ComandaDto dto = comandaDb.ToDto();
                 await SalvarCache(dto.Id, dto);

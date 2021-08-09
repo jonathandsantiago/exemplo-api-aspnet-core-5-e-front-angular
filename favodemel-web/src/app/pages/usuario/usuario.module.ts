@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UsuarioComponent} from './usuario.component';
 import {SharedModule} from '../../shared/shared.module';
-import {UsuarioCrudComponent} from './usuario-crud/usuario-crud.component';
+import {UsuarioEditComponent} from './usuario-edit/usuario-edit.component';
 import {UsuarioRoutingModule} from './usuario-routing.module';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {PaginacaoModule} from '../../shared/paginacao/paginacao.module';
@@ -20,7 +20,7 @@ import {PaginacaoModule} from '../../shared/paginacao/paginacao.module';
   ],
   declarations: [
     UsuarioComponent,
-    UsuarioCrudComponent,
+    UsuarioEditComponent,
   ],
   exports: [
   ],

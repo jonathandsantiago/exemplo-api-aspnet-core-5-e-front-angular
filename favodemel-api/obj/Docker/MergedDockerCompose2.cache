@@ -1,0 +1,147 @@
+networks:
+  net:
+    driver: bridge
+services:
+  favodemel.api:
+    build:
+      context: D:\Pessoal\Arquitetura\favodemel-api
+      dockerfile: src/FavoDeMel.Api/Dockerfile
+      labels:
+        com.microsoft.created-by: visual-studio
+        com.microsoft.visual-studio.project-name: FavoDeMel.Api
+      target: base
+    container_name: FavoDeMel.Api
+    depends_on:
+      postgres:
+        condition: service_started
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+        reservations:
+          memory: 1024M
+    entrypoint: tail -f /dev/null
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTPS_PORT: '44300'
+      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
+      ASPNETCORE_URLS: https://+:443;http://+:80
+      DOTNET_USE_POLLING_FILE_WATCHER: '1'
+      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
+    image: favodemelapi:dev
+    labels:
+      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
+        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net5.0/FavoDeMel.Api.dll"'
+      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
+        dotnet); then kill $$PID; fi"
+      com.microsoft.visualstudio.debuggee.program: dotnet
+      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    networks:
+      net: {}
+    ports:
+    - published: 8080
+      target: 80
+    - published: 44300
+      target: 443
+    tty: true
+    volumes:
+    - D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Api:/app:rw
+    - C:\Users\40923\vsdbg\vs2017u5:/remote_debugger:rw
+    - C:\Users\40923\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
+    - C:\Users\40923\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+    - C:\Program Files\dotnet\sdk\NuGetFallbackFolder:/root/.nuget/fallbackpackages:ro
+    - C:\Users\40923\.nuget\packages:/root/.nuget/packages:ro
+    - D:\Pessoal\Arquitetura\favodemel-api:/src:rw
+  flyway:
+    command: -url=jdbc:postgresql://postgres:5432/favodemel -schemas=migration -user=admin
+      -password=Password_1 migrate
+    depends_on:
+      favodemel.api:
+        condition: service_started
+      postgres:
+        condition: service_started
+    environment:
+      FLYWAY_EDITION: community
+    image: flyway/flyway:7
+    networks:
+      net: {}
+    restart: on-failure
+    volumes:
+    - D:\Pessoal\Arquitetura\favodemel-api\postgresdb\scripts:/flyway/sql:rw
+  kafdrop:
+    depends_on:
+      kafka:
+        condition: service_started
+    environment:
+      KAFKA_BROKERCONNECT: kafka:29092
+    image: obsidiandynamics/kafdrop:latest
+    networks:
+      net: {}
+    ports:
+    - published: 19000
+      target: 9000
+  kafka:
+    depends_on:
+      zookeeper:
+        condition: service_started
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_BROKER_ID: 1
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    image: confluentinc/cp-kafka:latest
+    networks:
+      net: {}
+    ports:
+    - published: 9092
+      target: 9092
+  postgres:
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: favodemel
+      POSTGRES_PASSWORD: Password_1
+      POSTGRES_USER: admin
+    image: postgres:11-alpine
+    networks:
+      net: {}
+    ports:
+    - published: 15432
+      target: 5432
+    volumes:
+    - postgres-data:/var/lib/postgresql/data:rw
+  redis:
+    image: redis:4.0.11
+    networks:
+      net: {}
+    ports:
+    - published: 6379
+      target: 6379
+    volumes:
+    - redis-data:/data:rw
+  redis-commander:
+    depends_on:
+      redis:
+        condition: service_started
+    environment:
+      REDIS_HOSTS: 'no1:redis:6379:0,no2:redis:6379:1,no3:redis:6379:2
+        '
+      USE_SCAN: "true"
+    image: rediscommander/redis-commander
+    networks:
+      net: {}
+    ports:
+    - published: 8081
+      target: 8081
+  zookeeper:
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    image: confluentinc/cp-zookeeper:latest
+    networks:
+      net: {}
+version: '3.6'
+volumes:
+  postgres-data: {}
+  redis-data: {}

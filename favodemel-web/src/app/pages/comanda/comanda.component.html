@@ -13,7 +13,7 @@
       <div class="card-body text-primary">
         <ng-template ngFor let-comanda [ngForOf]="comandasAberta" let-i="index">
           <div class="card border-primary mb-3">
-            <div class="card-header"><strong>Comanda: {{comanda.id}}</strong></div>
+            <div class="card-header"><strong>Comanda: {{comanda.codigo}}</strong></div>
             <div class="card-body text-primary">
               <ng-template ngFor let-pedido [ngForOf]="comanda.pedidos" let-i="index">
                 <div class="row">
@@ -114,8 +114,8 @@
     </button>
   </div>
   <div class="modal-body">
-    <app-comanda-cadastro [modalRef]="modalRef"
+    <app-comanda-edit [modalRef]="modalRef"
                           (callbackCadastro)="inserirComanda($event)"
-                          (callbackEdicao)="atualizarComanda($event)"></app-comanda-cadastro>
+                          (callbackEdicao)="atualizarComanda($event)"></app-comanda-edit>
   </div>
 </ng-template>

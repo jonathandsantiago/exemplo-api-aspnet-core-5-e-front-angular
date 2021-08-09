@@ -9,6 +9,8 @@ namespace FavoDeMel.Domain.Dtos
         public Guid? GarcomId { get; set; }
         public decimal TotalAPagar { get; set; }
         public decimal GorjetaGarcom { get; set; }
+        public string Codigo { get; set; }
+        public DateTime? DataCadastro { get; set; }
         public ComandaSituacao Situacao { get; set; }
         public IList<ComandaPedidoDto> Pedidos { get; set; }
 

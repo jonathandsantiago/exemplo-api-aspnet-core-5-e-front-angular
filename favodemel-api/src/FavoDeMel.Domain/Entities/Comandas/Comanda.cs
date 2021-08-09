@@ -13,7 +13,7 @@ namespace FavoDeMel.Domain.Entities.Comandas
         public decimal TotalAPagar { get; set; }
         public decimal GorjetaGarcom { get; set; }
         public string Codigo { get; set; }
-        public DateTimeOffset DataCadastro { get; set; }
+        public DateTime DataCadastro { get; set; }
         public ComandaSituacao Situacao { get; set; }
 
         public Usuario Garcom { get; set; }

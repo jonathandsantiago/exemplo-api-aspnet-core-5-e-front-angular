@@ -22,7 +22,10 @@ D:\Pessoal\Arquitetura\Novo\favodemel-api\src\FavoDeMel.Domain\obj\Debug\net5.0\
 D:\Pessoal\Arquitetura\Novo\favodemel-api\src\FavoDeMel.Domain\obj\Debug\net5.0\FavoDeMel.Domain.dll
 D:\Pessoal\Arquitetura\Novo\favodemel-api\src\FavoDeMel.Domain\obj\Debug\net5.0\ref\FavoDeMel.Domain.dll
 D:\Pessoal\Arquitetura\Novo\favodemel-api\src\FavoDeMel.Domain\obj\Debug\net5.0\FavoDeMel.Domain.pdb
-D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\obj\Debug\net5.0\FavoDeMel.Domain.csproj.AssemblyReference.cache
+D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\bin\Debug\net5.0\FavoDeMel.Domain.deps.json
+D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\bin\Debug\net5.0\FavoDeMel.Domain.dll
+D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\bin\Debug\net5.0\ref\FavoDeMel.Domain.dll
+D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\bin\Debug\net5.0\FavoDeMel.Domain.pdb
 D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\obj\Debug\net5.0\FavoDeMel.Domain.GeneratedMSBuildEditorConfig.editorconfig
 D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\obj\Debug\net5.0\FavoDeMel.Domain.AssemblyInfoInputs.cache
 D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\obj\Debug\net5.0\FavoDeMel.Domain.AssemblyInfo.cs
@@ -30,7 +33,3 @@ D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\obj\Debug\net5.0\FavoD
 D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\obj\Debug\net5.0\FavoDeMel.Domain.dll
 D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\obj\Debug\net5.0\ref\FavoDeMel.Domain.dll
 D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\obj\Debug\net5.0\FavoDeMel.Domain.pdb
-D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\bin\Debug\net5.0\FavoDeMel.Domain.deps.json
-D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\bin\Debug\net5.0\FavoDeMel.Domain.dll
-D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\bin\Debug\net5.0\ref\FavoDeMel.Domain.dll
-D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\bin\Debug\net5.0\FavoDeMel.Domain.pdb

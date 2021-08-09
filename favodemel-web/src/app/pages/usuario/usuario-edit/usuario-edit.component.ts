@@ -8,11 +8,11 @@ import {UsuarioPerfil} from '../../../models/usuario';
 import {Location} from '@angular/common';
 
 @Component({
-  selector: 'app-usuario-crud',
-  templateUrl: './usuario-crud.component.html',
-  styleUrls: ['./usuario-crud.component.scss'],
+  selector: 'app-usuario-edit',
+  templateUrl: './usuario-edit.component.html',
+  styleUrls: ['./usuario-edit.component.scss'],
 })
-export class UsuarioCrudComponent extends EditBaseComponent implements OnInit {
+export class UsuarioEditComponent extends EditBaseComponent implements OnInit {
 
   constructor(injector: Injector,
               protected formBuilder: FormBuilder,

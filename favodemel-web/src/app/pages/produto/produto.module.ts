@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ProdutoComponent} from './produto.component';
 import {SharedModule} from '../../shared/shared.module';
-import {ProdutoCrudComponent} from './produto-crud/produto-crud.component';
+import {ProdutoEditComponent} from './produto-edit/produto-edit.component';
 import {ProdutoRoutingModule} from './produto-routing.module';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {PaginacaoModule} from '../../shared/paginacao/paginacao.module';
@@ -20,7 +20,7 @@ import {PaginacaoModule} from '../../shared/paginacao/paginacao.module';
   ],
   declarations: [
     ProdutoComponent,
-    ProdutoCrudComponent,
+    ProdutoEditComponent,
   ],
   exports: [
   ],

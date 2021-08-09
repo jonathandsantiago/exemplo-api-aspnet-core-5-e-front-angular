@@ -5,6 +5,8 @@ export class Comanda {
   totalAPagar: any;
   gorjetaGarcom: any;
   situacao: ComandaSituacao;
+  dataCadastro: any;
+  codigo: string;
 }
 
 export class ComandaPedido {

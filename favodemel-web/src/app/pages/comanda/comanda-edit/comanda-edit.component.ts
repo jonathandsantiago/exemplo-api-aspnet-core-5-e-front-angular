@@ -12,11 +12,11 @@ import {Usuario, UsuarioPerfil} from '../../../models/usuario';
 import {UsuarioService} from '../../../services/usuario.service';
 
 @Component({
-  selector: 'app-comanda-cadastro',
-  templateUrl: './comanda-crud.component.html',
-  styleUrls: ['./comanda-crud.component.scss'],
+  selector: 'app-comanda-edit',
+  templateUrl: './comanda-edit.component.html',
+  styleUrls: ['./comanda-edit.component.scss'],
 })
-export class ComandaCrudComponent extends EditBaseComponent implements OnInit {
+export class ComandaEditComponent extends EditBaseComponent implements OnInit {
   @Input() modalRef: BsModalRef;
   @Output() callbackEdicao: EventEmitter<any> = new EventEmitter<any>();
   @Output() callbackCadastro: EventEmitter<any> = new EventEmitter<any>();

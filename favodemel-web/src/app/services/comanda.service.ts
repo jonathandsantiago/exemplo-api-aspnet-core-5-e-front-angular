@@ -10,7 +10,7 @@ import {Comanda} from '../models/comanda';
 import {finalize} from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
-export class ComandaService extends BaseService<Comanda>{
+export class ComandaService extends BaseService<Comanda> {
 
   protected urlApi = `${environment.apiUrl}/comandas`;
 
@@ -33,7 +33,6 @@ export class ComandaService extends BaseService<Comanda>{
       pedido.situacao = convertToInt(pedido.situacao);
       return pedido;
     });
-    console.log(JSON.stringify(params));
     return params;
   }
 
@@ -41,13 +40,13 @@ export class ComandaService extends BaseService<Comanda>{
     return this.http.get<any>(`${this.urlApi}/listar-por-situacao/${situacao}`);
   }
 
-  confirmar(id: number) {
-    return this.http.post(`${this.urlApi}/confirmar`, id)
+  confirmar(id: any) {
+    return this.http.post(`${this.urlApi}/confirmar`, {id})
       .pipe(prepare(() => this.spinner.show()), finalize(() => this.spinner.hide()));
   }
 
-  fechar(id: number) {
-    return this.http.post(`${this.urlApi}/fechar`, id)
+  fechar(id: any) {
+    return this.http.post(`${this.urlApi}/fechar`, {id})
       .pipe(prepare(() => this.spinner.show()), finalize(() => this.spinner.hide()));
   }
 }

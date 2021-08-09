@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FavoDeMel.Domain.Helpers;
 
 namespace FavoDeMel.Repository
 {
@@ -49,6 +50,8 @@ namespace FavoDeMel.Repository
         public async Task<Comanda> Inserir(Comanda comanda)
         {
             comanda.Garcom = comanda.Garcom == null ? null : await UsuarioSelect.Where(c => c.Id == comanda.Garcom.Id).FirstOrDefaultAsync();
+            var existe = await ComandaSelect.AnyAsync(c => c.DataCadastro.Date == comanda.DataCadastro.Date);
+            comanda.Codigo = !existe ? "0001" : StringHelper.MaxAddPadLeft(ComandaSelect.Where(c => c.DataCadastro.Date == comanda.DataCadastro.Date).Max(c => c.Codigo), 4);
 
             foreach (var comandaPedido in comanda.Pedidos)
             {

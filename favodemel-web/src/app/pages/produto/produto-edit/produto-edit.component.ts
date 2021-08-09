@@ -7,11 +7,11 @@ import {ProdutoService} from '../../../services/produto.service';
 import {Location} from '@angular/common';
 
 @Component({
-  selector: 'app-produto-crud',
-  templateUrl: './produto-crud.component.html',
-  styleUrls: ['./produto-crud.component.scss'],
+  selector: 'app-produto-edit',
+  templateUrl: './produto-edit.component.html',
+  styleUrls: ['./produto-edit.component.scss'],
 })
-export class ProdutoCrudComponent extends EditBaseComponent implements OnInit {
+export class ProdutoEditComponent extends EditBaseComponent implements OnInit {
 
   constructor(injector: Injector,
               protected formBuilder: FormBuilder,

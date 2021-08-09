@@ -1,6 +1,0 @@
-D:\Pessoal\Arquitetura\favodemel-api\test\FavoDeMel.Tests\bin\Debug\net5.0\CoverletSourceRootsMapping
-D:\Pessoal\Arquitetura\favodemel-api\test\FavoDeMel.Tests\obj\Debug\net5.0\FavoDeMel.Tests.csproj.AssemblyReference.cache
-D:\Pessoal\Arquitetura\favodemel-api\test\FavoDeMel.Tests\obj\Debug\net5.0\FavoDeMel.Tests.GeneratedMSBuildEditorConfig.editorconfig
-D:\Pessoal\Arquitetura\favodemel-api\test\FavoDeMel.Tests\obj\Debug\net5.0\FavoDeMel.Tests.AssemblyInfoInputs.cache
-D:\Pessoal\Arquitetura\favodemel-api\test\FavoDeMel.Tests\obj\Debug\net5.0\FavoDeMel.Tests.AssemblyInfo.cs
-D:\Pessoal\Arquitetura\favodemel-api\test\FavoDeMel.Tests\obj\Debug\net5.0\FavoDeMel.Tests.csproj.CoreCompileInputs.cache

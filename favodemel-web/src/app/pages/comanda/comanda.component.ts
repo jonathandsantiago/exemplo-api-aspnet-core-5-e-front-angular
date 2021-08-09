@@ -5,6 +5,8 @@ import {Comanda, ComandaPedido, ComandaSituacao} from '../../models/comanda';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 import {UsuarioService} from '../../services/usuario.service';
 import {Usuario, UsuarioPerfil} from '../../models/usuario';
+import {WebSocketService} from '../../services/websocket.service';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-comanda',
@@ -24,10 +26,11 @@ export class ComandaComponent implements OnInit, OnDestroy {
 
   constructor(protected modalService: BsModalService,
               protected usuarioService: UsuarioService,
-              protected comandaService: ComandaService) {
+              protected comandaService: ComandaService,
+              protected toastService: ToastrService,
+              protected webSocketService: WebSocketService) {
     this.subscription.add(this.usuarioService.usuarioLogado$.subscribe((usuario: Usuario) => {
       this.usuarioLogado = usuario;
-      console.log(this.usuarioLogado);
     }));
   }
 
@@ -48,6 +51,12 @@ export class ComandaComponent implements OnInit, OnDestroy {
         comanda.totalAPagar = `${comanda.totalAPagar.toLocaleString('pt-br', {minimumFractionDigits: 2})}`;
         return comanda;
       })));
+
+    this.subscription.add(this.webSocketService.filaPedido$.subscribe(c => {
+      if (c){
+        this.toastService.success(`${c}`);
+      }
+    }));
   }
 
   abrirModal(template: TemplateRef<any>, content?: any, titulo = null, largura = 'lg') {

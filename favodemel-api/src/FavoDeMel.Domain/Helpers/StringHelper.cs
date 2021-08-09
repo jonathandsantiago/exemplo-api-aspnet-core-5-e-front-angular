@@ -1,5 +1,7 @@
 ﻿using FavoDeMel.Domain.Extensions;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -55,6 +57,36 @@ namespace FavoDeMel.Domain.Helpers
         public static string JoinHtmlMensagem(IEnumerable<string> mensagem)
         {
             return string.Join("<br>", mensagem);
+        }
+
+        public static string ApenasNumeros(string str)
+        {
+            return str == null ? null : string.Join(string.Empty, str.ToCharArray().Where(char.IsDigit));
+        }
+
+        public static string MaxAddPadLeft(string value, int qtdZeros)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+
+            return PadLeft($"{Convert.ToInt32(ApenasNumeros(value)) + 1}", qtdZeros);
+        }
+
+        public static string PadLeft(string value, int qtdZeros, bool onlyNumbers = true)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+
+            if (onlyNumbers && value.Any(c => !Char.IsDigit(c)))
+            {
+                return value;
+            }
+
+            return value.PadLeft(qtdZeros, '0');
         }
     }
 }

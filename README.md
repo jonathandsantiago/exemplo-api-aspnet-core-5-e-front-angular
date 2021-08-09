@@ -24,38 +24,35 @@ O Controle de acesso do sistema é gerenciado por perfil.
     - Tem acesso a cadastro de comandas e ação de confirmar pedidos;
 
 ## Backend
-- Projeto desenvolvido em C# .NET com ASP.NET Core 3.1;
-- Entity Framework - com MySql;
+- Projeto desenvolvido em C# .NET com ASP.NET Core 5.0;
+- Entity Framework - com PostgreSql;
 - Autenticação e autorização OAuth2 - JWT
 - Docker
-- Messageria com RabbitMq
-- Storage com Minio
+- Messageria com Kafka
 - Controle de cache com Redis
   
 #### Containers Docker:
 - Api
-- Banco de dados MySql
-- RabbitMq
+- Banco de dados PostgreSql
+- Kafka
 - Redis
-- Minio
 
 #### Estrutura projeto:
 Projeto estruturado com a metodologia DDD e TDD distribuito por camadas:
 - FavoDeMel.Api: `Camada de aplicação;`
 - FavoDeMel.Domain: `Cadama de dominio;`
-- FavoDeMel.EF.Repository: `Camada de repositório, responsavel por gerenciar todas as consultas e transações no banco de dados;`
-- FavoDeMel.Framework: `Camada de framework, reponsavel por conter todos os helpers extensões e facilitadores do sistema;`
-- FavoDeMel.IoC: `Camada Ioc, responsavel por gerenciaçar as injeções de dependencias;`
-- FavoDeMel.Messaging: `Camada de mesageria, reponsavel por gerenciar todos os eventos e comandos de mesagens entre sistemas;`
-- FavoDeMel.Redis.Repository: `Camada de repositório de cache, reponsavel por gerenciar os cache do sistema;`
+- FavoDeMel.Repository: `Camada de repositório, responsavel por gerenciar todas as consultas e transações no banco de dados;`
 - FavoDeMel.Service: `Camada de serviço, reponsavel por gerenciar todos os serviços do sistema;`
 - FavoDeMel.Tests: `Camada de teste, reponsavel por gerenciar todos os testes unitários e de integração do sistema;`
 
 ## Frontend
-- Projeto desenvolvido com Angular 9.1 (Typescript);
+- Projeto desenvolvido com Angular 11.1 (Typescript);
 - Programação Reativa (RxJS);
 - Bootstrap;
+- NgxBootstrap;
+- Scss;
 - Docker;
+- Nginx
 
 #### Containers Docker:
 - Web
@@ -75,12 +72,10 @@ Projeto estruturado distribuito por camadas:
 
 ### BUILD
 - Api:
-    - Acessar a pasta da solução do projeto api e exucutar o seguinte comando:
-      
+    - Acessar a pasta da solução do projeto api e exucutar o seguinte comando:      
       `docker-compose up --build`
 - Api - Teste:
-    - Acessar a pasta da solução do projeto api e exucutar o seguinte comando:
-    
+    - Acessar a pasta da solução do projeto api e exucutar o seguinte comando:    
         `dotnet test	test/FavoDeMel.Tests`
 - Web:      
     - Acessar a pasta da solução do projeto e exucutar o seguinte comando:
@@ -95,24 +90,24 @@ Projeto estruturado distribuito por camadas:
 - [Api](https://localhost:44300/swagger/index.html)
 - [Web](http://localhost:4200)
 - [Redis](http://localhost:8081)
-- [RabbitMq](http://localhost:15672)
-  ```
-    Username: guest
-    Password: guest
-  ```
-- [Minio](http://localhost:9000)
-  ```
-    Access Key: minio
-    Secrt Key: minio123
-  ```
-- Mysql
+- [kafdrop](http://localhost:19000)
+- Kafka(kafka:29092)
+    ```
+      port=29092;
+      BrokerConnect=kafka:29092;
+    ```
+- PostgreSql
     ```
     server=localhost;
-    port=3306;
-    userid=user;
-    password=password;
-    database=favodemel-db
+    port=15432;
+    userid=admin;
+    password=Password_1;
+    database=favodemel
     ```
+
+### Kafka
+    A Mensageria foi montada com kafka e para que o frontend comunique em tempo real com kafka foi projetado um WebSocket.
+    Foi configurado no docker compose para levantar o kafdrop: Kafdrop é uma IU da web para visualizar os tópicos do Kafka
 
 ### Anotações
 Ao executar a Api em modo debug pelo Visual Studio, caso não contenha registro no banco de dados, o sistema irá gerar alguns dados para teste
