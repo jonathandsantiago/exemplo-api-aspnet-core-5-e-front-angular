@@ -108,7 +108,7 @@ namespace FavoDeMel.Service.Services
             Comanda comanda = await _repository.Confirmar(comandaId);
             ComandaDto dto = comanda.ToDto();
             await SalvarCache(dto.Id, dto);
-            await _mensageriaService.Publish(dto, TopicEvento.FilaPedido);
+            await _mensageriaService.Publish(dto, TopicEvento.CofirmacaoPedido);
             return dto;
         }
 
@@ -123,7 +123,7 @@ namespace FavoDeMel.Service.Services
             Comanda comanda = await _repository.Fechar(comandaId);
             ComandaDto dto = comanda.ToDto();
             await SalvarCache(dto.Id, dto);
-            await _mensageriaService.Publish(dto, TopicEvento.FilaPedido);
+            await _mensageriaService.Publish(dto, TopicEvento.FinalizacaoPedido);
             return comanda?.ToDto();
         }
     }
