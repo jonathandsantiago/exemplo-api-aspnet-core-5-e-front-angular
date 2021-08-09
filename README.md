@@ -46,7 +46,7 @@ Projeto estruturado com a metodologia DDD e TDD distribuito por camadas:
 - FavoDeMel.Tests: `Camada de teste, reponsavel por gerenciar todos os testes unitários e de integração do sistema;`
 
 ## Frontend
-- Projeto desenvolvido com Angular 11.1 (Typescript);
+- Projeto desenvolvido com Angular 11 (Typescript);
 - Programação Reativa (RxJS);
 - Bootstrap;
 - NgxBootstrap;
@@ -79,12 +79,12 @@ Projeto estruturado distribuito por camadas:
         `dotnet test	test/FavoDeMel.Tests`
 - Web:      
     - Acessar a pasta da solução do projeto e exucutar o seguinte comando:
-      `ng build --prod`
-      `ng s`
-      ou
-      `npm start`
-      ou 
-      `docker-compose up --build`
+    - `ng install`
+    - `docker-compose up --build`
+    ou
+    - `npm start`
+    - `ng s`
+    - `ng build --prod`
 
 ### Acesso aplicação após a build
 - [Api](https://localhost:44300/swagger/index.html)
