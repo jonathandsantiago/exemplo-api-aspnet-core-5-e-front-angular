@@ -105,3 +105,5 @@ lerna-debug.log*
 /favodemel-api/obj
 /favodemel-api/obj
 /favodemel-api/.vs
+/favodemel-api/src/FavoDeMel.Api/obj
+/favodemel-api/src/FavoDeMel.Api/bin

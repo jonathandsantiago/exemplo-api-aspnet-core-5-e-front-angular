@@ -10,12 +10,9 @@ namespace FavoDeMel.Api
 {
     public class Startup
     {
-        private readonly MensageriaEvents MensageriaEvents;
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            MensageriaEvents = new MensageriaEvents();
         }
 
         public IConfiguration Configuration { get; }
@@ -23,7 +20,6 @@ namespace FavoDeMel.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSingleton(MensageriaEvents);
             services.AddApiProvidersAssembly(Configuration);
         }
 
@@ -44,7 +40,7 @@ namespace FavoDeMel.Api
                 endpoints.MapControllers();
             });
 
-            app.AddApiConfigsAssembly(env, Configuration, MensageriaEvents);
+            app.AddApiConfigsAssembly(env, Configuration);
         }
     }
 }

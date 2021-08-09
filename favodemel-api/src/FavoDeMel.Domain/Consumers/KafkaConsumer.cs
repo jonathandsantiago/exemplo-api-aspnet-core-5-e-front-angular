@@ -2,6 +2,7 @@
 using Confluent.Kafka.Admin;
 using FavoDeMel.Domain.Events;
 using FavoDeMel.Domain.Models.Settings;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Net.WebSockets;
 using System.Text;
@@ -14,12 +15,10 @@ namespace FavoDeMel.Domain.Consumers
     {
         private readonly KafkaSettings _kafkaSettings;
         private readonly ConsumerConfig _consumerConfig;
-        private readonly MensageriaEvents _mensageriaEvents;
 
-        public KafkaConsumer(KafkaSettings kafkaSettings, MensageriaEvents mensageriaEvents)
+        public KafkaConsumer(KafkaSettings kafkaSettings)
         {
             _kafkaSettings = kafkaSettings;
-            _mensageriaEvents = mensageriaEvents;
             _consumerConfig = new ConsumerConfig
             {
                 BootstrapServers = _kafkaSettings.BootstrapServers,
@@ -29,17 +28,22 @@ namespace FavoDeMel.Domain.Consumers
             };
         }
 
-        public async Task SubscribeConsume()
+        public async Task SubscribeConsume(HttpContext context)
         {
             using var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build();
             try
             {
+                MensageriaEvents mensageriaEvent = (MensageriaEvents)context.RequestServices.GetService(typeof(MensageriaEvents));
+
                 await ConfigurarTopic(TopicEvento.FilaPedido);
                 consumer.Subscribe(TopicEvento.FilaPedido);
                 while (true)
                 {
                     var cr = consumer.Consume(CancellationToken.None);
-                    _mensageriaEvents.EnviarMensagem(cr.Message.Value);
+                    if (mensageriaEvent != null)
+                    {
+                        mensageriaEvent.EnviarMensagem(cr.Message.Value);
+                    }
                 }
             }
             catch (OperationCanceledException ex)
@@ -49,9 +53,34 @@ namespace FavoDeMel.Domain.Consumers
             }
         }
 
-        public async Task ConnectWebSocket(WebSocket webSocket)
+        public async Task ConnectWebSocket(HttpContext context, WebSocket webSocket)
         {
-            await SendWebSocket(webSocket);
+            MensageriaEvents mensageriaEvent = (MensageriaEvents)context.RequestServices.GetService(typeof(MensageriaEvents));
+            try
+            {
+                if (mensageriaEvent != null)
+                {
+                    mensageriaEvent.Mensagem += async (mensagem) =>
+                    {
+                        await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(mensagem), 0, mensagem.Length), WebSocketMessageType.Text, true, CancellationToken.None);
+                    };
+                }
+
+                var buffer = new byte[1024 * 4];
+                WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+
+                while (!result.CloseStatus.HasValue)
+                {
+                    string msg = Encoding.UTF8.GetString(new ArraySegment<byte>(buffer, 0, result.Count));
+                    result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                }
+
+                await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error websocket: {ex.Message}");
+            }
         }
 
         private async Task ConfigurarTopic(string topic)
@@ -68,32 +97,6 @@ namespace FavoDeMel.Domain.Consumers
             catch (CreateTopicsException e)
             {
                 Console.WriteLine($"An error occured creating topic {e.Results[0].Topic}: {e.Results[0].Error.Reason}");
-            }
-        }
-
-        public async Task SendWebSocket(WebSocket webSocket)
-        {
-            try
-            {
-                _mensageriaEvents.Mensagem += async (mensagem) =>
-                {
-                    await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(mensagem), 0, mensagem.Length), WebSocketMessageType.Text, true, CancellationToken.None);
-                };
-
-                var buffer = new byte[1024 * 4];
-                WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-
-                while (!result.CloseStatus.HasValue)
-                {
-                    string msg = Encoding.UTF8.GetString(new ArraySegment<byte>(buffer, 0, result.Count));
-                    result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                }
-
-                await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error websocket: {ex.Message}");
             }
         }
     }

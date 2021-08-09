@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka;
 using FavoDeMel.Api.Providers.Interface;
+using FavoDeMel.Domain.Events;
 using FavoDeMel.Domain.Extensions;
 using FavoDeMel.Domain.Interfaces;
 using FavoDeMel.Domain.Models.Settings;
@@ -19,7 +20,9 @@ namespace FavoDeMel.Api.Providers
             {
                 BootstrapServers = kafkaSettings.BootstrapServers
             };
-            
+
+            MensageriaEvents mensageriaEvents = new MensageriaEvents();
+            services.AddSingleton(mensageriaEvents);
             services.AddTransient(c => new ProducerBuilder<Null, string>(config));
             services.TryAddScoped<IMensageriaService, MensageriaService>();
         }

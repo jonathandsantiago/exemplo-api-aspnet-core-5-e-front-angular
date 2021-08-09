@@ -54,19 +54,31 @@ export class ComandaComponent implements OnInit, OnDestroy {
 
     this.subscription.add(this.webSocketService.filaPedido$.subscribe(pedido => {
       if (pedido) {
-        this.toastService.success(`Novo pedido cadastrado: ${pedido.Codigo}`);
+        this.toastService.success(`Novo pedido cadastrado: ${pedido.Codigo}`, null, {
+          positionClass: 'toast-bottom-right',
+          disableTimeOut: false,
+          progressBar: true
+        });
       }
     }));
 
     this.subscription.add(this.webSocketService.confirmacaoPedido$.subscribe(pedido => {
       if (pedido) {
-        this.toastService.success(`Confirmado o pedido: ${pedido.Codigo}`);
+        this.toastService.success(`Confirmado o pedido: ${pedido.Codigo}`, null, {
+          positionClass: 'toast-bottom-right',
+          disableTimeOut: false,
+          progressBar: true
+        });
       }
     }));
 
     this.subscription.add(this.webSocketService.finalizacaoPedido$.subscribe(pedido => {
       if (pedido) {
-        this.toastService.success(`Fechado o pedido: ${pedido.Codigo}`);
+        this.toastService.success(`Fechado o pedido: ${pedido.Codigo}`, null, {
+          positionClass: 'toast-bottom-right',
+          disableTimeOut: false,
+          progressBar: true
+        });
       }
     }));
   }

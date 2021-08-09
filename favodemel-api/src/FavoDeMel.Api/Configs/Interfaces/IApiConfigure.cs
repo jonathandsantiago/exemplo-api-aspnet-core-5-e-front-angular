@@ -6,6 +6,6 @@ namespace FavoDeMel.Api.Configs.Interfaces
 {
     public interface IApiConfigure
     {
-        void AddAplication(IApplicationBuilder app, IWebHostEnvironment env, ISettings<string, object> settings, IEvents events);
+        void AddAplication(IApplicationBuilder app, IWebHostEnvironment env, ISettings<string, object> settings);
     }
 }

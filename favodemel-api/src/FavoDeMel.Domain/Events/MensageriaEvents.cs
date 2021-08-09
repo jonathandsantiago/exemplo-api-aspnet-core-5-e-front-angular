@@ -1,11 +1,10 @@
-﻿using FavoDeMel.Domain.Interfaces;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace FavoDeMel.Domain.Events
 {
     public delegate Task MensagemEvent(string mensagem);
 
-    public class MensageriaEvents : IEvents
+    public class MensageriaEvents
     {
         public event MensagemEvent Mensagem;
 

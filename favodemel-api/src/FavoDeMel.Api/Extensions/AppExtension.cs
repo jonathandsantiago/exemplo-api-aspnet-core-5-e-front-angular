@@ -25,13 +25,13 @@ namespace FavoDeMel.Api.Extensions
             providers.ForEach(install => install.AddProvider(services, settings));
         }
 
-        public static void AddApiConfigsAssembly(this IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration, IEvents events)
+        public static void AddApiConfigsAssembly(this IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration)
         {
             ISettings<string, object> settings = ObterSettingsAssembly(configuration);
             var providers = typeof(Startup).Assembly.ExportedTypes.Where(x => typeof(IApiConfigure).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
                 .Select(Activator.CreateInstance).Cast<IApiConfigure>().ToList();
 
-            providers.ForEach(install => install.AddAplication(app, env, settings, events));
+            providers.ForEach(install => install.AddAplication(app, env, settings));
         }
 
         private static ISettings<string, object> ObterSettingsAssembly(IConfiguration configuration, IServiceCollection services = null)
