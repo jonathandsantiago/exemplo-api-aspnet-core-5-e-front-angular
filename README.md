@@ -79,9 +79,9 @@ Projeto estruturado distribuito por camadas:
         `dotnet test	test/FavoDeMel.Tests`
 - Web:      
     - Acessar a pasta da solução do projeto e exucutar o seguinte comando:
-    - `ng install`
     - `docker-compose up --build`
     ou
+    - `ng install`
     - `npm start`
     - `ng s`
     - `ng build --prod`
