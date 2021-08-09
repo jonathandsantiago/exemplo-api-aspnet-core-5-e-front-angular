@@ -9,7 +9,6 @@ namespace FavoDeMel.Domain.Models.Settings
     public class KafkaSettings : ISettings
     {
         public string BootstrapServers { get; set; }
-        public IEnumerable<string> Topics { get; set; }
 
         public KafkaSettings(IConfiguration configuration)
         {

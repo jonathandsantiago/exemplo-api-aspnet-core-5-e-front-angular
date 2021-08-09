@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit, TemplateRef} from '@angular/core';
-import {Observable, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {ComandaService} from '../../services/comanda.service';
 import {Comanda, ComandaPedido, ComandaSituacao} from '../../models/comanda';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
@@ -52,9 +52,21 @@ export class ComandaComponent implements OnInit, OnDestroy {
         return comanda;
       })));
 
-    this.subscription.add(this.webSocketService.filaPedido$.subscribe(c => {
-      if (c){
-        this.toastService.success(`${c}`);
+    this.subscription.add(this.webSocketService.filaPedido$.subscribe(pedido => {
+      if (pedido) {
+        this.toastService.success(`Novo pedido cadastrado: ${pedido.Codigo}`);
+      }
+    }));
+
+    this.subscription.add(this.webSocketService.confirmacaoPedido$.subscribe(pedido => {
+      if (pedido) {
+        this.toastService.success(`Confirmado o pedido: ${pedido.Codigo}`);
+      }
+    }));
+
+    this.subscription.add(this.webSocketService.finalizacaoPedido$.subscribe(pedido => {
+      if (pedido) {
+        this.toastService.success(`Fechado o pedido: ${pedido.Codigo}`);
       }
     }));
   }
@@ -76,18 +88,26 @@ export class ComandaComponent implements OnInit, OnDestroy {
 
   confirmarPedido(id: any) {
     this.subscription.add(this.comandaService.confirmar(id).subscribe((comanda: Comanda) => {
-      const index = this.comandasAberta.findIndex(c => c.id === id);
-      this.comandasAberta.splice(index, 1);
-      this.comandasEmAndamento.push(comanda);
+      this.moverPedidoConfirmado(id, comanda);
     }));
+  }
+
+  moverPedidoConfirmado(id, comanda) {
+    const index = this.comandasAberta.findIndex(c => c.id === id);
+    this.comandasAberta.splice(index, 1);
+    this.comandasEmAndamento.push(comanda);
   }
 
   fecharPedido(id: any) {
     this.subscription.add(this.comandaService.fechar(id).subscribe((comanda: Comanda) => {
-      const index = this.comandasEmAndamento.findIndex(c => c.id === id);
-      this.comandasEmAndamento.splice(index, 1);
-      this.comandasFechada.push(comanda);
+      this.moverPedidoFechado(id, comanda);
     }));
+  }
+
+  moverPedidoFechado(id, comanda) {
+    const index = this.comandasEmAndamento.findIndex(c => c.id === id);
+    this.comandasEmAndamento.splice(index, 1);
+    this.comandasFechada.push(comanda);
   }
 
   inserirComanda(comanda: Comanda) {

@@ -9,6 +9,10 @@ export class WebSocketService {
   private socket: WebSocket;
   filaPedidoSubject$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   filaPedido$ = this.filaPedidoSubject$.asObservable();
+  confirmacaoPedidoSubject$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  confirmacaoPedido$ = this.confirmacaoPedidoSubject$.asObservable();
+  finalizacaoPedidoSubject$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  finalizacaoPedido$ = this.finalizacaoPedidoSubject$.asObservable();
 
   constructor() {
   }
@@ -19,17 +23,22 @@ export class WebSocketService {
       console.log('Mensageria connectada!');
     }));
     this.socket.addEventListener('message', (ev => {
-      console.log('Mensagem: ', ev);
-
-      if (!ev || !ev.data) {
+      if (!ev.data) {
         return;
       }
 
-      console.log('teste: ', ev.data);
-      const messageBox = JSON.parse(ev.data);
-      switch (messageBox.topic) {
+      const data = JSON.parse(ev.data);
+      const mensagem = JSON.parse(data.Mensagem);
+      const value = JSON.parse(mensagem.Value);
+      switch (mensagem.Evento) {
         case 'fila_pedido':
-          this.filaPedidoSubject$.next(messageBox.value);
+          this.filaPedidoSubject$.next(value);
+          break;
+        case 'confirmacao_pedido':
+          this.confirmacaoPedidoSubject$.next(value);
+          break;
+        case 'finalizacao_pedido':
+          this.finalizacaoPedidoSubject$.next(value);
           break;
         default:
           break;

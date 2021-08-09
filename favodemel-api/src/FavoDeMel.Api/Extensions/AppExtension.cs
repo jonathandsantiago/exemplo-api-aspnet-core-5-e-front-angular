@@ -1,5 +1,6 @@
 ﻿using FavoDeMel.Api.Configs.Interfaces;
 using FavoDeMel.Api.Providers.Interface;
+using FavoDeMel.Domain.Events;
 using FavoDeMel.Domain.Interfaces;
 using FavoDeMel.Domain.Models.Settings;
 using Microsoft.AspNetCore.Builder;
@@ -24,13 +25,13 @@ namespace FavoDeMel.Api.Extensions
             providers.ForEach(install => install.AddProvider(services, settings));
         }
 
-        public static void AddApiConfigsAssembly(this IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration)
+        public static void AddApiConfigsAssembly(this IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration, IEvents events)
         {
             ISettings<string, object> settings = ObterSettingsAssembly(configuration);
             var providers = typeof(Startup).Assembly.ExportedTypes.Where(x => typeof(IApiConfigure).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
                 .Select(Activator.CreateInstance).Cast<IApiConfigure>().ToList();
 
-            providers.ForEach(install => install.AddAplication(app, env, settings));
+            providers.ForEach(install => install.AddAplication(app, env, settings, events));
         }
 
         private static ISettings<string, object> ObterSettingsAssembly(IConfiguration configuration, IServiceCollection services = null)

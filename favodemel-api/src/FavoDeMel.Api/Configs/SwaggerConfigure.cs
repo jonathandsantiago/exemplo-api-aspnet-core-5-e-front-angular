@@ -10,7 +10,7 @@ namespace FavoDeMel.Api.Configs
 {
     public class SwaggerConfigure : IApiConfigure
     {
-        public void AddAplication(IApplicationBuilder app, IWebHostEnvironment env, ISettings<string, object> settings)
+        public void AddAplication(IApplicationBuilder app, IWebHostEnvironment env, ISettings<string, object> settings, IEvents events)
         {
             SwaggerSettings authSettings = settings.GetSetting<SwaggerSettings>();
 

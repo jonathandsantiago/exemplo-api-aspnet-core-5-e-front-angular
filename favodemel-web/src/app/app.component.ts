@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {WebSocketService} from "./services/websocket.service";
+import {WebSocketService} from './services/websocket.service';
 
 @Component({
   selector: 'app-root',

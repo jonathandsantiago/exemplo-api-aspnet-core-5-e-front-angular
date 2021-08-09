@@ -1,5 +1,6 @@
 ﻿using FavoDeMel.Api.Configs.Interfaces;
 using FavoDeMel.Domain.Consumers;
+using FavoDeMel.Domain.Events;
 using FavoDeMel.Domain.Extensions;
 using FavoDeMel.Domain.Interfaces;
 using FavoDeMel.Domain.Models.Settings;
@@ -13,7 +14,7 @@ namespace FavoDeMel.Api.Configs
 {
     public class WebSocketConfigure : IApiConfigure
     {
-        public void AddAplication(IApplicationBuilder app, IWebHostEnvironment env, ISettings<string, object> settings)
+        public void AddAplication(IApplicationBuilder app, IWebHostEnvironment env, ISettings<string, object> settings, IEvents events)
         {
             app.UseWebSockets(new WebSocketOptions
             {
@@ -21,8 +22,7 @@ namespace FavoDeMel.Api.Configs
             });
 
             var kafkaSettings = settings.GetSetting<KafkaSettings>();
-            KafkaConsumer kafkaConsumer = new(kafkaSettings);
-            kafkaConsumer.Builder().Wait();
+            KafkaConsumer kafkaConsumer = new(kafkaSettings, events as MensageriaEvents);
 
             app.Use(async (context, next) =>
             {

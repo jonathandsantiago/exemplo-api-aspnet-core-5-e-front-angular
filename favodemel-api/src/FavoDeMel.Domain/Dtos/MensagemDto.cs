@@ -2,12 +2,12 @@
 {
     public class MensagemDto
     {
-        public string Topic { get; set; }
+        public string Evento { get; set; }
         public string Value { get; set; }
 
-        public MensagemDto(string topic, string value)
+        public MensagemDto(string evento, string value)
         {
-            Topic = topic;
+            Evento = evento;
             Value = value;
         }
     }

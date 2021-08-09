@@ -51,48 +51,44 @@ namespace FavoDeMel.Service.Services
 
         public async Task<ComandaDto> Inserir(ComandaDto comandaDto)
         {
-            using (var dbTransaction = _repository.BeginTransaction(_validador))
+            using var dbTransaction = _repository.BeginTransaction(_validador);
+            if (!await _validador.Validar(comandaDto))
             {
-                if (!await _validador.Validar(comandaDto))
-                {
-                    return null;
-                }
-
-                Comanda comanda = comandaDto.ToEntity();
-                comanda.Id = _geradorGuidService.GetNexGuid();
-
-                foreach (var pedido in comanda.Pedidos)
-                {
-                    pedido.Id = _geradorGuidService.GetNexGuid();
-                }
-
-                comanda.Prepare();
-                comanda.DataCadastro = DateTime.Now;
-                Comanda comandaDb = await _repository.Inserir(comanda);
-                ComandaDto dto = comandaDb.ToDto();
-                await SalvarCache(dto.Id, dto);
-                await _mensageriaService.Publish(dto, TopicEvento.FilaPedido);
-                return dto;
+                return null;
             }
+
+            Comanda comanda = comandaDto.ToEntity();
+            comanda.Id = _geradorGuidService.GetNexGuid();
+
+            foreach (var pedido in comanda.Pedidos)
+            {
+                pedido.Id = _geradorGuidService.GetNexGuid();
+            }
+
+            comanda.Prepare();
+            comanda.DataCadastro = DateTime.Now;
+            Comanda comandaDb = await _repository.Inserir(comanda);
+            ComandaDto dto = comandaDb.ToDto();
+            await SalvarCache(dto.Id, dto);
+            await _mensageriaService.Publish(dto, TopicEvento.FilaPedido);
+            return dto;
         }
 
         public async Task<ComandaDto> Editar(ComandaDto comandaDto)
         {
-            using (var dbTransaction = _repository.BeginTransaction(_validador))
+            using var dbTransaction = _repository.BeginTransaction(_validador);
+            if (!await _validador.Validar(comandaDto))
             {
-                if (!await _validador.Validar(comandaDto))
-                {
-                    return null;
-                }
-
-                Comanda comanda = comandaDto.ToEntity();
-                comanda.Prepare();
-                await _repository.Editar(comanda);
-                ComandaDto dto = comanda.ToDto();
-                await SalvarCache(dto.Id, dto);
-                await _mensageriaService.Publish(dto, TopicEvento.FilaPedido);
-                return dto;
+                return null;
             }
+
+            Comanda comanda = comandaDto.ToEntity();
+            comanda.Prepare();
+            await _repository.Editar(comanda);
+            ComandaDto dto = comanda.ToDto();
+            await SalvarCache(dto.Id, dto);
+            await _mensageriaService.Publish(dto, TopicEvento.FilaPedido);
+            return dto;
         }
 
         public async Task<IEnumerable<ComandaDto>> ObterTodosPorSituacao(ComandaSituacao situacao)
@@ -103,36 +99,32 @@ namespace FavoDeMel.Service.Services
 
         public async Task<ComandaDto> Confirmar(Guid comandaId)
         {
-            using (var dbTransaction = _repository.BeginTransaction(_validador))
+            using var dbTransaction = _repository.BeginTransaction(_validador);
+            if (!_validador.PermiteAlterarSituacao(comandaId))
             {
-                if (!_validador.PermiteAlterarSituacao(comandaId))
-                {
-                    return null;
-                }
-
-                Comanda comanda = await _repository.Confirmar(comandaId);
-                ComandaDto dto = comanda.ToDto();
-                await SalvarCache(dto.Id, dto);
-                await _mensageriaService.Publish(dto, TopicEvento.FilaPedido);
-                return dto;
+                return null;
             }
+
+            Comanda comanda = await _repository.Confirmar(comandaId);
+            ComandaDto dto = comanda.ToDto();
+            await SalvarCache(dto.Id, dto);
+            await _mensageriaService.Publish(dto, TopicEvento.FilaPedido);
+            return dto;
         }
 
         public async Task<ComandaDto> Fechar(Guid comandaId)
         {
-            using (var dbTransaction = _repository.BeginTransaction(_validador))
+            using var dbTransaction = _repository.BeginTransaction(_validador);
+            if (!_validador.PermiteAlterarSituacao(comandaId))
             {
-                if (!_validador.PermiteAlterarSituacao(comandaId))
-                {
-                    return null;
-                }
-
-                Comanda comanda = await _repository.Fechar(comandaId);
-                ComandaDto dto = comanda.ToDto();
-                await SalvarCache(dto.Id, dto);
-                await _mensageriaService.Publish(dto, TopicEvento.FilaPedido);
-                return comanda?.ToDto();
+                return null;
             }
+
+            Comanda comanda = await _repository.Fechar(comandaId);
+            ComandaDto dto = comanda.ToDto();
+            await SalvarCache(dto.Id, dto);
+            await _mensageriaService.Publish(dto, TopicEvento.FilaPedido);
+            return comanda?.ToDto();
         }
     }
 }

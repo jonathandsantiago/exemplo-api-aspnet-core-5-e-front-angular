@@ -2,6 +2,8 @@
 {
     public static class TopicEvento
     {
-        public static string FilaPedido = "fila_pedido";
+        public const string FilaPedido = "fila_pedido";
+        public const string CofirmacaoPedido = "confirmacao_pedido";
+        public const string FinalizacaoPedido = "finalizacao_pedido";
     }
 }

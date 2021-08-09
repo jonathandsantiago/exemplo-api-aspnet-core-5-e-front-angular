@@ -44,7 +44,7 @@
       <div class="card-body text-secondary">
         <ng-template ngFor let-comanda [ngForOf]="comandasEmAndamento" let-i="index">
           <div class="card border-secondary mb-3">
-            <div class="card-header"><strong>Comanda: {{comanda.id}}</strong></div>
+            <div class="card-header"><strong>Comanda: {{comanda.codigo}}</strong></div>
             <div class="card-body text-secondary">
               <ng-template ngFor let-pedido [ngForOf]="comanda.pedidos" let-i="index">
                 <div class="row">
@@ -77,7 +77,7 @@
       <div class="card-body text-success">
         <ng-template ngFor let-comanda [ngForOf]="comandasFechada" let-i="index">
           <div class="card border-success mb-3">
-            <div class="card-header"><strong>Comanda: {{comanda.id}}</strong></div>
+            <div class="card-header"><strong>Comanda: {{comanda.codigo}}</strong></div>
             <div class="card-body text-success">
               <ng-template ngFor let-pedido [ngForOf]="comanda.pedidos" let-i="index">
                 <div class="row">

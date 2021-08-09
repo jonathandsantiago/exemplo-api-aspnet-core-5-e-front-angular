@@ -1,7 +1,7 @@
 ﻿using Confluent.Kafka;
 using Confluent.Kafka.Admin;
+using FavoDeMel.Domain.Events;
 using FavoDeMel.Domain.Models.Settings;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Net.WebSockets;
 using System.Text;
@@ -10,44 +10,51 @@ using System.Threading.Tasks;
 
 namespace FavoDeMel.Domain.Consumers
 {
-    public class KafkaConsumer : IDisposable
+    public class KafkaConsumer
     {
         private readonly KafkaSettings _kafkaSettings;
-        private IConsumer<Ignore, string> _consumer;
+        private readonly ConsumerConfig _consumerConfig;
+        private readonly MensageriaEvents _mensageriaEvents;
 
-        public KafkaConsumer(KafkaSettings kafkaSettings)
+        public KafkaConsumer(KafkaSettings kafkaSettings, MensageriaEvents mensageriaEvents)
         {
             _kafkaSettings = kafkaSettings;
+            _mensageriaEvents = mensageriaEvents;
+            _consumerConfig = new ConsumerConfig
+            {
+                BootstrapServers = _kafkaSettings.BootstrapServers,
+                GroupId = Guid.NewGuid().ToString(),
+                AutoOffsetReset = AutoOffsetReset.Earliest,
+                AllowAutoCreateTopics = true
+            };
         }
 
-        public async Task Builder()
+        public async Task SubscribeConsume()
         {
+            using var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build();
             try
             {
-                var config = new ConsumerConfig
+                await ConfigurarTopic(TopicEvento.FilaPedido);
+                consumer.Subscribe(TopicEvento.FilaPedido);
+                while (true)
                 {
-                    BootstrapServers = _kafkaSettings.BootstrapServers,
-                    GroupId = Guid.NewGuid().ToString(),
-                    AutoOffsetReset = AutoOffsetReset.Earliest,
-                    AllowAutoCreateTopics = true
-                };
-
-                _consumer = new ConsumerBuilder<Ignore, string>(config).Build();
-
-                foreach (var topic in _kafkaSettings.Topics)
-                {
-                    await ConfigureTopics(topic);
-                    _consumer.Subscribe(topic);
+                    var cr = consumer.Consume(CancellationToken.None);
+                    _mensageriaEvents.EnviarMensagem(cr.Message.Value);
                 }
-
             }
-            catch (Exception ex)
+            catch (OperationCanceledException ex)
             {
-                Console.WriteLine($"Exceção: {ex.GetType().FullName} | Mensagem: {ex.Message}");
+                consumer.Close();
+                Console.WriteLine($"Cancelada a execução do Consumer pelo seguinte motivo: {ex.Message}");
             }
         }
 
-        private async Task ConfigureTopics(string topic)
+        public async Task ConnectWebSocket(WebSocket webSocket)
+        {
+            await SendWebSocket(webSocket);
+        }
+
+        private async Task ConfigurarTopic(string topic)
         {
             try
             {
@@ -64,43 +71,15 @@ namespace FavoDeMel.Domain.Consumers
             }
         }
 
-        public async Task ConnectWebSocket(WebSocket webSocket)
-        {
-            await ConsumeWebSocket(webSocket);
-            await SendWebSocket(webSocket);
-        }
-
-        private async Task ConsumeWebSocket(WebSocket webSocket)
+        public async Task SendWebSocket(WebSocket webSocket)
         {
             try
             {
-                CancellationTokenSource cts = new CancellationTokenSource();
-                Console.CancelKeyPress += (_, e) =>
+                _mensageriaEvents.Mensagem += async (mensagem) =>
                 {
-                    e.Cancel = true;
-                    cts.Cancel();
+                    await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(mensagem), 0, mensagem.Length), WebSocketMessageType.Text, true, CancellationToken.None);
                 };
 
-                while (true)
-                {
-                    var cr = _consumer.Consume(cts.Token);
-                    if (webSocket.State == WebSocketState.Open)
-                    {
-                        await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(cr.Message.Value), 0, cr.Message.Value.Length), WebSocketMessageType.Text, true, CancellationToken.None);
-                    }
-                }
-            }
-            catch (OperationCanceledException ex)
-            {
-                _consumer.Close();
-                Console.WriteLine($"Cancelada a execução do Consumer pelo seguinte motivo: {ex.Message}");
-            }
-        }
-
-        private async Task SendWebSocket(WebSocket webSocket)
-        {
-            try
-            {
                 var buffer = new byte[1024 * 4];
                 WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
@@ -116,11 +95,6 @@ namespace FavoDeMel.Domain.Consumers
             {
                 Console.WriteLine($"Error websocket: {ex.Message}");
             }
-        }
-
-        public void Dispose()
-        {
-            _consumer.Dispose();
         }
     }
 }

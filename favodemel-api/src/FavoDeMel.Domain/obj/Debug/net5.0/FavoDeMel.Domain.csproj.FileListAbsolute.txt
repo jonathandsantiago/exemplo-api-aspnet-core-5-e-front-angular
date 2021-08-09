@@ -33,3 +33,4 @@ D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\obj\Debug\net5.0\FavoD
 D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\obj\Debug\net5.0\FavoDeMel.Domain.dll
 D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\obj\Debug\net5.0\ref\FavoDeMel.Domain.dll
 D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\obj\Debug\net5.0\FavoDeMel.Domain.pdb
+D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Domain\obj\Debug\net5.0\FavoDeMel.Domain.csproj.AssemblyReference.cache
