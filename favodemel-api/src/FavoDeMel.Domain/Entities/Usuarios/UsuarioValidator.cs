@@ -32,7 +32,7 @@ namespace FavoDeMel.Domain.Entities.Usuarios
                 AddMensagem(UsuarioMessage.PerfilInvalido);
             }
 
-            if (usuario.Id == Guid.Empty)
+            if (usuario.Id == null || usuario.Id == Guid.Empty)
             {
                 if (await _repository.ExistsLogin(usuario.Login))
                 {

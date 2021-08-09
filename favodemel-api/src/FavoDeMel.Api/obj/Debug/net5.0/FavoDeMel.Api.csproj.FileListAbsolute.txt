@@ -213,7 +213,6 @@ D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Api\obj\Debug\net5.0\FavoDeMe
 D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Api\obj\Debug\net5.0\FavoDeMel.Api.MvcApplicationPartsAssemblyInfo.cs
 D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Api\obj\Debug\net5.0\FavoDeMel.Api.MvcApplicationPartsAssemblyInfo.cache
 D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Api\obj\Debug\net5.0\staticwebassets\FavoDeMel.Api.StaticWebAssets.Manifest.cache
-D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Api\obj\Debug\net5.0\staticwebassets\FavoDeMel.Api.StaticWebAssets.xml
 D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Api\obj\Debug\net5.0\scopedcss\bundle\FavoDeMel.Api.styles.css
 D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Api\obj\Debug\net5.0\FavoDeMel.Api.RazorTargetAssemblyInfo.cache
 D:\Pessoal\Arquitetura\favodemel-api\src\FavoDeMel.Api\obj\Debug\net5.0\FavoDeMel.Api.csproj.CopyComplete

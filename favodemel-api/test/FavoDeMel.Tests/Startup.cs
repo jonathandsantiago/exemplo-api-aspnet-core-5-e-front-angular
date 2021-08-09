@@ -43,6 +43,7 @@ namespace FavoDeMel.Tests
 
             services.AddHttpContextAccessor()
                   .AddRepositoryMock(serviceParameter)
+                  .AddServicesMock()
                   .AddRedisMock();
 
             services.TryAddScoped<IProdutoService, ProdutoService>();
