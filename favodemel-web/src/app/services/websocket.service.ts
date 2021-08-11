@@ -28,17 +28,16 @@ export class WebSocketService {
       }
 
       const data = JSON.parse(ev.data);
-      const mensagem = JSON.parse(data.Mensagem);
-      const value = JSON.parse(mensagem.Value);
-      switch (mensagem.Evento) {
+      console.log(data);
+      switch (data.topic) {
         case 'fila_pedido':
-          this.filaPedidoSubject$.next(value);
+          this.filaPedidoSubject$.next(data.mensagem);
           break;
         case 'confirmacao_pedido':
-          this.confirmacaoPedidoSubject$.next(value);
+          this.confirmacaoPedidoSubject$.next(data.mensagem);
           break;
         case 'finalizacao_pedido':
-          this.finalizacaoPedidoSubject$.next(value);
+          this.finalizacaoPedidoSubject$.next(data.mensagem);
           break;
         default:
           break;

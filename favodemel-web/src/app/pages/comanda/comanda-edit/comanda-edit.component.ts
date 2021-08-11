@@ -39,6 +39,7 @@ export class ComandaEditComponent extends EditBaseComponent implements OnInit {
     this.formGroup = this.formBuilder.group({
       id: new FormControl(null),
       garcomId: new FormControl(null),
+      codigo: new FormControl(null),
       totalAPagar: new FormControl(0),
       gorjetaGarcom: new FormControl(0),
       situacao: new FormControl(ComandaSituacao.Aberta, Validators.required)
@@ -89,11 +90,6 @@ export class ComandaEditComponent extends EditBaseComponent implements OnInit {
         progressBar: true
       });
       this.modalRef.hide();
-      if (this.isEdicao) {
-        this.callbackEdicao?.emit(response);
-      } else {
-        this.callbackCadastro?.emit(response);
-      }
     }, error => this.error = error));
   }
 

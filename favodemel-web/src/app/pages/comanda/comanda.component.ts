@@ -59,6 +59,7 @@ export class ComandaComponent implements OnInit, OnDestroy {
           disableTimeOut: false,
           progressBar: true
         });
+        this.inserirOuAtualizarComanda(this.converterComandaMensageria(pedido));
       }
     }));
 
@@ -69,6 +70,7 @@ export class ComandaComponent implements OnInit, OnDestroy {
           disableTimeOut: false,
           progressBar: true
         });
+        this.moverPedidoConfirmado(pedido.Id, this.converterComandaMensageria(pedido));
       }
     }));
 
@@ -79,6 +81,7 @@ export class ComandaComponent implements OnInit, OnDestroy {
           disableTimeOut: false,
           progressBar: true
         });
+        this.moverPedidoFechado(pedido.Id, this.converterComandaMensageria(pedido));
       }
     }));
   }
@@ -99,9 +102,7 @@ export class ComandaComponent implements OnInit, OnDestroy {
   }
 
   confirmarPedido(id: any) {
-    this.subscription.add(this.comandaService.confirmar(id).subscribe((comanda: Comanda) => {
-      this.moverPedidoConfirmado(id, comanda);
-    }));
+    this.subscription.add(this.comandaService.confirmar(id).subscribe());
   }
 
   moverPedidoConfirmado(id, comanda) {
@@ -111,9 +112,31 @@ export class ComandaComponent implements OnInit, OnDestroy {
   }
 
   fecharPedido(id: any) {
-    this.subscription.add(this.comandaService.fechar(id).subscribe((comanda: Comanda) => {
-      this.moverPedidoFechado(id, comanda);
-    }));
+    this.subscription.add(this.comandaService.fechar(id).subscribe());
+  }
+
+  converterComandaMensageria(comandaDto) {
+    return {
+      id: comandaDto.Id,
+      garcomId: comandaDto.GarcomId,
+      totalAPagar: comandaDto.TotalAPagar,
+      gorjetaGarcom: comandaDto.GorjetaGarcom,
+      codigo: comandaDto.Codigo,
+      dataCadastro: comandaDto.DataCadastro,
+      situacao: comandaDto.Situacao,
+      pedidos: comandaDto.Pedidos.map(item => {
+        return {
+          id: item.Id,
+          comandaId: item.ComandaId,
+          produtoId: item.ProdutoId,
+          produtoNome: item.ProdutoNome,
+          produtoPreco: item.ProdutoPreco,
+          quantidade: item.Quantidade,
+          total: item.Total,
+          situacao: item.Situacao
+        };
+      })
+    };
   }
 
   moverPedidoFechado(id, comanda) {
@@ -122,8 +145,20 @@ export class ComandaComponent implements OnInit, OnDestroy {
     this.comandasFechada.push(comanda);
   }
 
-  inserirComanda(comanda: Comanda) {
-    this.comandasAberta.push(comanda);
+  inserirOuAtualizarComanda(comanda: Comanda) {
+    if (comanda.situacao === ComandaSituacao.Aberta) {
+      this.removerComanda(comanda, this.comandasAberta);
+      this.comandasAberta.push(comanda);
+    } else {
+      this.atualizarComanda(comanda);
+    }
+  }
+
+  removerComanda(comanda, comandas) {
+    const index = comandas.findIndex(c => c.id === comanda.id);
+    if (index >= 0) {
+      comandas.splice(index, 1);
+    }
   }
 
   atualizarComanda(comanda: Comanda) {

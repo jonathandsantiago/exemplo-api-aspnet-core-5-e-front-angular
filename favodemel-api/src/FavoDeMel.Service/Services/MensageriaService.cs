@@ -22,19 +22,16 @@ namespace FavoDeMel.Service.Services
 
         public async Task<object> Publish<T>(T value, string topic)
         {
-            return await Publish(JsonConvert.SerializeObject(value), topic);
-        }
-
-        public async Task<object> Publish(string value, string topic)
-        {
             using var producer = _producer.Build();
             try
             {
-                MensagemDto mensagemDto = new MensagemDto(topic, value);
+                string json = JsonConvert.SerializeObject(value);
+                MensagemDto mensagemDto = new MensagemDto(topic, json);
                 var sendResult = await producer.ProduceAsync(topic, new Message<Null, string> { Value = JsonConvert.SerializeObject(mensagemDto) });
                 var mensagem = new
                 {
-                    Mensagem = sendResult.Value,
+                    mensagem = value,
+                    topic = topic,
                     sendResult.TopicPartitionOffset
                 };
                 _mensageriaEvents?.EnviarMensagem(JsonConvert.SerializeObject(mensagem));
