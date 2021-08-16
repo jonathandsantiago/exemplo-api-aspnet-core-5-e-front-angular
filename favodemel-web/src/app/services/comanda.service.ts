@@ -7,7 +7,9 @@ import {environment} from '../../environments/environment';
 import {BaseService, prepare} from './common/base.service';
 import {convertToInt} from '../shared/functions';
 import {Comanda} from '../models/comanda';
-import {finalize} from 'rxjs/operators';
+import {finalize, map} from 'rxjs/operators';
+import {Message} from '@stomp/stompjs';
+import {RxStompService} from '@stomp/ng2-stompjs';
 
 @Injectable({providedIn: 'root'})
 export class ComandaService extends BaseService<Comanda> {
@@ -16,7 +18,8 @@ export class ComandaService extends BaseService<Comanda> {
 
   constructor(protected router: Router,
               protected http: HttpClient,
-              protected spinner: NgxSpinnerService) {
+              protected spinner: NgxSpinnerService,
+              protected rxStompService: RxStompService) {
     super(http, spinner);
   }
 
@@ -36,6 +39,15 @@ export class ComandaService extends BaseService<Comanda> {
     return params;
   }
 
+  protected converterComandaMensageria(response) {
+    if (!response || !response.body) {
+      return null;
+    }
+
+    const body = JSON.parse(response.body);
+    return body.message ? body.message.comanda : null;
+  }
+
   obterTodosPorSituao(situacao: any) {
     return this.http.get<any>(`${this.urlApi}/listar-por-situacao/${situacao}`);
   }
@@ -48,5 +60,25 @@ export class ComandaService extends BaseService<Comanda> {
   fechar(id: any) {
     return this.http.post(`${this.urlApi}/fechar`, {id})
       .pipe(prepare(() => this.spinner.show()), finalize(() => this.spinner.hide()));
+  }
+
+  obterMensagensComandaCadastroCommand() {
+    return this.rxStompService.watch('/exchange/ComandaCadastroCommand')
+      .pipe(map((message: Message) => this.converterComandaMensageria(message)));
+  }
+
+  obterMensagensComandaEditarCommand() {
+    return this.rxStompService.watch('/exchange/ComandaEditarCommand')
+      .pipe(map((message: Message) => this.converterComandaMensageria(message)));
+  }
+
+  obterMensagensComandaConfirmarCommand() {
+    return this.rxStompService.watch('/exchange/ComandaConfirmarCommand')
+      .pipe(map((message: Message) => this.converterComandaMensageria(message)));
+  }
+
+  obterMensagensComandaFecharCommand() {
+    return this.rxStompService.watch('/exchange/ComandaFecharCommand')
+      .pipe(map((message: Message) => this.converterComandaMensageria(message)));
   }
 }

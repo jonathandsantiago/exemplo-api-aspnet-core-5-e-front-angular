@@ -1,13 +1,14 @@
-﻿using Confluent.Kafka;
-using FavoDeMel.Api.Providers.Interface;
-using FavoDeMel.Domain.Events;
+﻿using FavoDeMel.Api.Providers.Interface;
 using FavoDeMel.Domain.Extensions;
 using FavoDeMel.Domain.Interfaces;
 using FavoDeMel.Domain.Models.Settings;
 using FavoDeMel.Service.Interfaces;
 using FavoDeMel.Service.Services;
+using GreenPipes;
+using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+using Newtonsoft.Json;
+using System;
 
 namespace FavoDeMel.Api.Providers
 {
@@ -15,16 +16,33 @@ namespace FavoDeMel.Api.Providers
     {
         public void AddProvider(IServiceCollection services, ISettings<string, object> settings)
         {
-            var kafkaSettings = settings.GetSetting<KafkaSettings>();
-            var config = new ProducerConfig
-            {
-                BootstrapServers = kafkaSettings.BootstrapServers
-            };
+            var rabbitMqSettings = settings.GetSetting<RabbitMqSettings>();
 
-            MensageriaEvents mensageriaEvents = new MensageriaEvents();
-            services.AddSingleton(mensageriaEvents);
-            services.AddTransient(c => new ProducerBuilder<Null, string>(config));
-            services.TryAddScoped<IMensageriaService, MensageriaService>();
+            services.AddMassTransit(c =>
+            {
+                c.AddBus(context => Bus.Factory.CreateUsingRabbitMq(cfg =>
+                {
+                    cfg.ConfigureEndpoints(context);
+                    cfg.Host(rabbitMqSettings.Url, rabbitMqSettings.Vhost, h =>
+                    {
+                        h.Username(rabbitMqSettings.Usuario);
+                        h.Password(rabbitMqSettings.Senha);
+                    });
+                    cfg.UseMessageRetry(retry => retry.Interval(3, TimeSpan.FromSeconds(10)));
+
+                    cfg.ConfigureJsonSerializer(settings =>
+                    {
+                        settings.DefaultValueHandling = DefaultValueHandling.Include;
+                        return settings;
+                    });
+                }));
+            });
+
+            services.AddSingleton<IPublishEndpoint>(provider => provider.GetRequiredService<IBusControl>());
+            services.AddSingleton<ISendEndpointProvider>(provider => provider.GetRequiredService<IBusControl>());
+            services.AddSingleton<IBus>(provider => provider.GetRequiredService<IBusControl>());
+            services.AddSingleton<IMensageriaService, MensageriaService>();
+            services.AddHostedService<BusService>();
         }
     }
 }

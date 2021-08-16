@@ -17,6 +17,7 @@ namespace FavoDeMel.Domain.Entities.Comandas
         public ComandaSituacao Situacao { get; set; }
 
         public Usuario Garcom { get; set; }
+
         [ForeignKey("ComandaId")]
         public ICollection<ComandaPedido> Pedidos { get; set; }
 

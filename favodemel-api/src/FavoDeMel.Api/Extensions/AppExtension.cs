@@ -1,6 +1,5 @@
 ﻿using FavoDeMel.Api.Configs.Interfaces;
 using FavoDeMel.Api.Providers.Interface;
-using FavoDeMel.Domain.Events;
 using FavoDeMel.Domain.Interfaces;
 using FavoDeMel.Domain.Models.Settings;
 using Microsoft.AspNetCore.Builder;

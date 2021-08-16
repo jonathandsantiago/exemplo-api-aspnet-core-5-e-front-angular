@@ -1,5 +1,4 @@
 using FavoDeMel.Api.Extensions;
-using FavoDeMel.Domain.Events;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

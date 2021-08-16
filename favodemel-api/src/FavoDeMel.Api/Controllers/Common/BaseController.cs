@@ -46,6 +46,7 @@ namespace FavoDeMel.Api.Controllers.Common
             var retorno = await funcao();
             return Response(retorno);
         }
+
         protected virtual IActionResult Error(Exception ex)
         {
 

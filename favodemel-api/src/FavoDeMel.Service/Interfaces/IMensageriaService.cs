@@ -1,4 +1,4 @@
-﻿using FavoDeMel.Domain.Events;
+﻿using FavoDeMel.Domain.Interfaces;
 using System.Threading.Tasks;
 
 namespace FavoDeMel.Service.Interfaces
@@ -8,9 +8,8 @@ namespace FavoDeMel.Service.Interfaces
         /// <summary>
         /// Método responsável por enviar a mensagem do tipo objeto
         /// </summary>
-        /// <param name="value">Objeto a ser enviado</param>
-        /// <param name="topic">Nome da fila</param>
+        /// <param name="command">Command de envio</param>
         /// <returns></returns>
-        Task<object> Publish<T>(T value, string topic = TopicEvento.FilaPedido);
+        Task Enviar<T>(T command) where T : IMensageriaCommand;
     }
 }

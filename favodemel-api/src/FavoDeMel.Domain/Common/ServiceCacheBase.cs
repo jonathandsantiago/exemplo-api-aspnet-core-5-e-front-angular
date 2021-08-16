@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace FavoDeMel.Domain.Common
 {
-    public abstract class ServiceBase
+    public abstract class ServiceCacheBase
     {
         private readonly IServiceCache _serviceCache;
 
-        public ServiceBase(IServiceCache serviceCache)
+        public ServiceCacheBase(IServiceCache serviceCache)
         {
             _serviceCache = serviceCache;
         }

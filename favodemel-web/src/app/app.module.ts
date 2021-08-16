@@ -13,6 +13,10 @@ import {NgxSpinnerModule} from 'ngx-spinner';
 import {ToastrModule} from 'ngx-toastr';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from '@stomp/ng2-stompjs';
+import {environment} from '../environments/environment';
+
+const rxStompConfigFactory = (): InjectableRxStompConfig => environment.mensageriaConfig;
 
 @NgModule({
   declarations: [
@@ -32,6 +36,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     BsDatepickerModule.forRoot()
   ],
   providers: [
+    {provide: InjectableRxStompConfig, useFactory: rxStompConfigFactory},
+    {provide: RxStompService, useFactory: rxStompServiceFactory, deps: [InjectableRxStompConfig]},
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
   ],

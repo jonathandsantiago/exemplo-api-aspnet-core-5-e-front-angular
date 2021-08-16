@@ -13,7 +13,7 @@ using static FavoDeMel.Domain.Dtos.Mappers.UsuarioMappers;
 
 namespace FavoDeMel.Service.Services
 {
-    public class UsuarioService : ServiceBase, IUsuarioService
+    public class UsuarioService : ServiceCacheBase, IUsuarioService
     {
         private readonly IUsuarioRepository _repository;
         private readonly IGeradorGuidService _geradorGuidService;

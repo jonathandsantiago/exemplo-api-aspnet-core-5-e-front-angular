@@ -12,7 +12,7 @@ using static FavoDeMel.Domain.Dtos.Mappers.ProdutoMappers;
 
 namespace FavoDeMel.Service.Services
 {
-    public class ProdutoService : ServiceBase, IProdutoService
+    public class ProdutoService : ServiceCacheBase, IProdutoService
     {
         private readonly IProdutoRepository _repository;
         private readonly IGeradorGuidService _geradorGuidService;

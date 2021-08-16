@@ -5,8 +5,9 @@ import {Comanda, ComandaPedido, ComandaSituacao} from '../../models/comanda';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 import {UsuarioService} from '../../services/usuario.service';
 import {Usuario, UsuarioPerfil} from '../../models/usuario';
-import {WebSocketService} from '../../services/websocket.service';
 import {ToastrService} from 'ngx-toastr';
+import {RxStompService} from '@stomp/ng2-stompjs';
+import {Message} from '@stomp/stompjs';
 
 @Component({
   selector: 'app-comanda',
@@ -28,7 +29,7 @@ export class ComandaComponent implements OnInit, OnDestroy {
               protected usuarioService: UsuarioService,
               protected comandaService: ComandaService,
               protected toastService: ToastrService,
-              protected webSocketService: WebSocketService) {
+              protected rxStompService: RxStompService) {
     this.subscription.add(this.usuarioService.usuarioLogado$.subscribe((usuario: Usuario) => {
       this.usuarioLogado = usuario;
     }));
@@ -36,52 +37,57 @@ export class ComandaComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription.add(this.comandaService.obterTodosPorSituao(ComandaSituacao.Aberta)
-      .subscribe(comandasAberta => this.comandasAberta = comandasAberta.map((comanda: Comanda) => {
-        comanda.pedidos.map((pedido: ComandaPedido) => {
-          pedido.produtoPreco = `${pedido.produtoPreco.toLocaleString('pt-br', {minimumFractionDigits: 2})}`;
-          return pedido;
-        });
-        return comanda;
-      })));
+      .subscribe(comandasAberta => this.comandasAberta = comandasAberta
+        .map((comanda: Comanda) => {
+          comanda.pedidos
+            .map((pedido: ComandaPedido) => {
+              pedido.produtoPreco = `${pedido.produtoPreco.toLocaleString('pt-br', {minimumFractionDigits: 2})}`;
+              return pedido;
+            });
+          return comanda;
+        })));
+
     this.subscription.add(this.comandaService.obterTodosPorSituao(ComandaSituacao.EmAndamento)
       .subscribe(comandasEmAndamento => this.comandasEmAndamento = comandasEmAndamento));
+
     this.subscription.add(this.comandaService.obterTodosPorSituao(ComandaSituacao.Fechada)
-      .subscribe(comandasFechada => this.comandasFechada = comandasFechada.map((comanda: Comanda) => {
-        comanda.gorjetaGarcom = `${comanda.gorjetaGarcom.toLocaleString('pt-br', {minimumFractionDigits: 2})}`;
-        comanda.totalAPagar = `${comanda.totalAPagar.toLocaleString('pt-br', {minimumFractionDigits: 2})}`;
-        return comanda;
-      })));
+      .subscribe(comandasFechada => this.comandasFechada = comandasFechada
+        .map((comanda: Comanda) => {
+          comanda.gorjetaGarcom = `${comanda.gorjetaGarcom.toLocaleString('pt-br', {minimumFractionDigits: 2})}`;
+          comanda.totalAPagar = `${comanda.totalAPagar.toLocaleString('pt-br', {minimumFractionDigits: 2})}`;
+          return comanda;
+        })));
 
-    this.subscription.add(this.webSocketService.filaPedido$.subscribe(pedido => {
-      if (pedido) {
-        this.toastService.success(`Novo pedido cadastrado: ${pedido.Codigo}`, null, {
+    this.subscription.add(this.comandaService.obterMensagensComandaCadastroCommand().subscribe(comanda => {
+      if (comanda) {
+        this.toastService.success(`Novo pedido cadastrado: ${comanda.codigo}`, null, {
           positionClass: 'toast-bottom-right',
           disableTimeOut: false,
           progressBar: true
         });
-        this.inserirOuAtualizarComanda(this.converterComandaMensageria(pedido));
+        this.inserirOuAtualizarComanda(comanda);
       }
     }));
 
-    this.subscription.add(this.webSocketService.confirmacaoPedido$.subscribe(pedido => {
-      if (pedido) {
-        this.toastService.success(`Confirmado o pedido: ${pedido.Codigo}`, null, {
+    this.subscription.add(this.comandaService.obterMensagensComandaConfirmarCommand().subscribe(comanda => {
+      if (comanda) {
+        this.toastService.success(`Confirmado o pedido: ${comanda.codigo}`, null, {
           positionClass: 'toast-bottom-right',
           disableTimeOut: false,
           progressBar: true
         });
-        this.moverPedidoConfirmado(pedido.Id, this.converterComandaMensageria(pedido));
+        this.moverPedidoConfirmado(comanda.id, comanda);
       }
     }));
 
-    this.subscription.add(this.webSocketService.finalizacaoPedido$.subscribe(pedido => {
-      if (pedido) {
-        this.toastService.success(`Fechado o pedido: ${pedido.Codigo}`, null, {
+    this.subscription.add(this.comandaService.obterMensagensComandaFecharCommand().subscribe(comanda => {
+      if (comanda) {
+        this.toastService.success(`Fechado o pedido: ${comanda.codigo}`, null, {
           positionClass: 'toast-bottom-right',
           disableTimeOut: false,
           progressBar: true
         });
-        this.moverPedidoFechado(pedido.Id, this.converterComandaMensageria(pedido));
+        this.moverPedidoFechado(comanda.id, comanda);
       }
     }));
   }
@@ -113,30 +119,6 @@ export class ComandaComponent implements OnInit, OnDestroy {
 
   fecharPedido(id: any) {
     this.subscription.add(this.comandaService.fechar(id).subscribe());
-  }
-
-  converterComandaMensageria(comandaDto) {
-    return {
-      id: comandaDto.Id,
-      garcomId: comandaDto.GarcomId,
-      totalAPagar: comandaDto.TotalAPagar,
-      gorjetaGarcom: comandaDto.GorjetaGarcom,
-      codigo: comandaDto.Codigo,
-      dataCadastro: comandaDto.DataCadastro,
-      situacao: comandaDto.Situacao,
-      pedidos: comandaDto.Pedidos.map(item => {
-        return {
-          id: item.Id,
-          comandaId: item.ComandaId,
-          produtoId: item.ProdutoId,
-          produtoNome: item.ProdutoNome,
-          produtoPreco: item.ProdutoPreco,
-          quantidade: item.Quantidade,
-          total: item.Total,
-          situacao: item.Situacao
-        };
-      })
-    };
   }
 
   moverPedidoFechado(id, comanda) {

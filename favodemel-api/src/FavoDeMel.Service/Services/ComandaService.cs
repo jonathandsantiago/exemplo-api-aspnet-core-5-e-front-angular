@@ -1,8 +1,8 @@
 ﻿using FavoDeMel.Domain.Common;
 using FavoDeMel.Domain.Dtos;
-using FavoDeMel.Domain.Events;
-using FavoDeMel.Domain.Interfaces;
 using FavoDeMel.Domain.Entities.Comandas;
+using FavoDeMel.Domain.Entities.Comandas.Commands;
+using FavoDeMel.Domain.Interfaces;
 using FavoDeMel.Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using static FavoDeMel.Domain.Dtos.Mappers.ComandaMappers;
 
 namespace FavoDeMel.Service.Services
 {
-    public class ComandaService : ServiceBase, IComandaService
+    public class ComandaService : ServiceCacheBase, IComandaService
     {
         private readonly IComandaRepository _repository;
         private readonly IGeradorGuidService _geradorGuidService;
@@ -70,7 +70,7 @@ namespace FavoDeMel.Service.Services
             Comanda comandaDb = await _repository.Inserir(comanda);
             ComandaDto dto = comandaDb.ToDto();
             await SalvarCache(dto.Id, dto);
-            await _mensageriaService.Publish(dto, TopicEvento.FilaPedido);
+            await _mensageriaService.Enviar(new ComandaCadastroCommand(dto));
             return dto;
         }
 
@@ -87,7 +87,7 @@ namespace FavoDeMel.Service.Services
             await _repository.Editar(comanda);
             ComandaDto dto = comanda.ToDto();
             await SalvarCache(dto.Id, dto);
-            await _mensageriaService.Publish(dto, TopicEvento.FilaPedido);
+            await _mensageriaService.Enviar(new ComandaEditarCommand(dto));
             return dto;
         }
 
@@ -108,7 +108,7 @@ namespace FavoDeMel.Service.Services
             Comanda comanda = await _repository.Confirmar(comandaId);
             ComandaDto dto = comanda.ToDto();
             await SalvarCache(dto.Id, dto);
-            await _mensageriaService.Publish(dto, TopicEvento.CofirmacaoPedido);
+            await _mensageriaService.Enviar(new ComandaConfirmarCommand(dto));
             return dto;
         }
 
@@ -123,7 +123,7 @@ namespace FavoDeMel.Service.Services
             Comanda comanda = await _repository.Fechar(comandaId);
             ComandaDto dto = comanda.ToDto();
             await SalvarCache(dto.Id, dto);
-            await _mensageriaService.Publish(dto, TopicEvento.FinalizacaoPedido);
+            await _mensageriaService.Enviar(new ComandaFecharCommand(dto));
             return comanda?.ToDto();
         }
     }
