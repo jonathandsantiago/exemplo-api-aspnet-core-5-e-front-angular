@@ -54,20 +54,20 @@ namespace FavoDeMel.Repository
             return await UsuarioSelect.AnyAsync(c => c.Login == login && c.Password == password);
         }
 
-        public async Task<Usuario> Editar(Usuario usuario)
+        public async Task<Usuario> EditarAsync(Usuario usuario)
         {
             UsuarioCrud.Update(usuario);
             return await Task.Run(() => usuario);
         }
 
-        public async Task<Usuario> Inserir(Usuario usuario)
+        public async Task<Usuario> CadastrarAsync(Usuario usuario)
         {
             var usuarioDb = await UsuarioCrud.AddAsync(usuario);
             usuario.Id = usuarioDb.Entity.Id;
             return usuario;
         }
 
-        public async Task<Usuario> ObterPorId(Guid id)
+        public async Task<Usuario> ObterPorIdAsync(Guid id)
         {
             return await UsuarioSelect.Where(c => c.Id == id).FirstOrDefaultAsync();
         }

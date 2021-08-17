@@ -30,7 +30,7 @@
                       (click)="abrirModal(templateCadastro, {id:comanda.id, isVisualizacao:true}, 'Detalhe Comanda - ' + comanda.id)">
                 Visualizar
               </button>
-              <button *ngIf="usuarioLogado.perfil !== usuarioPerfil.Garcon" type="button" class="btn btn-primary" (click)="confirmarPedido(comanda.id)">Confirmar</button>
+              <button *ngIf="usuarioLogado.perfil !== usuarioPerfil.Garcon" type="button" class="btn btn-primary" (click)="confirmarComanda(comanda.id)">Confirmar</button>
             </div>
           </div>
         </ng-template>
@@ -63,7 +63,7 @@
               </button>
               <button type="button" class="btn btn-secondary"
                       *ngIf="usuarioLogado.perfil !== usuarioPerfil.Cozinheiro"
-                      (click)="fecharPedido(comanda.id)">Fechar</button>
+                      (click)="fecharComanda(comanda.id)">Fechar</button>
             </div>
           </div>
         </ng-template>

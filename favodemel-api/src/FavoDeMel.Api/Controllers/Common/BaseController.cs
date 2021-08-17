@@ -14,7 +14,7 @@ namespace FavoDeMel.Api.Controllers.Common
         { }
 
         /// <summary>
-        /// 
+        /// Retorna o object resultado no response com status code 200
         /// </summary>
         /// <param name="result"></param>
         /// <returns></returns>
@@ -24,10 +24,10 @@ namespace FavoDeMel.Api.Controllers.Common
         }
 
         /// <summary>
-        /// Executa uma ação, e retorna um IActionResult
+        /// Executa uma ação ao serviço
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="funcao"></param>
+        /// <typeparam name="T">Tipo do retorna da ação</typeparam>
+        /// <param name="funcao">Função a ser executada</param>
         /// <returns></returns>
         protected IActionResult ExecutarFuncao<T>(Func<T> funcao)
         {
@@ -36,10 +36,10 @@ namespace FavoDeMel.Api.Controllers.Common
         }
 
         /// <summary>
-        /// Executa uma ação, e retorna um IActionResult
+        /// Executa ação ao serviço de forma assíncrona
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="funcao"></param>
+        /// <typeparam name="T">Tipo do retorna da ação</typeparam>
+        /// <param name="funcao">Função a ser executada</param>
         /// <returns></returns>
         protected async Task<IActionResult> ExecutarFuncaoAsync<T>(Func<Task<T>> funcao)
         {
@@ -47,6 +47,11 @@ namespace FavoDeMel.Api.Controllers.Common
             return Response(retorno);
         }
 
+        /// <summary>
+        /// Retorna a exceção no response com status code 500
+        /// </summary>
+        /// <param name="ex">Exceção</param>
+        /// <returns></returns>
         protected virtual IActionResult Error(Exception ex)
         {
 
@@ -54,14 +59,26 @@ namespace FavoDeMel.Api.Controllers.Common
         }
 
         /// <summary>
-        /// Executa uma ação, e retorna um HttpResponseMessage
+        /// Executa ação ao serviço de forma assíncrona
         /// </summary>
-        /// <param name="acao"></param>
+        /// <param name="acao">Ação a ser executada</param>
         /// <returns></returns>
         protected IActionResult ExecutarAcao(Action acao)
         {
             acao();
             return Response();
+        }
+
+        /// <summary>
+        /// Retorna o ip remoto da requisição
+        /// </summary>
+        /// <returns>Ip remoto da requisição</returns>
+        protected string IpAddress()
+        {
+            if (Request.Headers.ContainsKey("X-Forwarded-For"))
+                return Request.Headers["X-Forwarded-For"];
+            else
+                return HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
         }
     }
 }

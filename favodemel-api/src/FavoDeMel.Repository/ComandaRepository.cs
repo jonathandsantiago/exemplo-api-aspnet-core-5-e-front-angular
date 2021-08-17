@@ -27,7 +27,7 @@ namespace FavoDeMel.Repository
         public ComandaRepository(TDbContext dbContext) : base(dbContext)
         { }
 
-        public async Task<Comanda> ObterPorId(Guid id)
+        public async Task<Comanda> ObterPorIdAsync(Guid id)
         {
             return await ComandaSelect
                 .Include(c => c.Garcom)
@@ -47,7 +47,7 @@ namespace FavoDeMel.Repository
                 .ToListAsync();
         }
 
-        public async Task<Comanda> Inserir(Comanda comanda)
+        public async Task<Comanda> CadastrarAsync(Comanda comanda)
         {
             comanda.Garcom = comanda.Garcom == null ? null : await UsuarioSelect.Where(c => c.Id == comanda.Garcom.Id).FirstOrDefaultAsync();
             var existe = await ComandaSelect.AnyAsync(c => c.DataCadastro.Date == comanda.DataCadastro.Date);
@@ -67,7 +67,7 @@ namespace FavoDeMel.Repository
             return comanda;
         }
 
-        public async Task<Comanda> Editar(Comanda comanda)
+        public async Task<Comanda> EditarAsync(Comanda comanda)
         {
             Comanda comandaDb = await ComandaCrud.Where(c => c.Id == comanda.Id).Include(c => c.Pedidos).FirstOrDefaultAsync();
 

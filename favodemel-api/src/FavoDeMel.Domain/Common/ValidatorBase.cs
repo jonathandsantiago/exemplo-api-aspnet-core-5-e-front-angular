@@ -17,7 +17,7 @@ namespace FavoDeMel.Domain.Common
             Mensagens = new List<string>();
         }
 
-        public virtual async Task<bool> Validar(TEntity entity)
+        public virtual async Task<bool> ValidarAsync(TEntity entity)
         {
             return await Task.Run(() => IsValido);
         }

@@ -28,14 +28,14 @@ namespace FavoDeMel.Api.Controllers
         [Route(Rotas.Cadastrar)]
         public async Task<IActionResult> Cadastrar(ComandaDto dto)
         {
-            return await ExecutarFuncaoAsync(() => _service.Inserir(dto));
+            return await ExecutarFuncaoAsync(() => _service.CadastrarAsync(dto));
         }
        
         [HttpPut]
         [Route(Rotas.Editar)]
         public async Task<IActionResult> Editar(ComandaDto dto)
         {
-            return await ExecutarFuncaoAsync(() => _service.Editar(dto));
+            return await ExecutarFuncaoAsync(() => _service.EditarAsync(dto));
         }
      
         [HttpGet]
@@ -43,7 +43,7 @@ namespace FavoDeMel.Api.Controllers
         [ProducesResponseType(typeof(ComandaDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> ObterPorId(Guid id)
         {
-            return await ExecutarFuncaoAsync(() => _service.ObterPorId(id));
+            return await ExecutarFuncaoAsync(() => _service.ObterPorIdAsync(id));
         }
 
         [HttpGet]
@@ -51,7 +51,7 @@ namespace FavoDeMel.Api.Controllers
         [ProducesResponseType(typeof(IEnumerable<ComandaDto>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> ObterTodosPorSituao(ComandaSituacao situacao)
         {
-            return await ExecutarFuncaoAsync(() => _service.ObterTodosPorSituacao(situacao));
+            return await ExecutarFuncaoAsync(() => _service.ObterTodosPorSituacaoAsync(situacao));
         }
       
         [HttpPost]
@@ -59,7 +59,7 @@ namespace FavoDeMel.Api.Controllers
         [ProducesResponseType(typeof(ComandaDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Confirmar([FromBody] DtoBase<Guid> dto)
         {
-            return await ExecutarFuncaoAsync(() => _service.Confirmar(dto.Id));
+            return await ExecutarFuncaoAsync(() => _service.ConfirmarAsync(dto.Id));
         }
 
         [HttpPost]

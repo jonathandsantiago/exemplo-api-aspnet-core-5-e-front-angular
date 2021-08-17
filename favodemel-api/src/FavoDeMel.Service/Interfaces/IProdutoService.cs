@@ -9,33 +9,33 @@ namespace FavoDeMel.Service.Interfaces
     public interface IProdutoService : IServiceBase
     {
         /// <summary>
-        /// Método responsável obter o produto por id
+        /// Obter o produto de forma assíncrona
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Task<ProdutoDto> ObterPorId(Guid id);
+        /// <param name="idProduto">Id do produto</param>
+        /// <returns>Retorna o produto por id</returns>
+        Task<ProdutoDto> ObterPorIdAsync(Guid idProduto);
         /// <summary>
-        /// Método responsável por cadastrar o produto
+        /// Cadastrar o produto de forma assíncrona
         /// </summary>
-        /// <param name="produtoDto"></param>
-        /// <returns>Retorna a produto</returns>
-        Task<ProdutoDto> Inserir(ProdutoDto produtoDto);
+        /// <param name="produtoDto">Produto Dto</param>
+        /// <returns>Retorna a produto cadastrado</returns>
+        Task<ProdutoDto> CadastrarAsync(ProdutoDto produtoDto);
         /// <summary>
-        /// Método responsável por editar o produto
+        /// Editar o produto de forma assíncrona
         /// </summary>
-        /// <param name="produtoDto"></param>
+        /// <param name="produtoDto">Produto Dto</param>
         /// <returns>Retorna a produto</returns>
-        Task<ProdutoDto> Editar(ProdutoDto produtoDto);
+        Task<ProdutoDto> EditarAsync(ProdutoDto produtoDto);
         /// <summary>
-        /// Método responsável por obter todos paginados
+        /// Obter todos os produtos filtrados e paginado de forma assíncrona
         /// </summary>
-        /// <param name="filtro"></param>
-        /// <returns>Retorna a produto</returns>
-        Task<PaginacaoDto<ProdutoDto>> ObterTodosPaginado(FiltroProduto filtro);
+        /// <param name="filtro">Filtro</param>
+        /// <returns>Retorna todos os produtos filtrado e paginado</returns>
+        Task<PaginacaoDto<ProdutoDto>> ObterTodosPaginadoAsync(FiltroProduto filtro);
         /// <summary>
-        /// Método responsável por obter todos produtos
+        /// Obter todos os produtos de forma assíncrona
         /// </summary>
-        /// <returns>Retorna a produto</returns>
-        Task<IEnumerable<ProdutoDto>> ObterTodos();
+        /// <returns>Retorna todos os produtos</returns>
+        Task<IEnumerable<ProdutoDto>> ObterTodosAsync();
     }
 }

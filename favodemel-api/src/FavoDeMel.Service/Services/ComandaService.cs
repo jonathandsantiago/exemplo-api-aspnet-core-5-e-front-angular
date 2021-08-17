@@ -31,7 +31,7 @@ namespace FavoDeMel.Service.Services
             _geradorGuidService = geradorGuidService;
         }
 
-        public async Task<ComandaDto> ObterPorId(Guid id)
+        public async Task<ComandaDto> ObterPorIdAsync(Guid id)
         {
             var comandoCache = await ObterPorIdInCache<ComandaDto, Guid>(id);
 
@@ -40,7 +40,7 @@ namespace FavoDeMel.Service.Services
                 return comandoCache;
             }
 
-            var comanda = await _repository.ObterPorId(id);
+            var comanda = await _repository.ObterPorIdAsync(id);
             ComandaDto dto = comanda?.ToDto();
             if (dto != null)
             {
@@ -49,10 +49,10 @@ namespace FavoDeMel.Service.Services
             return dto;
         }
 
-        public async Task<ComandaDto> Inserir(ComandaDto comandaDto)
+        public async Task<ComandaDto> CadastrarAsync(ComandaDto comandaDto)
         {
             using var dbTransaction = _repository.BeginTransaction(_validador);
-            if (!await _validador.Validar(comandaDto))
+            if (!await _validador.ValidarAsync(comandaDto))
             {
                 return null;
             }
@@ -67,37 +67,37 @@ namespace FavoDeMel.Service.Services
 
             comanda.Prepare();
             comanda.DataCadastro = DateTime.Now;
-            Comanda comandaDb = await _repository.Inserir(comanda);
+            Comanda comandaDb = await _repository.CadastrarAsync(comanda);
             ComandaDto dto = comandaDb.ToDto();
             await SalvarCache(dto.Id, dto);
-            await _mensageriaService.Enviar(new ComandaCadastroCommand(dto));
+            await _mensageriaService.EnviarAsync(new ComandaCadastroCommand(dto));
             return dto;
         }
 
-        public async Task<ComandaDto> Editar(ComandaDto comandaDto)
+        public async Task<ComandaDto> EditarAsync(ComandaDto comandaDto)
         {
             using var dbTransaction = _repository.BeginTransaction(_validador);
-            if (!await _validador.Validar(comandaDto))
+            if (!await _validador.ValidarAsync(comandaDto))
             {
                 return null;
             }
 
             Comanda comanda = comandaDto.ToEntity();
             comanda.Prepare();
-            await _repository.Editar(comanda);
+            await _repository.EditarAsync(comanda);
             ComandaDto dto = comanda.ToDto();
             await SalvarCache(dto.Id, dto);
-            await _mensageriaService.Enviar(new ComandaEditarCommand(dto));
+            await _mensageriaService.EnviarAsync(new ComandaEditarCommand(dto));
             return dto;
         }
 
-        public async Task<IEnumerable<ComandaDto>> ObterTodosPorSituacao(ComandaSituacao situacao)
+        public async Task<IEnumerable<ComandaDto>> ObterTodosPorSituacaoAsync(ComandaSituacao situacao)
         {
             var comandas = await _repository.ObterTodosPorSituacao(situacao);
             return comandas?.ToListDto();
         }
 
-        public async Task<ComandaDto> Confirmar(Guid comandaId)
+        public async Task<ComandaDto> ConfirmarAsync(Guid comandaId)
         {
             using var dbTransaction = _repository.BeginTransaction(_validador);
             if (!_validador.PermiteAlterarSituacao(comandaId))
@@ -108,7 +108,7 @@ namespace FavoDeMel.Service.Services
             Comanda comanda = await _repository.Confirmar(comandaId);
             ComandaDto dto = comanda.ToDto();
             await SalvarCache(dto.Id, dto);
-            await _mensageriaService.Enviar(new ComandaConfirmarCommand(dto));
+            await _mensageriaService.EnviarAsync(new ComandaConfirmarCommand(dto));
             return dto;
         }
 
@@ -123,7 +123,7 @@ namespace FavoDeMel.Service.Services
             Comanda comanda = await _repository.Fechar(comandaId);
             ComandaDto dto = comanda.ToDto();
             await SalvarCache(dto.Id, dto);
-            await _mensageriaService.Enviar(new ComandaFecharCommand(dto));
+            await _mensageriaService.EnviarAsync(new ComandaFecharCommand(dto));
             return comanda?.ToDto();
         }
     }

@@ -25,7 +25,7 @@ namespace FavoDeMel.EF.Repository.Common
         {
             UnitOfWork ??= new UnitOfWork(DbContext, _validator);
 
-            UnitOfWork.BeginTransaction().Wait();
+            UnitOfWork.BeginTransactionAsync().Wait();
             return UnitOfWork;
         }
 

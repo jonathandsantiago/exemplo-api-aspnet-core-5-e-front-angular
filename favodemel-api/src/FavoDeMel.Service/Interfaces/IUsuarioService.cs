@@ -10,47 +10,47 @@ namespace FavoDeMel.Service.Interfaces
     public interface IUsuarioService : IServiceBase
     {
         /// <summary>
-        /// Método responsável por obter usuário por login e senha
+        /// Obter usuário pelo login de forma assíncrona
         /// </summary>
-        /// <param name="loginDto"></param>
-        /// <returns></returns>
-        Task<UsuarioDto> Login(LoginDto loginDto);
+        /// <param name="loginDto">Login do usuário</param>
+        /// <returns>Retorna o usuário pelo login</returns>
+        Task<UsuarioDto> LoginAsync(LoginDto loginDto);
         /// <summary>
-        /// Método responsável por alterar a senha do usuário
+        /// Alterar a senha do usuário pelo id de forma assíncrona
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
-        Task<bool> AlterarSenha(Guid id, string password);
+        /// <param name="idUsuario">Id do usuário</param>
+        /// <param name="password">Nova senha</param>
+        /// <returns>Retorna um boleano representando a eficácia da edição da senha</returns>
+        Task<bool> AlterarSenhaAsync(Guid idUsuario, string password);
         /// <summary>
-        /// Método responsável por obter os usuários paginado
+        /// Obter todos os usuários filtrado e paginado de forma assíncrona
         /// </summary>
-        /// <param name="filtro"></param>
-        /// <returns></returns>
-        Task<PaginacaoDto<UsuarioDto>> ObterTodosPaginado(FiltroUsuario filtro);
+        /// <param name="filtro">Filtro</param>
+        /// <returns>Retorna todos os usuários filtrado e paginado</returns>
+        Task<PaginacaoDto<UsuarioDto>> ObterTodosPaginadoAsync(FiltroUsuario filtro);
         /// <summary>
-        /// Método responsável por obter por perfil
+        /// Obter todos os usuários por perfil de forma assíncrona
         /// </summary>
-        /// <param name="perfil"></param>
-        /// <returns></returns>
-        Task<IEnumerable<UsuarioDto>> ObterTodosPorPerfil(UsuarioPerfil perfil);
+        /// <param name="perfil">Perfil</param>
+        /// <returns>Retorna todos os usuários por perfil</returns>
+        Task<IEnumerable<UsuarioDto>> ObterTodosPorPerfilAsync(UsuarioPerfil perfil);
         /// <summary>
-        /// Método responsável por cadastrar o usúario
+        /// Cadastar o usuário de forma assíncrona
         /// </summary>
-        /// <param name="usuarioDto"></param>
-        /// <returns></returns>
-        Task<UsuarioDto> Inserir(UsuarioDto usuarioDto);
+        /// <param name="usuarioDto">Usuário Dto</param>
+        /// <returns>Retorna o usuário cadastrado</returns>
+        Task<UsuarioDto> CadastrarAsync(UsuarioDto usuarioDto);
         /// <summary>
-        /// Método responsável por editar o usúario
+        /// Editar o usuário de forma assíncrona
         /// </summary>
-        /// <param name="usuarioDto"></param>
-        /// <returns></returns>
-        Task<UsuarioDto> Editar(UsuarioDto usuarioDto);
+        /// <param name="usuarioDto">Usuário Dto</param>
+        /// <returns>Retorna o usuário editado</returns>
+        Task<UsuarioDto> EditarAsync(UsuarioDto usuarioDto);
         /// <summary>
-        /// Método responsável obter o usúario por id
+        /// Obter o usuário de forma assíncrona
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="idUsuario">Id do usuário</param>
         /// <returns></returns>
-        Task<UsuarioDto> ObterPorId(Guid id);
+        Task<UsuarioDto> ObterPorIdAsync(Guid idUsuario);
     }
 }

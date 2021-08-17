@@ -15,7 +15,7 @@ namespace FavoDeMel.Domain.Entities.Comandas
             _repository = repository;
         }
 
-        public override async Task<bool> Validar(ComandaDto comanda)
+        public override async Task<bool> ValidarAsync(ComandaDto comanda)
         {
             if (!comanda.Pedidos.Any())
             {
@@ -31,7 +31,7 @@ namespace FavoDeMel.Domain.Entities.Comandas
                 AddMensagem(ComandaMessage.SituacaoInvalida);
             }
 
-            return await base.Validar(comanda);
+            return await base.ValidarAsync(comanda);
         }
 
         private bool ValidarPedido(ComandaPedidoDto pedido)

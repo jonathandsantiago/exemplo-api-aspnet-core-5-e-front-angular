@@ -20,7 +20,7 @@ namespace FavoDeMel.EF.Repository.Common
             _validator = validator;
         }
 
-        public virtual async Task BeginTransaction()
+        public virtual async Task BeginTransactionAsync()
         {
             if (Transaction == null)
             {

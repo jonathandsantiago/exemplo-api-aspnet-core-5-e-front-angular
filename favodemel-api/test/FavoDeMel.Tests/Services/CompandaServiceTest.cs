@@ -43,7 +43,7 @@ namespace FavoDeMel.Tests.Services
                 comanda.Pedidos.Add(new ComandaPedidoDto() { ProdutoId = Guid.NewGuid(), Quantidade = 1, Situacao = ComandaPedidoSituacao.Pedido });
             }
 
-            var result = await comandaService.Inserir(comanda);
+            var result = await comandaService.CadastrarAsync(comanda);
             result.Should().NotBeNull(StringHelper.JoinHtmlMensagem(comandaService.MensagensValidacao));
         }
 
@@ -58,7 +58,7 @@ namespace FavoDeMel.Tests.Services
                 comanda.Pedidos.Add(new ComandaPedidoDto() { ProdutoId = Guid.NewGuid(), Quantidade = 1, Situacao = ComandaPedidoSituacao.Pedido });
             }
 
-            var result = await comandaService.Inserir(comanda);
+            var result = await comandaService.CadastrarAsync(comanda);
             result.Should().BeNull();
             comandaService.MensagensValidacao.Should().NotBeNull(StringHelper.JoinHtmlMensagem(comandaService.MensagensValidacao));
             comandaService.MensagensValidacao.Any(c => c == ComandaMessage.SituacaoInvalida).Should().BeTrue();
@@ -73,7 +73,7 @@ namespace FavoDeMel.Tests.Services
                 Situacao = ComandaSituacao.Aberta
             };
 
-            var result = await comandaService.Inserir(comanda);
+            var result = await comandaService.CadastrarAsync(comanda);
             result.Should().BeNull();
             comandaService.MensagensValidacao.Should().NotBeNull(StringHelper.JoinHtmlMensagem(comandaService.MensagensValidacao));
             comandaService.MensagensValidacao.Any(c => c == ComandaMessage.PedidoObrigatorio).Should().BeTrue();
@@ -90,7 +90,7 @@ namespace FavoDeMel.Tests.Services
 
             comanda.Pedidos.Add(new ComandaPedidoDto() { Quantidade = 1, Situacao = ComandaPedidoSituacao.Pedido });
 
-            var result = await comandaService.Inserir(comanda);
+            var result = await comandaService.CadastrarAsync(comanda);
             result.Should().BeNull();
             comandaService.MensagensValidacao.Should().NotBeNull(StringHelper.JoinHtmlMensagem(comandaService.MensagensValidacao));
             comandaService.MensagensValidacao.Any(c => c == ComandaMessage.ProdutoObrigatorio).Should().BeTrue();
@@ -110,7 +110,7 @@ namespace FavoDeMel.Tests.Services
                 comanda.Pedidos.Add(new ComandaPedidoDto() { ProdutoId = produto.Id, Quantidade = 1, Situacao = default(ComandaPedidoSituacao) });
             }
 
-            var result = await comandaService.Inserir(comanda);
+            var result = await comandaService.CadastrarAsync(comanda);
             result.Should().BeNull();
             comandaService.MensagensValidacao.Should().NotBeNull(StringHelper.JoinHtmlMensagem(comandaService.MensagensValidacao));
             comandaService.MensagensValidacao.Any(c => c == ComandaMessage.SituacaoInvalida).Should().BeTrue();
@@ -131,7 +131,7 @@ namespace FavoDeMel.Tests.Services
                 comanda.Pedidos.Add(new ComandaPedidoDto() { ProdutoId = Guid.NewGuid(), Quantidade = 1, Situacao = ComandaPedidoSituacao.Pedido });
             }
 
-            var result = await comandaService.Editar(comanda);
+            var result = await comandaService.EditarAsync(comanda);
             result.Should().NotBeNull(StringHelper.JoinHtmlMensagem(comandaService.MensagensValidacao));
         }
 
@@ -147,7 +147,7 @@ namespace FavoDeMel.Tests.Services
                 comanda.Pedidos.Add(new ComandaPedidoDto() { ProdutoId = Guid.NewGuid(), Quantidade = 1, Situacao = ComandaPedidoSituacao.Pedido });
             }
 
-            var result = await comandaService.Editar(comanda);
+            var result = await comandaService.EditarAsync(comanda);
             result.Should().BeNull();
             comandaService.MensagensValidacao.Should().NotBeNull(StringHelper.JoinHtmlMensagem(comandaService.MensagensValidacao));
             comandaService.MensagensValidacao.Any(c => c == ComandaMessage.SituacaoInvalida).Should().BeTrue();
@@ -163,7 +163,7 @@ namespace FavoDeMel.Tests.Services
                 Situacao = ComandaSituacao.Aberta
             };
 
-            var result = await comandaService.Editar(comanda);
+            var result = await comandaService.EditarAsync(comanda);
             result.Should().BeNull();
             comandaService.MensagensValidacao.Should().NotBeNull(StringHelper.JoinHtmlMensagem(comandaService.MensagensValidacao));
             comandaService.MensagensValidacao.Any(c => c == ComandaMessage.PedidoObrigatorio).Should().BeTrue();
@@ -181,7 +181,7 @@ namespace FavoDeMel.Tests.Services
 
             comanda.Pedidos.Add(new ComandaPedidoDto() { Quantidade = 1, Situacao = ComandaPedidoSituacao.Pedido });
 
-            var result = await comandaService.Editar(comanda);
+            var result = await comandaService.EditarAsync(comanda);
             result.Should().BeNull();
             comandaService.MensagensValidacao.Should().NotBeNull(StringHelper.JoinHtmlMensagem(comandaService.MensagensValidacao));
             comandaService.MensagensValidacao.Any(c => c == ComandaMessage.ProdutoObrigatorio).Should().BeTrue();
@@ -202,7 +202,7 @@ namespace FavoDeMel.Tests.Services
                 comanda.Pedidos.Add(new ComandaPedidoDto() { ProdutoId = produto.Id, Quantidade = 1, Situacao = default(ComandaPedidoSituacao) });
             }
 
-            var result = await comandaService.Inserir(comanda);
+            var result = await comandaService.CadastrarAsync(comanda);
             result.Should().BeNull();
             comandaService.MensagensValidacao.Should().NotBeNull(StringHelper.JoinHtmlMensagem(comandaService.MensagensValidacao));
             comandaService.MensagensValidacao.Any(c => c == ComandaMessage.SituacaoInvalida).Should().BeTrue();
@@ -234,7 +234,7 @@ namespace FavoDeMel.Tests.Services
             };
 
             IComandaService comandaService = Startup.GetServiceProvider(new ServiceParameter(parameter)).GetRequiredService<IComandaService>();
-            var result = await comandaService.Confirmar(Guid.NewGuid());
+            var result = await comandaService.ConfirmarAsync(Guid.NewGuid());
             result.Should().NotBeNull(StringHelper.JoinHtmlMensagem(comandaService.MensagensValidacao));
         }
 
@@ -242,7 +242,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDeveConfirmarCasoComandaInValido()
         {
             IComandaService comandaService = _serviceProvider.GetRequiredService<IComandaService>();
-            var result = await comandaService.Confirmar(Guid.Empty);
+            var result = await comandaService.ConfirmarAsync(Guid.Empty);
             result.Should().BeNull();
             comandaService.MensagensValidacao.Should().NotBeNull(StringHelper.JoinHtmlMensagem(comandaService.MensagensValidacao));
             comandaService.MensagensValidacao.Any(c => c == ComandaMessage.ComandaInvalida).Should().BeTrue();
@@ -252,7 +252,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDeveFecharCasoComandaInValido()
         {
             IComandaService comandaService = _serviceProvider.GetRequiredService<IComandaService>();
-            var result = await comandaService.Confirmar(Guid.Empty);
+            var result = await comandaService.ConfirmarAsync(Guid.Empty);
             result.Should().BeNull();
             comandaService.MensagensValidacao.Should().NotBeNull(StringHelper.JoinHtmlMensagem(comandaService.MensagensValidacao));
             comandaService.MensagensValidacao.Any(c => c == ComandaMessage.ComandaInvalida).Should().BeTrue();

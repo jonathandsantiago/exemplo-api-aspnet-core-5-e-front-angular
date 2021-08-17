@@ -14,7 +14,7 @@ namespace FavoDeMel.Domain.Entities.Usuarios
             _repository = repository;
         }
 
-        public override async Task<bool> Validar(UsuarioDto usuario)
+        public override async Task<bool> ValidarAsync(UsuarioDto usuario)
         {
             if (usuario == null)
             {
@@ -47,7 +47,7 @@ namespace FavoDeMel.Domain.Entities.Usuarios
                 ValidarSenha(usuario.Password);
             }
 
-            return await base.Validar(usuario);
+            return await base.ValidarAsync(usuario);
         }
 
         public async Task<bool> ValidarLogin(LoginDto loginDto)

@@ -26,16 +26,18 @@ namespace FavoDeMel.Api.Controllers
 
         [HttpPost]
         [Route(Rotas.Cadastrar)]
+        [ProducesResponseType(typeof(ProdutoDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Cadastrar(ProdutoDto produtoDto)
         {
-            return await ExecutarFuncaoAsync(() => _service.Inserir(produtoDto));
+            return await ExecutarFuncaoAsync(() => _service.CadastrarAsync(produtoDto));
         }
 
         [HttpPut]
         [Route(Rotas.Editar)]
+        [ProducesResponseType(typeof(ProdutoDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Editar(ProdutoDto produtoDto)
         {
-            return await ExecutarFuncaoAsync(() => _service.Editar(produtoDto));
+            return await ExecutarFuncaoAsync(() => _service.EditarAsync(produtoDto));
         }
 
         [HttpGet]
@@ -43,7 +45,7 @@ namespace FavoDeMel.Api.Controllers
         [ProducesResponseType(typeof(ProdutoDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> ObterPorId(Guid id)
         {
-            return await ExecutarFuncaoAsync(() => _service.ObterPorId(id));
+            return await ExecutarFuncaoAsync(() => _service.ObterPorIdAsync(id));
         }
 
         [HttpGet]
@@ -51,7 +53,7 @@ namespace FavoDeMel.Api.Controllers
         [ProducesResponseType(typeof(PaginacaoDto<ProdutoDto>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> ObterTodosPaginado([FromQuery] FiltroProduto filtro)
         {
-            return await ExecutarFuncaoAsync(() => _service.ObterTodosPaginado(filtro));
+            return await ExecutarFuncaoAsync(() => _service.ObterTodosPaginadoAsync(filtro));
         }
 
         [HttpGet]
@@ -59,7 +61,7 @@ namespace FavoDeMel.Api.Controllers
         [ProducesResponseType(typeof(IEnumerable<ProdutoDto>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> ObterTodos()
         {
-            return await ExecutarFuncaoAsync(() => _service.ObterTodos());
+            return await ExecutarFuncaoAsync(() => _service.ObterTodosAsync());
         }
     }
 }

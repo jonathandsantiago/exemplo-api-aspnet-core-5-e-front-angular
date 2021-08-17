@@ -30,7 +30,7 @@ namespace FavoDeMel.Service.Services
             _validator = validator;
         }
 
-        public async Task<UsuarioDto> Login(LoginDto loginDto)
+        public async Task<UsuarioDto> LoginAsync(LoginDto loginDto)
         {
             if (!await _validator.ValidarLogin(loginDto))
             {
@@ -43,7 +43,7 @@ namespace FavoDeMel.Service.Services
             return dto;
         }
 
-        public async Task<UsuarioDto> ObterPorId(Guid id)
+        public async Task<UsuarioDto> ObterPorIdAsync(Guid id)
         {
             var usuarioCache = await ObterPorIdInCache<UsuarioDto, Guid>(id);
 
@@ -52,15 +52,15 @@ namespace FavoDeMel.Service.Services
                 return usuarioCache;
             }
 
-            var usuario = await _repository.ObterPorId(id);
+            var usuario = await _repository.ObterPorIdAsync(id);
             return usuario?.ToDto();
         }
 
-        public async Task<UsuarioDto> Inserir(UsuarioDto usuarioDto)
+        public async Task<UsuarioDto> CadastrarAsync(UsuarioDto usuarioDto)
         {
             using (var dbTransaction = _repository.BeginTransaction(_validator))
             {
-                if (!await _validator.Validar(usuarioDto))
+                if (!await _validator.ValidarAsync(usuarioDto))
                 {
                     return null;
                 }
@@ -68,18 +68,18 @@ namespace FavoDeMel.Service.Services
                 Usuario usuario = usuarioDto.ToEntity();
                 usuario.Id = _geradorGuidService.GetNexGuid();
                 usuario.Prepare();
-                Usuario usuarioDb = await _repository.Inserir(usuario);
+                Usuario usuarioDb = await _repository.CadastrarAsync(usuario);
                 UsuarioDto dto = usuarioDb.ToDto();
                 await SalvarCache(dto.Id, dto);
                 return dto;
             }
         }
 
-        public async Task<UsuarioDto> Editar(UsuarioDto usuarioDto)
+        public async Task<UsuarioDto> EditarAsync(UsuarioDto usuarioDto)
         {
             using (var dbTransaction = _repository.BeginTransaction(_validator))
             {
-                if (!await _validator.Validar(usuarioDto))
+                if (!await _validator.ValidarAsync(usuarioDto))
                 {
                     return null;
                 }
@@ -87,22 +87,22 @@ namespace FavoDeMel.Service.Services
                 Usuario usuario = usuarioDto.ToEntity();
                 usuario.Prepare();
 
-                Usuario usuarioDb = await _repository.ObterPorId(usuario.Id);
+                Usuario usuarioDb = await _repository.ObterPorIdAsync(usuario.Id);
                 usuario.Login = usuarioDb.Login;
                 usuario.Password = usuarioDb.Password;
 
-                await _repository.Editar(usuario);
+                await _repository.EditarAsync(usuario);
                 UsuarioDto dto = usuarioDb.ToDto();
                 await SalvarCache(dto.Id, dto);
                 return dto;
             }
         }
 
-        public async Task<bool> AlterarSenha(Guid id, string password)
+        public async Task<bool> AlterarSenhaAsync(Guid id, string password)
         {
             using (var dbTransaction = _repository.BeginTransaction(_validator))
             {
-                Usuario usuario = await _repository.ObterPorId(id);
+                Usuario usuario = await _repository.ObterPorIdAsync(id);
 
                 if (!_validator.PermiteEditarSenha(usuario.Password, password))
                 {
@@ -110,21 +110,21 @@ namespace FavoDeMel.Service.Services
                 }
 
                 usuario.Password = StringHelper.CalculateMD5Hash(password);
-                await _repository.Editar(usuario);
+                await _repository.EditarAsync(usuario);
                 UsuarioDto dto = usuario.ToDto();
                 await SalvarCache(dto.Id, dto);
                 return true;
             }
         }
 
-        public async Task<PaginacaoDto<UsuarioDto>> ObterTodosPaginado(FiltroUsuario filtro)
+        public async Task<PaginacaoDto<UsuarioDto>> ObterTodosPaginadoAsync(FiltroUsuario filtro)
         {
 
             var produtos = await _repository.ObterTodosPaginado(filtro.Pagina, filtro.Limite);
             return produtos?.ToPaginacaoDto<PaginacaoDto<UsuarioDto>>();
         }
 
-        public async Task<IEnumerable<UsuarioDto>> ObterTodosPorPerfil(UsuarioPerfil perfil)
+        public async Task<IEnumerable<UsuarioDto>> ObterTodosPorPerfilAsync(UsuarioPerfil perfil)
         {
             var usuarios = await _repository.ObterTodosPorPerfil(perfil);
             return usuarios?.ToListDto();

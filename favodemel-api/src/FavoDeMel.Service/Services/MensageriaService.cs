@@ -15,7 +15,7 @@ namespace FavoDeMel.Service.Services
             _busControl = busControl;
         }
 
-        public async Task Enviar<T>(T command) where T : IMensageriaCommand
+        public async Task EnviarAsync<T>(T command) where T : IMensageriaCommand
         {
             var queue = command.GetType().Name;         
 

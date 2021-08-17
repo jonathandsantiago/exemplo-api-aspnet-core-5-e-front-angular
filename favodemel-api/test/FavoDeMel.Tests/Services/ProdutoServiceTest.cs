@@ -34,7 +34,7 @@ namespace FavoDeMel.Tests.Services
         public async Task DeveCadastarProdutoValido()
         {
             IProdutoService produtoService = _serviceProvider.GetRequiredService<IProdutoService>();
-            var usuario = await produtoService.Inserir(new ProdutoDto
+            var usuario = await produtoService.CadastrarAsync(new ProdutoDto
             {
                 Nome = "Teste",
                 Preco = Convert.ToDecimal(10.5)
@@ -46,7 +46,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDeveCadastarCasoNomeNulo()
         {
             IProdutoService produtoService = _serviceProvider.GetRequiredService<IProdutoService>();
-            var usuario = await produtoService.Inserir(new ProdutoDto
+            var usuario = await produtoService.CadastrarAsync(new ProdutoDto
             {
                 Nome = null,
                 Preco = Convert.ToDecimal(10.5)
@@ -60,7 +60,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDeveCadastarCasoPrecoInvalido()
         {
             IProdutoService produtoService = _serviceProvider.GetRequiredService<IProdutoService>();
-            var usuario = await produtoService.Inserir(new ProdutoDto
+            var usuario = await produtoService.CadastrarAsync(new ProdutoDto
             {
                 Nome = "Coca Cola",
                 Preco = 0
@@ -74,7 +74,7 @@ namespace FavoDeMel.Tests.Services
         public async Task DeveEditarProdutoValido()
         {
             IProdutoService produtoService = _serviceProvider.GetRequiredService<IProdutoService>();
-            var usuario = await produtoService.Editar(new ProdutoDto
+            var usuario = await produtoService.EditarAsync(new ProdutoDto
             {
                 Id = Guid.NewGuid(),
                 Nome = "Teste",
@@ -87,7 +87,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDeveEditarCasoNomeNulo()
         {
             IProdutoService produtoService = _serviceProvider.GetRequiredService<IProdutoService>();
-            var usuario = await produtoService.Editar(new ProdutoDto
+            var usuario = await produtoService.EditarAsync(new ProdutoDto
             {
                 Id = Guid.NewGuid(),
                 Nome = null,
@@ -102,7 +102,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDeveEditarCasoPrecoInvalido()
         {
             IProdutoService produtoService = _serviceProvider.GetRequiredService<IProdutoService>();
-            var usuario = await produtoService.Editar(new ProdutoDto
+            var usuario = await produtoService.EditarAsync(new ProdutoDto
             {
                 Id = Guid.NewGuid(),
                 Nome = "Coca Cola",

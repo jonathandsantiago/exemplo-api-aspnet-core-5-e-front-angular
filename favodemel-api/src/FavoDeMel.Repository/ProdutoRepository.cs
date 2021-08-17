@@ -25,20 +25,20 @@ namespace FavoDeMel.Repository
             return await ProdutoSelect.AnyAsync(c => c.Id != id && c.Nome == nome);
         }
 
-        public async Task<Produto> Editar(Produto produto)
+        public async Task<Produto> EditarAsync(Produto produto)
         {
             ProdutoCrud.Update(produto);
             return await Task.Run(() => produto);
         }
 
-        public async Task<Produto> Inserir(Produto produto)
+        public async Task<Produto> CadastrarAsync(Produto produto)
         {
             var produtoDb = await ProdutoCrud.AddAsync(produto);
             produto.Id = produtoDb.Entity.Id;
             return produto;
         }
 
-        public async Task<Produto> ObterPorId(Guid id)
+        public async Task<Produto> ObterPorIdAsync(Guid id)
         {
             return await ProdutoSelect.Where(c => c.Id == id).FirstOrDefaultAsync();
         }

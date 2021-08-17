@@ -7,7 +7,6 @@ import {UsuarioService} from '../../services/usuario.service';
 import {Usuario, UsuarioPerfil} from '../../models/usuario';
 import {ToastrService} from 'ngx-toastr';
 import {RxStompService} from '@stomp/ng2-stompjs';
-import {Message} from '@stomp/stompjs';
 
 @Component({
   selector: 'app-comanda',
@@ -87,7 +86,7 @@ export class ComandaComponent implements OnInit, OnDestroy {
           disableTimeOut: false,
           progressBar: true
         });
-        this.moverPedidoFechado(comanda.id, comanda);
+        this.moverComandaFechado(comanda.id, comanda);
       }
     }));
   }
@@ -107,7 +106,7 @@ export class ComandaComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  confirmarPedido(id: any) {
+  confirmarComanda(id: any) {
     this.subscription.add(this.comandaService.confirmar(id).subscribe());
   }
 
@@ -117,11 +116,11 @@ export class ComandaComponent implements OnInit, OnDestroy {
     this.comandasEmAndamento.push(comanda);
   }
 
-  fecharPedido(id: any) {
+  fecharComanda(id: any) {
     this.subscription.add(this.comandaService.fechar(id).subscribe());
   }
 
-  moverPedidoFechado(id, comanda) {
+  moverComandaFechado(id, comanda) {
     const index = this.comandasEmAndamento.findIndex(c => c.id === id);
     this.comandasEmAndamento.splice(index, 1);
     this.comandasFechada.push(comanda);

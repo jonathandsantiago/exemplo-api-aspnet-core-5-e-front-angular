@@ -1,10 +1,10 @@
 ﻿using FavoDeMel.Api.Controllers.Common;
 using FavoDeMel.Domain.Dtos;
 using FavoDeMel.Domain.Dtos.Filtros;
+using FavoDeMel.Domain.Entities.Usuarios;
 using FavoDeMel.Domain.Helpers;
 using FavoDeMel.Domain.Models.Auths;
 using FavoDeMel.Domain.Models.Settings;
-using FavoDeMel.Domain.Entities.Usuarios;
 using FavoDeMel.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -41,38 +41,42 @@ namespace FavoDeMel.Api.Controllers
 
         [HttpPost]
         [Route(Rotas.Cadastrar)]
+        [ProducesResponseType(typeof(UsuarioDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Cadastrar(UsuarioDto dto)
         {
-            return await ExecutarFuncaoAsync(() => _service.Inserir(dto));
+            return await ExecutarFuncaoAsync(() => _service.CadastrarAsync(dto));
         }
 
         [HttpPut]
         [Route(Rotas.Editar)]
+        [ProducesResponseType(typeof(UsuarioDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Editar(UsuarioDto dto)
         {
-            return await ExecutarFuncaoAsync(() => _service.Editar(dto));
+            return await ExecutarFuncaoAsync(() => _service.EditarAsync(dto));
         }
 
         [HttpPut]
         [Route(UsuarioApi.AlterarSenha)]
+        [ProducesResponseType(typeof(UsuarioDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> AlterarSenha(Guid id, string password)
         {
-            return await ExecutarFuncaoAsync(() => _service.AlterarSenha(id, password));
+            return await ExecutarFuncaoAsync(() => _service.AlterarSenhaAsync(id, password));
         }
 
         [AllowAnonymous]
         [HttpPost]
         [Route(UsuarioApi.Login)]
+        [ProducesResponseType(typeof(object), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
             try
             {
-                UsuarioDto user = await _service.Login(loginDto);
+                UsuarioDto user = await _service.LoginAsync(loginDto);
 
                 if (_service.MensagensValidacao.Any()) return BadRequest(StringHelper.JoinHtmlMensagem(_service.MensagensValidacao));
 
                 JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
-                SecurityToken securityToken = GetSecurityToken(user, handler);
+                SecurityToken securityToken = ObterSecurityToken(user, handler);
 
                 return Ok(new
                 {
@@ -94,55 +98,40 @@ namespace FavoDeMel.Api.Controllers
             }
         }
 
-        /// <summary>
-        /// Responsável obter usuario por id
-        /// </summary>
-        /// 
-        /// <returns>Retorna os usuario pro id</returns>
         [HttpGet]
         [Route(Rotas.ObterPorId)]
         [ProducesResponseType(typeof(UsuarioDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> ObterPorId(Guid id)
         {
-            return await ExecutarFuncaoAsync(() => _service.ObterPorId(id));
+            return await ExecutarFuncaoAsync(() => _service.ObterPorIdAsync(id));
         }
 
-        /// <summary>
-        /// Responsável obter os usuarios paginado
-        /// </summary>
-        /// 
-        /// <returns>Retorna os usuarios paginado</returns>
         [HttpGet]
         [Route(Rotas.ObterTodosPaginado)]
         [ProducesResponseType(typeof(PaginacaoDto<UsuarioDto>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> ObterTodosPaginado([FromQuery] FiltroUsuario filtro)
         {
-            return await ExecutarFuncaoAsync(() => _service.ObterTodosPaginado(filtro));
+            return await ExecutarFuncaoAsync(() => _service.ObterTodosPaginadoAsync(filtro));
         }
 
-        /// <summary>
-        /// Responsável obter os usuarios por perfil
-        /// </summary>
-        /// 
-        /// <returns>Retorna os usuarios por perfil</returns>
         [HttpGet]
         [Route(UsuarioApi.ObterTodosPorPerfil)]
         [ProducesResponseType(typeof(IEnumerable<UsuarioDto>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> ObterTodosPorPerfil(UsuarioPerfil perfil)
         {
-            return await ExecutarFuncaoAsync(() => _service.ObterTodosPorPerfil(perfil));
+            return await ExecutarFuncaoAsync(() => _service.ObterTodosPorPerfilAsync(perfil));
         }
 
-        private SecurityToken GetSecurityToken(UsuarioDto user, JwtSecurityTokenHandler handler)
+        private SecurityToken ObterSecurityToken(UsuarioDto usuario, JwtSecurityTokenHandler handler)
         {
             DateTime dateCreation = DateTime.Now;
             DateTime dateExpiration = dateCreation + TimeSpan.FromSeconds(_authSettings.Seconds);
             ClaimsIdentity identity = new ClaimsIdentity(
-                     new GenericIdentity(user.Login, "Login"),
+                     new GenericIdentity(usuario.Login, "Login"),
                      new[] {
-                            new Claim(ClaimName.UserId, Convert.ToString(user.Id)),
-                            new Claim(ClaimName.UserName, user.Nome),
-                            new Claim(ClaimName.UserPerfil, Convert.ToString((int)user.Perfil)),
+                            new Claim(ClaimName.UserId, Convert.ToString(usuario.Id)),
+                            new Claim(ClaimName.UserName, usuario.Nome),
+                            new Claim(ClaimName.UserPerfil, Convert.ToString((int)usuario.Perfil)),
                      }
                  );
 

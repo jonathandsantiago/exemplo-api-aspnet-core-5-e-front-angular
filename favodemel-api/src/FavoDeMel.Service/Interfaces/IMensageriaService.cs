@@ -6,10 +6,9 @@ namespace FavoDeMel.Service.Interfaces
     public interface IMensageriaService
     {
         /// <summary>
-        /// Método responsável por enviar a mensagem do tipo objeto
+        /// Envia a mensagem na fila de forma assíncrona
         /// </summary>
         /// <param name="command">Command de envio</param>
-        /// <returns></returns>
-        Task Enviar<T>(T command) where T : IMensageriaCommand;
+        Task EnviarAsync<T>(T command) where T : IMensageriaCommand;
     }
 }

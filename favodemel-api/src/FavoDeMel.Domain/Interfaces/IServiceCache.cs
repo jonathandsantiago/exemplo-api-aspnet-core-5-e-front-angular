@@ -5,22 +5,22 @@ namespace FavoDeMel.Domain.Interfaces
     public interface IServiceCache
     {
         /// <summary>
-        /// Método responsável por obter o cache pela chave
+        /// Obtem a entidade em cache pela chave de forma assíncrona
         /// </summary>
-        /// <param name="key"></param>
-        Task<T> ObterAsync<T>(string key);
+        /// <param name="chave">Chave de registro do cache</param>
+        /// <returns>Retorna o T em cache</returns>
+        Task<T> ObterAsync<T>(string chave);
         /// <summary>
-        /// Método responsável por salvar o cache
+        /// Salva a entidade em cache pela chave de forma assíncrona
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="objeto"></param>
-        /// <param name="timeToLive"></param>
-        /// <returns></returns>
-        Task SalvarAsync<T>(string key, T objeto, int timeToLive = 300);
+        /// <param name="chave">Chave de registro do cache</param>
+        /// <param name="entidade">Endiade a ser salva no cache</param>
+        /// <param name="cicloDeVida">Ciclo de vida do cache</param>
+        Task SalvarAsync<T>(string chave, T entidade, int cicloDeVida = 300);
         /// <summary>
-        /// Método responsável por remover o cache pela chave
+        /// Remove o cache pela chave pela chave de forma assíncrona
         /// </summary>
-        /// <param name="key"></param>
-        Task RemoverAsync(string key);
+        /// <param name="chave">Chave de registro do cache</param>
+        Task RemoverAsync(string chave);
     }
 }

@@ -14,7 +14,7 @@ namespace FavoDeMel.Domain.Entities.Produtos
             _repository = repository;
         }
 
-        public override async Task<bool> Validar(ProdutoDto produto)
+        public override async Task<bool> ValidarAsync(ProdutoDto produto)
         {
             if (string.IsNullOrEmpty(produto.Nome))
             {
@@ -30,7 +30,7 @@ namespace FavoDeMel.Domain.Entities.Produtos
                 AddMensagem(ProdutoMessage.PrecoObrigatorio);
             }
 
-            return await base.Validar(produto);
+            return await base.ValidarAsync(produto);
         }
     }
 }

@@ -5,9 +5,9 @@ namespace FavoDeMel.Service.Interfaces
     public interface IServiceBase
     {
         /// <summary>
-        /// Responsável por obter as mensagens de validação
+        /// Obter as mensagens de validação
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Retornas as mensagens de validação</returns>
         IList<string> MensagensValidacao { get; }
     }
 }

@@ -5,9 +5,9 @@ namespace FavoDeMel.Service.Interfaces
     public interface IGeradorGuidService
     {
         /// <summary>
-        /// Resposável por gerar um novo GUID para o registro que será cadastrado.
+        /// Gera novo Guid para o registro que será cadastrado.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Retorna novo Guid</returns>
         Guid GetNexGuid();
     }
 }

@@ -7,22 +7,29 @@ namespace FavoDeMel.Domain.Interfaces
         where TEntity : class
     {
         /// <summary>
-        /// Método responsável por validar a entidade.
+        /// Valida a entidade de forma assíncrona
         /// </summary>
-        /// <param name="entity">Entidade</param>
-        /// <returns></returns>
-        Task<bool> Validar(TEntity entity);
+        /// <param name="entidade">Entidade a ser validada</param>
+        /// <returns>Retorna o boleano da validação</returns>
+        Task<bool> ValidarAsync(TEntity entidade);
     }
 
     public interface IValidator
     {
+        /// <summary>
+        /// Mensagens de validação.
+        /// </summary>
+        /// <returns>Retorna a lista de mensagens da validação</returns>
         IList<string> Mensagens { get; }
+        /// <summary>
+        /// Retorna se a validação é valida ou não.
+        /// </summary>
+        /// <returns>Retorna o boleano da validação</returns>
         bool IsValido { get; }
         /// <summary>
-        /// Método responsável por adicionar as mensagens de validação.
+        /// Método responsável por adicionar a mensagem de validação.
         /// </summary>
         /// <param name="mensagem">Mensagem</param>
-        /// <returns></returns>
         void AddMensagem(string mensagem);
     }
 }

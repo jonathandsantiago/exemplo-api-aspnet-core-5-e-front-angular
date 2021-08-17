@@ -15,6 +15,11 @@ namespace FavoDeMel.Api.Extensions
     {
         public static bool ConsoleAlreadyWritten = false;
 
+        /// <summary>
+        /// Configura as injeções de dependências da aplicação, buscando todos as classes assinadas com IApiProvider
+        /// </summary>
+        /// <param name="services">IServiceCollection da aplicação</param>
+        /// <param name="configuration">IConfiguration da aplicação</param>
         public static void AddApiProvidersAssembly(this IServiceCollection services, IConfiguration configuration)
         {
             ISettings<string, object> settings = ObterSettingsAssembly(configuration, services);
@@ -24,6 +29,12 @@ namespace FavoDeMel.Api.Extensions
             providers.ForEach(install => install.AddProvider(services, settings));
         }
 
+        /// <summary>
+        /// Configura as injeções de dependências da aplicação, buscando todos as classes assinadas com IApiProvider
+        /// </summary>
+        /// <param name="app">IApplicationBuilder da aplicação</param>
+        /// <param name="env">IWebHostEnvironment da aplicação</param>
+        /// <param name="configuration">IConfiguration da aplicação</param>
         public static void AddApiConfigsAssembly(this IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration)
         {
             ISettings<string, object> settings = ObterSettingsAssembly(configuration);
@@ -33,6 +44,12 @@ namespace FavoDeMel.Api.Extensions
             providers.ForEach(install => install.AddAplication(app, env, settings));
         }
 
+        /// <summary>
+        /// Obter todas as configurações da aplicação com base no appsettings assinadas com ISettings
+        /// </summary>
+        /// <param name="configuration">IConfiguration da aplicação</param>
+        /// <param name="services">IServiceCollection da aplicação</param>
+        /// <returns>Retorna todas as configurações da aplicação com base no appsettings assinadas com ISettings</returns>
         private static ISettings<string, object> ObterSettingsAssembly(IConfiguration configuration, IServiceCollection services = null)
         {
             ISettings<string, object> settings = new Settings();

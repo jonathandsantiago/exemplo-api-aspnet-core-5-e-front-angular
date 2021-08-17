@@ -1,22 +1,21 @@
 ﻿using FavoDeMel.Api.Providers.Interface;
+using FavoDeMel.Domain.Extensions;
 using FavoDeMel.Domain.Interfaces;
+using FavoDeMel.Domain.Models.Settings;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FavoDeMel.Api.Providers
 {
-    public class ApiProvider : IApiProvider
+    public class CorsProvider : IApiProvider
     {
         public void AddProvider(IServiceCollection services, ISettings<string, object> settings)
         {
+            CorsSettings corsSettings = settings.GetSetting<CorsSettings>();
             services.AddCors(options =>
             {
-                options.AddPolicy("CorsPolicy",
+                options.AddPolicy(corsSettings.Policy,
                     builder => builder
-                        .WithOrigins(new string[]
-                        {
-                            "http://localhost:4200",
-                            "https://localhost:4200",
-                        })
+                        .WithOrigins(corsSettings.WithOrigins)
                         .SetIsOriginAllowedToAllowWildcardSubdomains()
                         .AllowAnyMethod()
                         .AllowAnyHeader()

@@ -34,7 +34,7 @@ namespace FavoDeMel.Tests.Services
         public async Task DeveCadastarUsuarioValido()
         {
             IUsuarioService usuarioService = _serviceProvider.GetRequiredService<IUsuarioService>();
-            var usuario = await usuarioService.Inserir(new UsuarioDto
+            var usuario = await usuarioService.CadastrarAsync(new UsuarioDto
             {
                 Nome = "Teste",
                 Login = "Teste",
@@ -50,7 +50,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDeveCadastarCasoUsuarioNulo()
         {
             IUsuarioService usuarioService = _serviceProvider.GetRequiredService<IUsuarioService>();
-            var usuario = await usuarioService.Inserir(null);
+            var usuario = await usuarioService.CadastrarAsync(null);
             usuario.Should().BeNull();
             usuarioService.MensagensValidacao.Should().NotBeNull(StringHelper.JoinHtmlMensagem(usuarioService.MensagensValidacao));
             usuarioService.MensagensValidacao.Any(c => c == UsuarioMessage.UsuarioNaoPodeSerNulo).Should().BeTrue();
@@ -68,7 +68,7 @@ namespace FavoDeMel.Tests.Services
             };
 
             IUsuarioService usuarioService = Startup.GetServiceProvider(new ServiceParameter(parameter)).GetRequiredService<IUsuarioService>();
-            var usuario = await usuarioService.Inserir(new UsuarioDto
+            var usuario = await usuarioService.CadastrarAsync(new UsuarioDto
             {
                 Nome = "Teste",
                 Login = "Teste",
@@ -86,7 +86,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDeveCadastarCasoUsuarioInvalido()
         {
             IUsuarioService usuarioService = _serviceProvider.GetRequiredService<IUsuarioService>();
-            var usuario = await usuarioService.Inserir(new UsuarioDto());
+            var usuario = await usuarioService.CadastrarAsync(new UsuarioDto());
             usuario.Should().BeNull();
             usuarioService.MensagensValidacao.Should().NotBeNull(StringHelper.JoinHtmlMensagem(usuarioService.MensagensValidacao));
         }
@@ -95,7 +95,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDeveCadastarCasoNomeNulo()
         {
             IUsuarioService usuarioService = _serviceProvider.GetRequiredService<IUsuarioService>();
-            var usuario = await usuarioService.Inserir(new UsuarioDto
+            var usuario = await usuarioService.CadastrarAsync(new UsuarioDto
             {
                 Nome = null,
                 Login = "Teste",
@@ -113,7 +113,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDeveCadastarCasoSenhaLoginNuLo()
         {
             IUsuarioService usuarioService = _serviceProvider.GetRequiredService<IUsuarioService>();
-            var usuario = await usuarioService.Inserir(new UsuarioDto
+            var usuario = await usuarioService.CadastrarAsync(new UsuarioDto
             {
                 Nome = "Teste",
                 Login = null,
@@ -132,7 +132,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDeveCadastarCasoSenhaNaoCumpraRequisitoMinimo()
         {
             IUsuarioService usuarioService = _serviceProvider.GetRequiredService<IUsuarioService>();
-            var usuario = await usuarioService.Inserir(new UsuarioDto
+            var usuario = await usuarioService.CadastrarAsync(new UsuarioDto
             {
                 Nome = "Teste",
                 Login = "Teste",
@@ -150,7 +150,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDeveCadastarCasoSenhaContenhaEspacoEmBranco()
         {
             IUsuarioService usuarioService = _serviceProvider.GetRequiredService<IUsuarioService>();
-            var usuario = await usuarioService.Inserir(new UsuarioDto
+            var usuario = await usuarioService.CadastrarAsync(new UsuarioDto
             {
                 Nome = "Teste",
                 Login = "Teste",
@@ -168,7 +168,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDeveCadastarPerfilInvalido()
         {
             IUsuarioService usuarioService = _serviceProvider.GetRequiredService<IUsuarioService>();
-            var usuario = await usuarioService.Inserir(new UsuarioDto
+            var usuario = await usuarioService.CadastrarAsync(new UsuarioDto
             {
                 Nome = "Teste",
                 Login = "Teste",
@@ -186,7 +186,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDevePermitirEditarSenhaCasoNovaSenhaNula()
         {
             IUsuarioService usuarioService = _serviceProvider.GetRequiredService<IUsuarioService>();
-            var usuario = await usuarioService.AlterarSenha(Guid.NewGuid(), null);
+            var usuario = await usuarioService.AlterarSenhaAsync(Guid.NewGuid(), null);
             usuario.Should().BeFalse();
             usuarioService.MensagensValidacao.Should().NotBeNull(StringHelper.JoinHtmlMensagem(usuarioService.MensagensValidacao));
             usuarioService.MensagensValidacao.Any(c => c == UsuarioMessage.SenhaObrigatoria).Should().BeTrue();
@@ -196,7 +196,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDevePermitirEditarSenhaCasoNovaSejaIgualAnterior()
         {
             IUsuarioService usuarioService = _serviceProvider.GetRequiredService<IUsuarioService>();
-            var usuario = await usuarioService.AlterarSenha(Guid.NewGuid(), StringHelper.CalculateMD5Hash("Admin"));
+            var usuario = await usuarioService.AlterarSenhaAsync(Guid.NewGuid(), StringHelper.CalculateMD5Hash("Admin"));
             usuario.Should().BeFalse();
             usuarioService.MensagensValidacao.Should().NotBeNull(StringHelper.JoinHtmlMensagem(usuarioService.MensagensValidacao));
             usuarioService.MensagensValidacao.Any(c => c == UsuarioMessage.NovaSenhaNaoPodeSerIgualAtual).Should().BeTrue();
@@ -206,7 +206,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDevePermitirEditarSenhaCasoNaoCumpraRequisitoMinimo()
         {
             IUsuarioService usuarioService = _serviceProvider.GetRequiredService<IUsuarioService>();
-            var usuario = await usuarioService.AlterarSenha(Guid.NewGuid(), "123");
+            var usuario = await usuarioService.AlterarSenhaAsync(Guid.NewGuid(), "123");
             usuario.Should().BeFalse();
             usuarioService.MensagensValidacao.Should().NotBeNull(StringHelper.JoinHtmlMensagem(usuarioService.MensagensValidacao));
             usuarioService.MensagensValidacao.Any(c => c == UsuarioMessage.SenhaDeConterMinioCaracters(6)).Should().BeTrue();
@@ -216,7 +216,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDevePermitirEditarSenhaCasoContenhaEspacoEmBranco()
         {
             IUsuarioService usuarioService = _serviceProvider.GetRequiredService<IUsuarioService>();
-            var usuario = await usuarioService.AlterarSenha(Guid.NewGuid(), "teste 123");
+            var usuario = await usuarioService.AlterarSenhaAsync(Guid.NewGuid(), "teste 123");
             usuario.Should().BeFalse();
             usuarioService.MensagensValidacao.Should().NotBeNull(StringHelper.JoinHtmlMensagem(usuarioService.MensagensValidacao));
             usuarioService.MensagensValidacao.Any(c => c == UsuarioMessage.SenhaNaoPodeConterEspacoEmBranco).Should().BeTrue();
@@ -226,7 +226,7 @@ namespace FavoDeMel.Tests.Services
         public async Task DeveEditarUsuarioValido()
         {
             IUsuarioService usuarioService = _serviceProvider.GetRequiredService<IUsuarioService>();
-            var usuario = await usuarioService.Editar(new UsuarioDto
+            var usuario = await usuarioService.EditarAsync(new UsuarioDto
             {
                 Id = Guid.NewGuid(),
                 Nome = "Teste",
@@ -243,7 +243,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDeveEditarCasoUsuarioNulo()
         {
             IUsuarioService usuarioService = _serviceProvider.GetRequiredService<IUsuarioService>();
-            var usuario = await usuarioService.Editar(null);
+            var usuario = await usuarioService.EditarAsync(null);
             usuario.Should().BeNull();
             usuarioService.MensagensValidacao.Should().NotBeNull(StringHelper.JoinHtmlMensagem(usuarioService.MensagensValidacao));
             usuarioService.MensagensValidacao.Any(c => c == UsuarioMessage.UsuarioNaoPodeSerNulo).Should().BeTrue();
@@ -253,7 +253,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDeveEditarCasoUsuarioInvalido()
         {
             IUsuarioService usuarioService = _serviceProvider.GetRequiredService<IUsuarioService>();
-            var usuario = await usuarioService.Editar(new UsuarioDto());
+            var usuario = await usuarioService.EditarAsync(new UsuarioDto());
             usuario.Should().BeNull();
             usuarioService.MensagensValidacao.Should().NotBeNull(StringHelper.JoinHtmlMensagem(usuarioService.MensagensValidacao));
         }
@@ -262,7 +262,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDeveEditarCasoNomeNulo()
         {
             IUsuarioService usuarioService = _serviceProvider.GetRequiredService<IUsuarioService>();
-            var usuario = await usuarioService.Editar(new UsuarioDto
+            var usuario = await usuarioService.EditarAsync(new UsuarioDto
             {
                 Id = Guid.NewGuid(),
                 Nome = null,
@@ -281,7 +281,7 @@ namespace FavoDeMel.Tests.Services
         public async Task NaoDeveEditarPerfilInvalido()
         {
             IUsuarioService usuarioService = _serviceProvider.GetRequiredService<IUsuarioService>();
-            var usuario = await usuarioService.Editar(new UsuarioDto
+            var usuario = await usuarioService.EditarAsync(new UsuarioDto
             {
                 Id = Guid.NewGuid(),
                 Nome = "Teste",

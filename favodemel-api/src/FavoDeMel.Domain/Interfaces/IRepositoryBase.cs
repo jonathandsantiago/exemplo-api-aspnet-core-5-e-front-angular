@@ -7,24 +7,29 @@ namespace FavoDeMel.Domain.Interfaces
         where TEntity : Entity<TId>
     {
         /// <summary>
-        /// Método responsável por editar
+        /// Edita a entidade no banco de dados de forma assíncrona
         /// </summary>
-        /// <returns></returns>
-        Task<TEntity> Editar(TEntity entidade);
+        /// <param name="entidade">Entidade a ser salva</param>
+        /// <returns>Retorna a TEntity editada</returns>
+        Task<TEntity> EditarAsync(TEntity entidade);
         /// <summary>
-        /// Método responsável por cadastrar
+        /// Cadastra a entidade no banco de dados de forma assíncrona
         /// </summary>
-        /// <returns></returns>
-        Task<TEntity> Inserir(TEntity entity);
+        /// <param name="entidade">Entidade a ser salva</param>
+        /// <returns>Retorna a TEntity cadastrada</returns>
+        Task<TEntity> CadastrarAsync(TEntity entidade);
         /// <summary>
-        /// Método responsável por obter por id
+        /// Obter entidade pelo id de forma assíncrona
+        /// Método responsável obter a entidade cadastrada por id
         /// </summary>
-        /// <returns></returns>
-        Task<TEntity> ObterPorId(TId id);
+        /// <param name="id">Id do registro</param>
+        /// <returns>Retorna a TEntity consultada pelo TId</returns>
+        Task<TEntity> ObterPorIdAsync(TId id);
         /// <summary>
-        /// Método responsável por iniciar a transação
+        /// Inicia transação de forma assíncrona
         /// </summary>
-        /// <returns></returns>
-        IUnitOfWork BeginTransaction(IValidator _validator = null);
+        /// <param name="validator">Validador</param>
+        /// <returns>Retorna o IUnitOfWork da requisição</returns>
+        IUnitOfWork BeginTransaction(IValidator validator = null);
     }
 }

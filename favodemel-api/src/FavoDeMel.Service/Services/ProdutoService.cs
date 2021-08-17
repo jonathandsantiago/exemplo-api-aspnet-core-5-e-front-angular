@@ -29,7 +29,7 @@ namespace FavoDeMel.Service.Services
             _geradorGuidService = geradorGuidService;
         }
 
-        public async Task<ProdutoDto> ObterPorId(Guid id)
+        public async Task<ProdutoDto> ObterPorIdAsync(Guid id)
         {
             var produtoCache = await ObterPorIdInCache<ProdutoDto, Guid>(id);
 
@@ -38,15 +38,15 @@ namespace FavoDeMel.Service.Services
                 return produtoCache;
             }
 
-            var produto = await _repository.ObterPorId(id);
+            var produto = await _repository.ObterPorIdAsync(id);
             return produto?.ToDto();
         }
 
-        public async Task<ProdutoDto> Inserir(ProdutoDto produtoDto)
+        public async Task<ProdutoDto> CadastrarAsync(ProdutoDto produtoDto)
         {
             using (var dbTransaction = _repository.BeginTransaction(_validator))
             {
-                if (!await _validator.Validar(produtoDto))
+                if (!await _validator.ValidarAsync(produtoDto))
                 {
                     return null;
                 }
@@ -54,38 +54,38 @@ namespace FavoDeMel.Service.Services
                 Produto produto = produtoDto.ToEntity();
                 produto.Id = _geradorGuidService.GetNexGuid();
                 produto.Prepare();
-                Produto produtoDb = await _repository.Inserir(produto);
+                Produto produtoDb = await _repository.CadastrarAsync(produto);
                 ProdutoDto dto = produtoDb.ToDto();
                 await SalvarCache(dto.Id, dto);
                 return dto;
             }
         }
 
-        public async Task<ProdutoDto> Editar(ProdutoDto produtoDto)
+        public async Task<ProdutoDto> EditarAsync(ProdutoDto produtoDto)
         {
             using (var dbTransaction = _repository.BeginTransaction(_validator))
             {
-                if (!await _validator.Validar(produtoDto))
+                if (!await _validator.ValidarAsync(produtoDto))
                 {
                     return null;
                 }
 
                 Produto produto = produtoDto.ToEntity();
                 produto.Prepare();
-                await _repository.Editar(produto);
+                await _repository.EditarAsync(produto);
                 ProdutoDto dto = produto.ToDto();
                 await SalvarCache(dto.Id, dto);
                 return dto;
             }
         }
 
-        public virtual async Task<IEnumerable<ProdutoDto>> ObterTodos()
+        public virtual async Task<IEnumerable<ProdutoDto>> ObterTodosAsync()
         {
             var produtos = await _repository.ObterTodos();
             return produtos?.ToListDto();
         }
 
-        public async Task<PaginacaoDto<ProdutoDto>> ObterTodosPaginado(FiltroProduto filtro)
+        public async Task<PaginacaoDto<ProdutoDto>> ObterTodosPaginadoAsync(FiltroProduto filtro)
         {
             var produtos = await _repository.ObterTodosPaginado(filtro.Pagina, filtro.Limite);
             return produtos?.ToPaginacaoDto<PaginacaoDto<ProdutoDto>>();

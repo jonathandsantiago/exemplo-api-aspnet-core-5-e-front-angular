@@ -29,7 +29,7 @@ namespace FavoDeMel.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors("CorsPolicy");
+            app.AddApiConfigsAssembly(env, Configuration);
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
@@ -38,8 +38,6 @@ namespace FavoDeMel.Api
             {
                 endpoints.MapControllers();
             });
-
-            app.AddApiConfigsAssembly(env, Configuration);
         }
     }
 }

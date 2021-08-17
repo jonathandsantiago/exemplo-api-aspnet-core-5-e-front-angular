@@ -9,40 +9,40 @@ namespace FavoDeMel.Service.Interfaces
     public interface IComandaService : IServiceBase
     {
         /// <summary>
-        /// Método responsável obter comanda por id
+        /// Obtem a comanda de forma assíncrona
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Task<ComandaDto> ObterPorId(Guid id);
+        /// <param name="idComanda">Id da comanda</param>
+        /// <returns>Retorna a comanda por id</returns>
+        Task<ComandaDto> ObterPorIdAsync(Guid idComanda);
         /// <summary>
-        /// Método responsável por cadastrar a comanda
+        /// Cadastrar a comanda de forma assíncrona
+        /// </summary>
+        /// <param name="comandaDto">Comanda Dto</param>
+        /// <returns>Retorna a comanda cadastrada</returns>
+        Task<ComandaDto> CadastrarAsync(ComandaDto comandaDto);
+        /// <summary>
+        /// Editar a comanda de forma assíncrona
         /// </summary>
         /// <param name="comandaDto"></param>
-        /// <returns></returns>
-        Task<ComandaDto> Inserir(ComandaDto comandaDto);
+        /// <returns>Retorna a comanda editada</returns>
+        Task<ComandaDto> EditarAsync(ComandaDto comandaDto);
         /// <summary>
-        /// Método responsável por editar a comanda
+        /// Obter todas as comanda pela situação de forma assíncrona
         /// </summary>
-        /// <param name="comandaDto"></param>
-        /// <returns></returns>
-        Task<ComandaDto> Editar(ComandaDto comandaDto);
+        /// <param name="situacao">Situação</param>
+        /// <returns>Retorna todas as comandas por situação</returns>
+        Task<IEnumerable<ComandaDto>> ObterTodosPorSituacaoAsync(ComandaSituacao situacao);
         /// <summary>
-        /// Método responsável obter as comandas paginado
+        /// Confirmar a comanda pelo id de forma assíncrona
         /// </summary>
-        /// <param name="situacao"></param>
-        /// <returns></returns>
-        Task<IEnumerable<ComandaDto>> ObterTodosPorSituacao(ComandaSituacao situacao);
+        /// <param name="idComanda">Id da comanda</param>
+        /// <returns>Retorna a comanda confirmada</returns>
+        Task<ComandaDto> ConfirmarAsync(Guid idComanda);
         /// <summary>
-        /// Método responsável confirmar comanda cozinha
+        /// Fechar a comanda pelo id de forma assíncrona
         /// </summary>
-        /// <param name="comandaId"></param>
-        /// <returns></returns>
-        Task<ComandaDto> Confirmar(Guid comandaId);
-        /// <summary>
-        /// Método responsável fechar comanda
-        /// </summary>
-        /// <param name="comandaId"></param>
-        /// <returns></returns>
-        Task<ComandaDto> Fechar(Guid comandaId);      
+        /// <param name="idComanda">Id da comanda</param>
+        /// <returns>Retorna a comanda fechada</returns>
+        Task<ComandaDto> Fechar(Guid idComanda);      
     }
 }
