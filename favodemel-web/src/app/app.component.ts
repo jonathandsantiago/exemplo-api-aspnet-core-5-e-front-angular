@@ -1,4 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import { RxStompService, StompState } from '@stomp/ng2-stompjs';
 
 @Component({
   selector: 'app-root',
@@ -6,11 +7,12 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  constructor() {
+  constructor(protected rxStompService: RxStompService ) {
 
   }
 
   ngOnInit() {
+    this.rxStompService.connectionState$.subscribe(c => console.log(StompState[c]));
   }
 
   ngOnDestroy() {

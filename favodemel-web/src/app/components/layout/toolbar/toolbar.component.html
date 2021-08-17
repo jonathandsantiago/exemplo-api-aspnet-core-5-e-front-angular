@@ -23,13 +23,18 @@
       </li>
       <li class="nav-item dropdown"
           [class.active]="router.isActive('produtos',false) || router.isActive('usuarios',false)">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-           aria-haspopup="true" aria-expanded="false">
-          Cadastros
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" [routerLink]="['produtos']">Produtos</a>
-          <a class="dropdown-item" [routerLink]="['usuarios']">Usuários</a>
+        <div class="btn-group" dropdown>
+          <button id="button-basic" dropdownToggle type="button"
+                  style="background-color: #24292e; border-color: #24292e"
+                  class="btn btn-primary dropdown-toggle"
+                  aria-controls="dropdown-basic">
+            Cadastros <span class="caret"></span>
+          </button>
+          <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+              role="menu" aria-labelledby="button-basic">
+            <li role="menuitem"><a class="dropdown-item" [routerLink]="['produtos']">Produtos</a></li>
+            <li role="menuitem"><a class="dropdown-item" [routerLink]="['usuarios']">Usuários</a></li>
+          </ul>
         </div>
       </li>
       <li class="nav-item">

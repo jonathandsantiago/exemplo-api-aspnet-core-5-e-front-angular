@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.6'
 
 services:
   favodemel-web:
@@ -6,7 +6,7 @@ services:
     container_name: favodemel-web
     build: .
     ports:
-      - 5401:80
+      - 54200:80
     deploy:
       resources:
         limits:

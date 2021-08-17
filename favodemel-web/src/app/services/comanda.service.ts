@@ -40,6 +40,7 @@ export class ComandaService extends BaseService<Comanda> {
   }
 
   protected converterComandaMensageria(response) {
+    console.log(response);
     if (!response || !response.body) {
       return null;
     }
