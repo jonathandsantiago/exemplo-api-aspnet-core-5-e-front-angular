@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FavoDeMel.Service", "src\Fa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FavoDeMel.Repository", "src\FavoDeMel.Repository\FavoDeMel.Repository.csproj", "{9DA173C5-2BC0-4BDA-BD0B-5110FA17D0CD}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{84281C32-2726-4F69-982E-D9D567227F4E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FavoDeMel.Tests", "test\FavoDeMel.Tests\FavoDeMel.Tests.csproj", "{DD873C30-725C-4767-96F9-9094D0A623A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FavoDeMel.Tests", "test\FavoDeMel.Tests\FavoDeMel.Tests.csproj", "{DD873C30-725C-4767-96F9-9094D0A623A8}"
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{2289CED0-931B-4B6F-BC97-26E3A7B3F7EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,14 +41,14 @@ Global
 		{9DA173C5-2BC0-4BDA-BD0B-5110FA17D0CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DA173C5-2BC0-4BDA-BD0B-5110FA17D0CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DA173C5-2BC0-4BDA-BD0B-5110FA17D0CD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{84281C32-2726-4F69-982E-D9D567227F4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{84281C32-2726-4F69-982E-D9D567227F4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{84281C32-2726-4F69-982E-D9D567227F4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{84281C32-2726-4F69-982E-D9D567227F4E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DD873C30-725C-4767-96F9-9094D0A623A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DD873C30-725C-4767-96F9-9094D0A623A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD873C30-725C-4767-96F9-9094D0A623A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD873C30-725C-4767-96F9-9094D0A623A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2289CED0-931B-4B6F-BC97-26E3A7B3F7EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2289CED0-931B-4B6F-BC97-26E3A7B3F7EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2289CED0-931B-4B6F-BC97-26E3A7B3F7EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2289CED0-931B-4B6F-BC97-26E3A7B3F7EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

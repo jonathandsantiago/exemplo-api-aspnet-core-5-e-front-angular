@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>84281c32-2726-4f69-982e-d9d567227f4e</ProjectGuid>
+    <ProjectGuid>2289ced0-931b-4b6f-bc97-26e3a7b3f7eb</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
     <DockerServiceName>favodemel.api</DockerServiceName>

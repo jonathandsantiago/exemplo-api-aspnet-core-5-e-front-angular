@@ -6,10 +6,10 @@ services:
     container_name: favodemel-web
     build: .
     ports:
-      - 4200:80
+      - 5401:80
     deploy:
       resources:
         limits:
-          memory: 2048M
+          memory: 512M
         reservations:
-          memory: 1024M
+          memory: 256M

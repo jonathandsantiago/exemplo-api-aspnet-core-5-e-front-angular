@@ -8,18 +8,18 @@ services:
       - ASPNETCORE_HTTPS_PORT=44300
     ports:
       - "8080:80"
-      - "44300:443"
+      - "5400:443"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
     depends_on:
       - postgres
     deploy:
-        resources:
-            limits:
-              memory: 2048M
-            reservations:
-              memory: 1024M
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
     networks: 
       - net
 
@@ -85,6 +85,8 @@ services:
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
       - ./config/enabled_plugins:/etc/rabbitmq/enabled_plugins
+    networks: 
+      - net
 
 volumes:
   rabbitmq-data:
