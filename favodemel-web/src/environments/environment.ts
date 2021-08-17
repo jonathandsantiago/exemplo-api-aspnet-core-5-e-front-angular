@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:44300',
+  apiUrl: 'https://localhost:5400',
   mensageriaConfig: {
     brokerURL: 'ws://127.0.0.1:15674/ws',
     connectHeaders: {
