@@ -68,6 +68,17 @@ export class ComandaComponent implements OnInit, OnDestroy {
       }
     }));
 
+    this.subscription.add(this.comandaService.obterMensagensComandaEditarCommand().subscribe(comanda => {
+      if (comanda) {
+        this.toastService.success(`Atualizado pedido: ${comanda.codigo}`, null, {
+          positionClass: 'toast-bottom-right',
+          disableTimeOut: false,
+          progressBar: true
+        });
+        this.inserirOuAtualizarComanda(comanda);
+      }
+    }));
+
     this.subscription.add(this.comandaService.obterMensagensComandaConfirmarCommand().subscribe(comanda => {
       if (comanda) {
         this.toastService.success(`Confirmado o pedido: ${comanda.codigo}`, null, {

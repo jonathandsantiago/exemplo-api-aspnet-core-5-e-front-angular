@@ -19,7 +19,7 @@ describe('UsuarioComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should main-comanda-edit', () => {
+  it('should main-usuario-edit', () => {
     expect(component).toBeTruthy();
   });
 });

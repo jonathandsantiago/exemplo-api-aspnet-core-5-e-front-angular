@@ -11,10 +11,10 @@ import {ListBaseComponent} from '../../components/common/list-base.component';
 })
 export class UsuarioComponent extends ListBaseComponent implements OnInit, OnDestroy {
   columns = [
-    {nome: 'id', titulo: 'Id'},
-    {nome: 'nome', titulo: 'Nome'},
-    {nome: 'perfil', titulo: 'Perfil'},
-    {nome: 'comissao', titulo: 'Comissão'},
+    {nome: 'id', titulo: 'Id', textAlign: 'left'},
+    {nome: 'nome', titulo: 'Nome', textAlign: 'left'},
+    {nome: 'perfil', titulo: 'Perfil', textAlign: 'left'},
+    {nome: 'comissao', titulo: 'Comissão', textAlign: 'left'},
     {nome: 'acao', titulo: '', textAlign: 'right'},
   ];
 

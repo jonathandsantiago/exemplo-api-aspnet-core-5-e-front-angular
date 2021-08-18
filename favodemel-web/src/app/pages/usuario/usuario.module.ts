@@ -7,6 +7,7 @@ import {UsuarioEditComponent} from './usuario-edit/usuario-edit.component';
 import {UsuarioRoutingModule} from './usuario-routing.module';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {PaginacaoModule} from '../../shared/paginacao/paginacao.module';
+import {NgxCurrencyModule} from 'ngx-currency';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import {PaginacaoModule} from '../../shared/paginacao/paginacao.module';
     ReactiveFormsModule,
     SharedModule,
     TooltipModule.forRoot(),
+    NgxCurrencyModule,
     PaginacaoModule
   ],
   declarations: [

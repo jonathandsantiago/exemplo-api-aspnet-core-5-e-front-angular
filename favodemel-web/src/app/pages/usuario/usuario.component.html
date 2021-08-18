@@ -20,7 +20,7 @@
         <tbody>
         <ng-container *ngFor="let usuario of (usuarios$ | async)">
           <tr>
-            <td style="text-align: center;">{{usuario.id}}</td>
+            <td style="text-align: left;">{{usuario.id}}</td>
             <td style="text-align: left;">{{usuario.nome}}</td>
             <td style="text-align: left;">{{descricaoPerfil[usuario.perfil]}}</td>
             <td style="text-align: left;">{{usuario.comissao}}%</td>

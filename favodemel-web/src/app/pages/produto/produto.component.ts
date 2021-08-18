@@ -12,9 +12,9 @@ import {UsuarioService} from '../../services/usuario.service';
 })
 export class ProdutoComponent extends ListBaseComponent implements OnInit {
   columns = [
-    {nome: 'id', titulo: 'Id'},
-    {nome: 'nome', titulo: 'Nome'},
-    {nome: 'preco', titulo: 'Preço'},
+    {nome: 'id', titulo: 'Id', textAlign: 'left'},
+    {nome: 'nome', titulo: 'Nome', textAlign: 'left'},
+    {nome: 'preco', titulo: 'Preço', textAlign: 'left'},
     {nome: 'acao', titulo: '', textAlign: 'right'},
   ];
 

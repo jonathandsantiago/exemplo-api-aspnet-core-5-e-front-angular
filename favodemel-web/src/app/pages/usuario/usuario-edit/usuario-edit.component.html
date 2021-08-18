@@ -47,9 +47,11 @@
                 <div class="col-xs-12 col-md-6 form-group">
                   <label class="label-input">% Comissão</label>
                   <div class="input-group mb-3">
-                    <input type="number"
+                    <input type="text"
                            formControlName="comissao"
                            class="form-control form-input"
+                           currencyMask
+                           [options]="{ prefix: '% ', thousands: '.', decimal: ',' , max: 99999999.99, min: 0 }"
                            [attr.disabled]="isVisualizacao ? '' : null"
                            [class.is-invalid]="submitted && formControl.comissao.errors"/>
                   </div>

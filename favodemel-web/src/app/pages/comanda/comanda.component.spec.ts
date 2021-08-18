@@ -1,25 +1,25 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProdutoComponent } from './produto.component';
+import { ComandaComponent } from './comanda.component';
 
-describe('ProdutoComponent', () => {
-  let component: ProdutoComponent;
-  let fixture: ComponentFixture<ProdutoComponent>;
+describe('ComandaComponent', () => {
+  let component: ComandaComponent;
+  let fixture: ComponentFixture<ComandaComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProdutoComponent ]
+      declarations: [ ComandaComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProdutoComponent);
+    fixture = TestBed.createComponent(ComandaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should main-produto-edit', () => {
+  it('should main-comanda-edit', () => {
     expect(component).toBeTruthy();
   });
 });
