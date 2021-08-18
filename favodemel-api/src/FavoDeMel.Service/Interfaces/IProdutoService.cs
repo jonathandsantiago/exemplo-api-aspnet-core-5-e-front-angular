@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FavoDeMel.Service.Interfaces
 {
-    public interface IProdutoService : IServiceBase
+    public interface IProdutoService : IService
     {
         /// <summary>
         /// Obter o produto de forma assíncrona

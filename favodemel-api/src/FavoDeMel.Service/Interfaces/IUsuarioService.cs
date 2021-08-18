@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FavoDeMel.Service.Interfaces
 {
-    public interface IUsuarioService : IServiceBase
+    public interface IUsuarioService : IService
     {
         /// <summary>
         /// Obter usuário pelo login de forma assíncrona

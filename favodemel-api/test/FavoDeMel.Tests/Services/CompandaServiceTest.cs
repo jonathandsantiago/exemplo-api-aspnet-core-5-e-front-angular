@@ -40,7 +40,14 @@ namespace FavoDeMel.Tests.Services
 
             foreach (var produto in ProdutoMock.ObterListaDeProdutos())
             {
-                comanda.Pedidos.Add(new ComandaPedidoDto() { ProdutoId = Guid.NewGuid(), Quantidade = 1, Situacao = ComandaPedidoSituacao.Pedido });
+                comanda.Pedidos.Add(new ComandaPedidoDto()
+                {
+                    ProdutoId = Guid.NewGuid(),
+                    ProdutoNome = produto.Nome,
+                    ProdutoPreco = produto.Preco,
+                    Quantidade = 1,
+                    Situacao = ComandaPedidoSituacao.Pedido
+                });
             }
 
             var result = await comandaService.CadastrarAsync(comanda);
@@ -55,7 +62,14 @@ namespace FavoDeMel.Tests.Services
 
             foreach (var produto in ProdutoMock.ObterListaDeProdutos())
             {
-                comanda.Pedidos.Add(new ComandaPedidoDto() { ProdutoId = Guid.NewGuid(), Quantidade = 1, Situacao = ComandaPedidoSituacao.Pedido });
+                comanda.Pedidos.Add(new ComandaPedidoDto()
+                {
+                    ProdutoId = Guid.NewGuid(),
+                    ProdutoNome = produto.Nome,
+                    ProdutoPreco = produto.Preco,
+                    Quantidade = 1,
+                    Situacao = ComandaPedidoSituacao.Pedido
+                });
             }
 
             var result = await comandaService.CadastrarAsync(comanda);
@@ -107,7 +121,14 @@ namespace FavoDeMel.Tests.Services
 
             foreach (var produto in ProdutoMock.ObterListaDeProdutos())
             {
-                comanda.Pedidos.Add(new ComandaPedidoDto() { ProdutoId = produto.Id, Quantidade = 1, Situacao = default(ComandaPedidoSituacao) });
+                comanda.Pedidos.Add(new ComandaPedidoDto()
+                {
+                    ProdutoId = produto.Id,
+                    ProdutoNome = produto.Nome,
+                    ProdutoPreco = produto.Preco,
+                    Quantidade = 1,
+                    Situacao = default(ComandaPedidoSituacao)
+                });
             }
 
             var result = await comandaService.CadastrarAsync(comanda);
@@ -128,7 +149,14 @@ namespace FavoDeMel.Tests.Services
 
             foreach (var produto in ProdutoMock.ObterListaDeProdutos())
             {
-                comanda.Pedidos.Add(new ComandaPedidoDto() { ProdutoId = Guid.NewGuid(), Quantidade = 1, Situacao = ComandaPedidoSituacao.Pedido });
+                comanda.Pedidos.Add(new ComandaPedidoDto()
+                {
+                    ProdutoId = Guid.NewGuid(),
+                    ProdutoNome = produto.Nome,
+                    ProdutoPreco = produto.Preco,
+                    Quantidade = 1,
+                    Situacao = ComandaPedidoSituacao.Pedido
+                });
             }
 
             var result = await comandaService.EditarAsync(comanda);
@@ -144,7 +172,14 @@ namespace FavoDeMel.Tests.Services
 
             foreach (var produto in ProdutoMock.ObterListaDeProdutos())
             {
-                comanda.Pedidos.Add(new ComandaPedidoDto() { ProdutoId = Guid.NewGuid(), Quantidade = 1, Situacao = ComandaPedidoSituacao.Pedido });
+                comanda.Pedidos.Add(new ComandaPedidoDto()
+                {
+                    ProdutoId = Guid.NewGuid(),
+                    ProdutoNome = produto.Nome,
+                    ProdutoPreco = produto.Preco,
+                    Quantidade = 1,
+                    Situacao = ComandaPedidoSituacao.Pedido
+                });
             }
 
             var result = await comandaService.EditarAsync(comanda);
@@ -199,7 +234,14 @@ namespace FavoDeMel.Tests.Services
 
             foreach (var produto in ProdutoMock.ObterListaDeProdutos())
             {
-                comanda.Pedidos.Add(new ComandaPedidoDto() { ProdutoId = produto.Id, Quantidade = 1, Situacao = default(ComandaPedidoSituacao) });
+                comanda.Pedidos.Add(new ComandaPedidoDto()
+                {
+                    ProdutoId = produto.Id,
+                    ProdutoNome = produto.Nome,
+                    ProdutoPreco = produto.Preco,
+                    Quantidade = 1,
+                    Situacao = default(ComandaPedidoSituacao)
+                });
             }
 
             var result = await comandaService.CadastrarAsync(comanda);

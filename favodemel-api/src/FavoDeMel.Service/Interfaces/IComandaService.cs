@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FavoDeMel.Service.Interfaces
 {
-    public interface IComandaService : IServiceBase
+    public interface IComandaService : IService
     {
         /// <summary>
         /// Obtem a comanda de forma assíncrona

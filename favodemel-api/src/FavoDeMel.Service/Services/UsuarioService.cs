@@ -13,8 +13,9 @@ using static FavoDeMel.Domain.Dtos.Mappers.UsuarioMappers;
 
 namespace FavoDeMel.Service.Services
 {
-    public class UsuarioService : ServiceCacheBase, IUsuarioService
+    public class UsuarioService : IUsuarioService
     {
+        private readonly IServiceCache _serviceCache;
         private readonly IUsuarioRepository _repository;
         private readonly IGeradorGuidService _geradorGuidService;
         private readonly UsuarioValidator _validator;
@@ -23,8 +24,9 @@ namespace FavoDeMel.Service.Services
         public UsuarioService(IServiceCache serviceCache,
             IUsuarioRepository repository,
             IGeradorGuidService geradorGuidService,
-            UsuarioValidator validator) : base(serviceCache)
+            UsuarioValidator validator)
         {
+            _serviceCache = serviceCache;
             _repository = repository;
             _geradorGuidService = geradorGuidService;
             _validator = validator;
@@ -38,14 +40,17 @@ namespace FavoDeMel.Service.Services
             }
 
             var usuario = await _repository.Login(loginDto.Login, loginDto.PasswordHash);
-            UsuarioDto dto = usuario.ToDto();
-            await SalvarCache(dto.Id, dto);
+            var dto = usuario?.ToDto();
+            if (dto != null)
+            {
+                await _serviceCache.SalvarAsync(dto.Id, dto);
+            }
             return dto;
         }
 
         public async Task<UsuarioDto> ObterPorIdAsync(Guid id)
         {
-            var usuarioCache = await ObterPorIdInCache<UsuarioDto, Guid>(id);
+            var usuarioCache = await _serviceCache.ObterAsync< UsuarioDto, Guid>(id);
 
             if (usuarioCache != null)
             {
@@ -53,73 +58,71 @@ namespace FavoDeMel.Service.Services
             }
 
             var usuario = await _repository.ObterPorIdAsync(id);
-            return usuario?.ToDto();
+            var dto = usuario?.ToDto();
+            if (dto != null)
+            {
+                await _serviceCache.SalvarAsync(dto.Id, dto);
+            }
+            return dto;
         }
 
         public async Task<UsuarioDto> CadastrarAsync(UsuarioDto usuarioDto)
         {
-            using (var dbTransaction = _repository.BeginTransaction(_validator))
+            using var dbTransaction = _repository.BeginTransaction(_validator);
+            if (!await _validator.ValidarAsync(usuarioDto))
             {
-                if (!await _validator.ValidarAsync(usuarioDto))
-                {
-                    return null;
-                }
-
-                Usuario usuario = usuarioDto.ToEntity();
-                usuario.Id = _geradorGuidService.GetNexGuid();
-                usuario.Prepare();
-                Usuario usuarioDb = await _repository.CadastrarAsync(usuario);
-                UsuarioDto dto = usuarioDb.ToDto();
-                await SalvarCache(dto.Id, dto);
-                return dto;
+                return null;
             }
+
+            Usuario usuario = usuarioDto.ToEntity();
+            usuario.Id = _geradorGuidService.GetNexGuid();
+            usuario.Prepare();
+            Usuario usuarioDb = await _repository.CadastrarAsync(usuario);
+            UsuarioDto dto = usuarioDb.ToDto();
+            await _serviceCache.SalvarAsync(dto.Id, dto);
+            return dto;
         }
 
         public async Task<UsuarioDto> EditarAsync(UsuarioDto usuarioDto)
         {
-            using (var dbTransaction = _repository.BeginTransaction(_validator))
+            using var dbTransaction = _repository.BeginTransaction(_validator);
+            if (!await _validator.ValidarAsync(usuarioDto))
             {
-                if (!await _validator.ValidarAsync(usuarioDto))
-                {
-                    return null;
-                }
-
-                Usuario usuario = usuarioDto.ToEntity();
-                usuario.Prepare();
-
-                Usuario usuarioDb = await _repository.ObterPorIdAsync(usuario.Id);
-                usuario.Login = usuarioDb.Login;
-                usuario.Password = usuarioDb.Password;
-
-                await _repository.EditarAsync(usuario);
-                UsuarioDto dto = usuarioDb.ToDto();
-                await SalvarCache(dto.Id, dto);
-                return dto;
+                return null;
             }
+
+            Usuario usuario = usuarioDto.ToEntity();
+            usuario.Prepare();
+
+            Usuario usuarioDb = await _repository.ObterPorIdAsync(usuario.Id);
+            usuario.Login = usuarioDb.Login;
+            usuario.Password = usuarioDb.Password;
+
+            await _repository.EditarAsync(usuario);
+            UsuarioDto dto = usuarioDb.ToDto();
+            await _serviceCache.SalvarAsync(dto.Id, dto);
+            return dto;
         }
 
         public async Task<bool> AlterarSenhaAsync(Guid id, string password)
         {
-            using (var dbTransaction = _repository.BeginTransaction(_validator))
+            using var dbTransaction = _repository.BeginTransaction(_validator);
+            Usuario usuario = await _repository.ObterPorIdAsync(id);
+
+            if (!_validator.PermiteEditarSenha(usuario.Password, password))
             {
-                Usuario usuario = await _repository.ObterPorIdAsync(id);
-
-                if (!_validator.PermiteEditarSenha(usuario.Password, password))
-                {
-                    return false;
-                }
-
-                usuario.Password = StringHelper.CalculateMD5Hash(password);
-                await _repository.EditarAsync(usuario);
-                UsuarioDto dto = usuario.ToDto();
-                await SalvarCache(dto.Id, dto);
-                return true;
+                return false;
             }
+
+            usuario.Password = StringHelper.CalculateMD5Hash(password);
+            await _repository.EditarAsync(usuario);
+            UsuarioDto dto = usuario.ToDto();
+            await _serviceCache.SalvarAsync(dto.Id, dto);
+            return true;
         }
 
         public async Task<PaginacaoDto<UsuarioDto>> ObterTodosPaginadoAsync(FiltroUsuario filtro)
         {
-
             var produtos = await _repository.ObterTodosPaginado(filtro.Pagina, filtro.Limite);
             return produtos?.ToPaginacaoDto<PaginacaoDto<UsuarioDto>>();
         }

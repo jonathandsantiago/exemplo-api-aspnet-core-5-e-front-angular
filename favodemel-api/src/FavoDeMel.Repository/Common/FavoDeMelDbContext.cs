@@ -1,8 +1,5 @@
 ﻿using FavoDeMel.Domain.Interfaces;
-using FavoDeMel.Domain.Entities.Comandas;
-using FavoDeMel.Domain.Entities.Usuarios;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Linq;
 

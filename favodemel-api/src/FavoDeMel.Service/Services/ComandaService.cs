@@ -1,5 +1,4 @@
-﻿using FavoDeMel.Domain.Common;
-using FavoDeMel.Domain.Dtos;
+﻿using FavoDeMel.Domain.Dtos;
 using FavoDeMel.Domain.Entities.Comandas;
 using FavoDeMel.Domain.Entities.Comandas.Commands;
 using FavoDeMel.Domain.Interfaces;
@@ -11,8 +10,9 @@ using static FavoDeMel.Domain.Dtos.Mappers.ComandaMappers;
 
 namespace FavoDeMel.Service.Services
 {
-    public class ComandaService : ServiceCacheBase, IComandaService
+    public class ComandaService: IComandaService
     {
+        private readonly IServiceCache _serviceCache;
         private readonly IComandaRepository _repository;
         private readonly IGeradorGuidService _geradorGuidService;
         private readonly IMensageriaService _mensageriaService;
@@ -23,8 +23,9 @@ namespace FavoDeMel.Service.Services
             IComandaRepository repository,
             IGeradorGuidService geradorGuidService,
             IMensageriaService mensageriaService,
-            ComandaValidator comandaValidator) : base(serviceCache)
+            ComandaValidator comandaValidator)
         {
+            _serviceCache = serviceCache;
             _repository = repository;
             _validador = comandaValidator;
             _mensageriaService = mensageriaService;
@@ -33,7 +34,7 @@ namespace FavoDeMel.Service.Services
 
         public async Task<ComandaDto> ObterPorIdAsync(Guid id)
         {
-            var comandoCache = await ObterPorIdInCache<ComandaDto, Guid>(id);
+            var comandoCache = await _serviceCache.ObterAsync<ComandaDto, Guid>(id);
 
             if (comandoCache != null)
             {
@@ -41,10 +42,10 @@ namespace FavoDeMel.Service.Services
             }
 
             var comanda = await _repository.ObterPorIdAsync(id);
-            ComandaDto dto = comanda?.ToDto();
+            var dto = comanda?.ToDto();
             if (dto != null)
             {
-                await SalvarCache(dto.Id, dto);
+                await _serviceCache.SalvarAsync(dto.Id, dto);
             }
             return dto;
         }
@@ -69,7 +70,7 @@ namespace FavoDeMel.Service.Services
             comanda.DataCadastro = DateTime.Now;
             Comanda comandaDb = await _repository.CadastrarAsync(comanda);
             ComandaDto dto = comandaDb.ToDto();
-            await SalvarCache(dto.Id, dto);
+            await _serviceCache.SalvarAsync(dto.Id, dto);
             await _mensageriaService.EnviarAsync(new ComandaCadastroCommand(dto));
             return dto;
         }
@@ -86,7 +87,7 @@ namespace FavoDeMel.Service.Services
             comanda.Prepare();
             await _repository.EditarAsync(comanda);
             ComandaDto dto = comanda.ToDto();
-            await SalvarCache(dto.Id, dto);
+            await _serviceCache.SalvarAsync(dto.Id, dto);
             await _mensageriaService.EnviarAsync(new ComandaEditarCommand(dto));
             return dto;
         }
@@ -107,7 +108,7 @@ namespace FavoDeMel.Service.Services
 
             Comanda comanda = await _repository.Confirmar(comandaId);
             ComandaDto dto = comanda.ToDto();
-            await SalvarCache(dto.Id, dto);
+            await _serviceCache.SalvarAsync(dto.Id, dto);
             await _mensageriaService.EnviarAsync(new ComandaConfirmarCommand(dto));
             return dto;
         }
@@ -122,7 +123,7 @@ namespace FavoDeMel.Service.Services
 
             Comanda comanda = await _repository.Fechar(comandaId);
             ComandaDto dto = comanda.ToDto();
-            await SalvarCache(dto.Id, dto);
+            await _serviceCache.SalvarAsync(dto.Id, dto);
             await _mensageriaService.EnviarAsync(new ComandaFecharCommand(dto));
             return comanda?.ToDto();
         }

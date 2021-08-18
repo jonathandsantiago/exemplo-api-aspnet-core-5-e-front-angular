@@ -2,7 +2,7 @@
 
 namespace FavoDeMel.Service.Interfaces
 {
-    public interface IServiceBase
+    public interface IService
     {
         /// <summary>
         /// Obter as mensagens de validação

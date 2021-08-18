@@ -7,16 +7,16 @@ namespace FavoDeMel.Domain.Interfaces
         /// <summary>
         /// Obtem a entidade em cache pela chave de forma assíncrona
         /// </summary>
-        /// <param name="chave">Chave de registro do cache</param>
+        /// <param name="id">Id do registro para chave do cache</param>
         /// <returns>Retorna o T em cache</returns>
-        Task<T> ObterAsync<T>(string chave);
+        Task<T> ObterAsync<T, TId>(TId id);
         /// <summary>
         /// Salva a entidade em cache pela chave de forma assíncrona
         /// </summary>
-        /// <param name="chave">Chave de registro do cache</param>
+        /// <param name="id">Id do registro para chave do cache</param>
         /// <param name="entidade">Endiade a ser salva no cache</param>
         /// <param name="cicloDeVida">Ciclo de vida do cache</param>
-        Task SalvarAsync<T>(string chave, T entidade, int cicloDeVida = 300);
+        Task SalvarAsync<T, TId>(TId id, T entidade, int cicloDeVida = 7200);
         /// <summary>
         /// Remove o cache pela chave pela chave de forma assíncrona
         /// </summary>
