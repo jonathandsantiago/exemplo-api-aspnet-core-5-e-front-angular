@@ -6,7 +6,7 @@ import {SharedModule} from '../../shared/shared.module';
 import {UsuarioEditComponent} from './usuario-edit/usuario-edit.component';
 import {UsuarioRoutingModule} from './usuario-routing.module';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
-import {PaginacaoModule} from '../../shared/paginacao/paginacao.module';
+import {PaginacaoModule} from '../../components/paginacao/paginacao.module';
 import {NgxCurrencyModule} from 'ngx-currency';
 
 @NgModule({

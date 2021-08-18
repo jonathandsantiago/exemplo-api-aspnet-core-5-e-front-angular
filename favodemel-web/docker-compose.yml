@@ -13,4 +13,3 @@ services:
 networks:
   net:
     driver: bridge
-    external: true
