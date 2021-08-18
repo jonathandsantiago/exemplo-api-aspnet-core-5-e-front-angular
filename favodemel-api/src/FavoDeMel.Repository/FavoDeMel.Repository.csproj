@@ -13,4 +13,8 @@
     <ProjectReference Include="..\FavoDeMel.Domain\FavoDeMel.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

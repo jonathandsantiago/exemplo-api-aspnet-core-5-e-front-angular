@@ -52,17 +52,17 @@ namespace FavoDeMel.Repository
             comanda.Garcom = comanda.Garcom == null ? null : await UsuarioSelect.Where(c => c.Id == comanda.Garcom.Id).FirstOrDefaultAsync();
             var existe = await ComandaSelect.AnyAsync(c => c.DataCadastro.Date == comanda.DataCadastro.Date);
             comanda.Codigo = !existe ? "0001" : StringHelper.MaxAddPadLeft(ComandaSelect.Where(c => c.DataCadastro.Date == comanda.DataCadastro.Date).Max(c => c.Codigo), 4);
-
-            foreach (var comandaPedido in comanda.Pedidos)
-            {
-                comandaPedido.Comanda = comanda;
-                comandaPedido.Produto = await ProdutoSelect.Where(c => c.Id == comandaPedido.Produto.Id).FirstOrDefaultAsync();
-                DbContext.Entry(comandaPedido).State = EntityState.Added;
-            }
-
+          
             DbContext.Entry(comanda).State = EntityState.Added;
             Comanda comandaDb = ComandaCrud.Add(comanda).Entity;
             comanda.Id = comandaDb.Id;
+
+            foreach (var comandaPedido in comanda.Pedidos)
+            {
+                comandaPedido.ComandaId = comanda.Id;
+                comandaPedido.Produto = await ProdutoSelect.Where(c => c.Id == comandaPedido.Produto.Id).FirstOrDefaultAsync();
+                DbContext.Entry(comandaPedido).State = EntityState.Added;
+            }
 
             return comanda;
         }
@@ -73,6 +73,7 @@ namespace FavoDeMel.Repository
 
             foreach (var comandaPedido in comanda.Pedidos)
             {
+                comandaPedido.ComandaId = comanda.Id;
                 comandaPedido.Produto = await ProdutoSelect.Where(c => c.Id == comandaPedido.Produto.Id).FirstOrDefaultAsync();
 
                 if (comandaPedido.Id == Guid.Empty)

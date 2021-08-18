@@ -12,7 +12,7 @@ namespace FavoDeMel.Repository.Common.Mapping
 
             builder.HasKey(c => c.Id);
             builder.Property(c => c.Id).IsRequired()
-                .HasColumnName("IdUsuario");
+                .HasColumnName("UsuarioId");
 
             builder.Property(c => c.Nome);
             builder.Property(c => c.Login);

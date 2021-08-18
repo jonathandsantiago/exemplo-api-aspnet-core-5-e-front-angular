@@ -12,9 +12,9 @@ namespace FavoDeMel.Repository.Common.Mapping
 
             builder.HasKey(c => c.Id);
             builder.Property(c => c.Id).IsRequired()
-                .HasColumnName("IdComandaPedido");
+                .HasColumnName("ComandaPedidoId");
 
-            builder.HasOne(c => c.Comanda).WithMany().IsRequired();
+            builder.Property(c => c.ComandaId).IsRequired();
             builder.HasOne(c => c.Produto).WithMany().IsRequired();
             builder.Property(c => c.Quantidade);
             builder.Property(c => c.Situacao);

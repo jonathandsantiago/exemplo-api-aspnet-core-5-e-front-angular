@@ -12,7 +12,7 @@ namespace FavoDeMel.Repository.Common.Mapping
 
             builder.HasKey(c => c.Id);
             builder.Property(c => c.Id).IsRequired()
-                .HasColumnName("IdComanda");
+                .HasColumnName("ComandaId");
 
             builder.HasOne(c => c.Garcom).WithMany();
             builder.Property(c => c.TotalAPagar);

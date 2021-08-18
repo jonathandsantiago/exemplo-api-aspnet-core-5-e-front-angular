@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FavoDeMel.Repository.Migrations
 {
     [DbContext(typeof(FavoDeMelDbContext))]
-    [Migration("20210807050938_EstruturaInicial")]
-    partial class EstruturaInicial
+    [Migration("20210818023117_EstruturaInicialProjeto")]
+    partial class EstruturaInicialProjeto
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,7 +26,13 @@ namespace FavoDeMel.Repository.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("IdComanda");
+                        .HasColumnName("ComandaId");
+
+                    b.Property<string>("Codigo")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<Guid?>("GarcomId")
                         .HasColumnType("uuid");
@@ -52,12 +58,9 @@ namespace FavoDeMel.Repository.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("IdComandaPedido");
+                        .HasColumnName("ComandaPedidoId");
 
-                    b.Property<Guid?>("ComandaId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ComandaId1")
+                    b.Property<Guid>("ComandaId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ProdutoId")
@@ -73,8 +76,6 @@ namespace FavoDeMel.Repository.Migrations
 
                     b.HasIndex("ComandaId");
 
-                    b.HasIndex("ComandaId1");
-
                     b.HasIndex("ProdutoId");
 
                     b.ToTable("ComandaPedido");
@@ -85,7 +86,7 @@ namespace FavoDeMel.Repository.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("IdProduto");
+                        .HasColumnName("ProdutoId");
 
                     b.Property<bool>("Ativo")
                         .HasColumnType("boolean");
@@ -106,7 +107,7 @@ namespace FavoDeMel.Repository.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("IdUsuario");
+                        .HasColumnName("UsuarioId");
 
                     b.Property<bool>("Ativo")
                         .HasColumnType("boolean");
@@ -144,11 +145,7 @@ namespace FavoDeMel.Repository.Migrations
                 {
                     b.HasOne("FavoDeMel.Domain.Entities.Comandas.Comanda", null)
                         .WithMany("Pedidos")
-                        .HasForeignKey("ComandaId");
-
-                    b.HasOne("FavoDeMel.Domain.Entities.Comandas.Comanda", "Comanda")
-                        .WithMany()
-                        .HasForeignKey("ComandaId1")
+                        .HasForeignKey("ComandaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -157,8 +154,6 @@ namespace FavoDeMel.Repository.Migrations
                         .HasForeignKey("ProdutoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Comanda");
 
                     b.Navigation("Produto");
                 });
