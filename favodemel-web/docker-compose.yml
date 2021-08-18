@@ -3,7 +3,7 @@ version: '3.6'
 services:
   favodemel-web:
     image: favodemel-web
-    container_name: favodemel-web
+    container_name: avaliacao-favodemel-web
     build: .
     ports:
       - 54200:80

@@ -2,7 +2,7 @@ version: '3.6'
 
 services:
   favodemel.api:
-    container_name: favodemel-api
+    container_name: avaliacao-favodemel-api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
@@ -14,13 +14,13 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
     depends_on:
-      - postgres
+      - favodemel.api.postgres
     networks: 
       - net
 
-  postgres:
+  favodemel.api.postgres:
     image: postgres:11-alpine
-    container_name: favodemel-postgres
+    container_name: avaliacao-favodemel-postgres
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=Password_1
@@ -29,53 +29,53 @@ services:
     ports:
       - "15432:5432"
     volumes:
-      - favodemel-postgres-data:/var/lib/postgresql/data
+      - avaliacao-favodemel-postgres-data:/var/lib/postgresql/data
     networks: 
       - net
 
-  flyway:
+  favodemel.api.flyway:
     image: flyway/flyway:7
-    container_name: favodemel-flyway
+    container_name: avaliacao-favodemel-flyway
     restart: on-failure
-    command: -url=jdbc:postgresql://postgres:5432/favodemel -schemas=migration -user=admin -password=Password_1 migrate
+    command: -url=jdbc:postgresql://favodemel.api.postgres:5432/favodemel -schemas=migration -user=admin -password=Password_1 migrate
     environment:
       - FLYWAY_EDITION=community
     volumes:
       - ./postgresdb/scripts:/flyway/sql
     depends_on:
-      - postgres
+      - favodemel.api.postgres
       - favodemel.api
     networks: 
       - net
 
-  redis:
+  favodemel.api.redis:
     image: redis:4.0.11
-    container_name: favodemel-redis
+    container_name: avaliacao-favodemel-redis
     ports:
       - "6379:6379"
     volumes:
-      - favodemel-redis-data:/data
+      - avaliacao-favodemel-redis-data:/data
     networks: 
       - net
 
-  redis-commander:
+  favodemel.api.redis-commander:
     image: rediscommander/redis-commander
-    container_name: favodemel-redis-commander
+    container_name: avaliacao-favodemel-redis-commander
     ports:
       - "8081:8081"
     environment:
       REDIS_HOSTS: |
-        no1:redis:6379:0,no2:redis:6379:1,no3:redis:6379:2
+        no1:favodemel.api.redis:6379:0,no2:favodemel.api.redis:6379:1,no3:favodemel.api.redis:6379:2
       USE_SCAN: "true"
     depends_on:
-      - redis
+      - favodemel.api.redis
     networks: 
       - net
 
-  rabbitmq:
+  favodemel.api.rabbitmq:
     image: rabbitmq:3-management
-    container_name: favodemel-rabbitmq
-    hostname: rabbitmq
+    container_name: avaliacao-favodemel-rabbitmq
+    hostname: favodemel.api.rabbitmq
     ports:
       - "15672:15672"
       - "5672:5672"
@@ -85,15 +85,15 @@ services:
       - DEFAULT_USER=guest
       - DEFAULT_PASS=guest
     volumes:
-      - favodemel-rabbitmq-data:/var/lib/rabbitmq
+      - avaliacao-favodemel-rabbitmq-data:/var/lib/rabbitmq
       - ./config/enabled_plugins:/etc/rabbitmq/enabled_plugins
     networks: 
       - net
 
 volumes:
-  favodemel-rabbitmq-data:
-  favodemel-postgres-data:
-  favodemel-redis-data:
+  avaliacao-favodemel-rabbitmq-data:
+  avaliacao-favodemel-postgres-data:
+  avaliacao-favodemel-redis-data:
 
 networks: 
   net:
