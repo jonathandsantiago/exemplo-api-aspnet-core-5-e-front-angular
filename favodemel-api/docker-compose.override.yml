@@ -2,6 +2,7 @@ version: '3.6'
 
 services:
   favodemel.api:
+    container_name: favodemel-api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
@@ -14,17 +15,12 @@ services:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
     depends_on:
       - postgres
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-        reservations:
-          memory: 256M
     networks: 
       - net
 
   postgres:
     image: postgres:11-alpine
+    container_name: favodemel-postgres
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=Password_1
@@ -33,12 +29,13 @@ services:
     ports:
       - "15432:5432"
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - favodemel-postgres-data:/var/lib/postgresql/data
     networks: 
       - net
 
   flyway:
     image: flyway/flyway:7
+    container_name: favodemel-flyway
     restart: on-failure
     command: -url=jdbc:postgresql://postgres:5432/favodemel -schemas=migration -user=admin -password=Password_1 migrate
     environment:
@@ -53,15 +50,17 @@ services:
 
   redis:
     image: redis:4.0.11
+    container_name: favodemel-redis
     ports:
       - "6379:6379"
     volumes:
-      - "redis-data:/data"
+      - favodemel-redis-data:/data
     networks: 
       - net
 
   redis-commander:
     image: rediscommander/redis-commander
+    container_name: favodemel-redis-commander
     ports:
       - "8081:8081"
     environment:
@@ -75,23 +74,26 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management
+    container_name: favodemel-rabbitmq
+    hostname: rabbitmq
     ports:
       - "15672:15672"
       - "5672:5672"
       - "15674:15674"
     environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
+      - DEFAULT_VHOST=/
+      - DEFAULT_USER=guest
+      - DEFAULT_PASS=guest
     volumes:
-      - rabbitmq-data:/var/lib/rabbitmq
+      - favodemel-rabbitmq-data:/var/lib/rabbitmq
       - ./config/enabled_plugins:/etc/rabbitmq/enabled_plugins
     networks: 
       - net
 
 volumes:
-  rabbitmq-data:
-  postgres-data:
-  redis-data:
+  favodemel-rabbitmq-data:
+  favodemel-postgres-data:
+  favodemel-redis-data:
 
 networks: 
   net:

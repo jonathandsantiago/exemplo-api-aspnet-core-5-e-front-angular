@@ -9,6 +9,8 @@ using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FavoDeMel.Api.Providers
 {
@@ -35,6 +37,11 @@ namespace FavoDeMel.Api.Providers
                         settings.DefaultValueHandling = DefaultValueHandling.Include;
                         return settings;
                     });
+
+                    foreach (var commandName in ObterCommandsNameInAssembly())
+                    {
+                        cfg.ReceiveEndpoint(commandName, e => e.Bind(commandName));
+                    }
                 }));
             });
 
@@ -43,6 +50,13 @@ namespace FavoDeMel.Api.Providers
             services.AddSingleton<IBus>(provider => provider.GetRequiredService<IBusControl>());
             services.AddSingleton<IMensageriaService, MensageriaService>();
             services.AddHostedService<BusService>();
+        }
+
+        private IList<string> ObterCommandsNameInAssembly()
+        {
+            return typeof(IMensageriaCommand).Assembly.ExportedTypes
+                 .Where(x => typeof(IMensageriaCommand).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
+                 .Select(c => c.Name).ToList(); ;
         }
     }
 }

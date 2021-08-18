@@ -1,4 +1,5 @@
-﻿using FavoDeMel.Domain.Dtos;
+﻿using FavoDeMel.Domain.Entities.Comandas.Commands;
+using FavoDeMel.Domain.Interfaces;
 using FavoDeMel.Service.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -10,18 +11,19 @@ namespace FavoDeMel.Tests.Mocks
         public static IServiceCollection AddServicesMock(this IServiceCollection services)
         {
             services.AddSingleton(ObterGeradorGuidService());
-            services.AddSingleton(ObterMensageriaService<ComandaDto>());
-            services.AddSingleton(ObterMensageriaService<ProdutoDto>());
-            services.AddSingleton(ObterMensageriaService<UsuarioDto>());
+            services.AddSingleton(ObterMensageriaService<ComandaCadastroCommand>());
+            services.AddSingleton(ObterMensageriaService<ComandaEditarCommand>());
+            services.AddSingleton(ObterMensageriaService<ComandaFecharCommand>());
+            services.AddSingleton(ObterMensageriaService<ComandaConfirmarCommand>());
 
             return services;
         }
 
-        public static IMensageriaService ObterMensageriaService<T>()
+        public static IMensageriaService ObterMensageriaService<T>() 
+            where T : IMensageriaCommand
         {
             var mock = new Mock<IMensageriaService>();
-            mock.Setup(c => c.Publish(It.IsAny<T>(), It.IsAny<string>()));
-            mock.Setup(c => c.Publish(It.IsAny<string>(), It.IsAny<string>()));
+            mock.Setup(c => c.EnviarAsync<T>(It.IsAny<T>()));
 
             return mock.Object;
         }

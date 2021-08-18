@@ -7,9 +7,10 @@ services:
     build: .
     ports:
       - 54200:80
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-        reservations:
-          memory: 256M
+    networks:
+      - net
+
+networks:
+  net:
+    driver: bridge
+    external: true
