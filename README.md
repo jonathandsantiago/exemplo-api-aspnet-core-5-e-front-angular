@@ -22,7 +22,7 @@ A rotina principal do sistema lista todas as comandas do dia, sendo dividido em 
 O sistema contem a atualização em tempo real das comandas, caso usuário cadastre ou efetue uma ação em uma comanda já cadastrada, será atualizada todas as janelas com a rotina principal de comandas aberta.
 
 ## Definições de Arquitetura das Aplicações
-O sistema foi arquitetado e distribuido com a estrutura dividida em Backend e Frontend.
+O sistema foi arquitetado e distribuido com a estrutura distribuida no Backend e Frontend.
 - O Backend é a parte de gerenciamento de toda as regras de negócio e conexões com bancos de dados e serviços da aplicação.
 - O Frontend é a parte visual da aplicação.
 
@@ -45,7 +45,7 @@ O sistema foi arquitetado e distribuido com a estrutura dividida em Backend e Fr
     - Docker Compose para orquestramento dos containers do Docker;
     - Nginx;
 
-#### Serviços configurado em containers no Docker da aplicação:
+#### Serviços configurado em containers no Docker das aplicações:
 - Api;
 - Aplicação Web com Nginx;
 - Banco de dados PostgreSql;
@@ -53,8 +53,8 @@ O sistema foi arquitetado e distribuido com a estrutura dividida em Backend e Fr
 - Flyway para executar os scripts de banco de dados default do sistema;
 - Redis;
 
-#### Definições e padrões:
-Projeto estruturado com a metodologia DDD e TDD distribuito por camadas:
+#### Definições de estrutura das aplicações:
+Projeto foi desenvolvido utilizando a metodologia DDD e TDD distribuito em camadas:
 - Backend
     - FavoDeMel.Api: `Camada de aplicação`;
     - FavoDeMel.Domain: `Cadama de dominio`;
@@ -63,11 +63,11 @@ Projeto estruturado com a metodologia DDD e TDD distribuito por camadas:
     - FavoDeMel.Tests: `Camada de teste, reponsavel por gerenciar todos os testes unitários e de integração do sistema`;
 - Frontend
     - App
-        - componentes: `Camada de armazenamento dos componentes genericos e reutilizaveis, como cards, layout menu etc.`;
-        - models: `Camada de armazenamento das entidades tipadas da aplicação`;
-        - pages: `Camada de armazenamento dos componentes de paginas da aplicação`;
-        - services: `Camada de serviços de consulta na api`;
-        - shared: `Camada de armazenamento de funções e serviços compartilhado`;
+        - componentes: `Camada dos componentes genéricos e reutilizáveis, como cards, layout menu etc.`;
+        - models: `Camada das entidades tipadas da aplicação`;
+        - pages: `Camada dos componentes das paginas da aplicação`;
+        - services: `Camada de serviços e consulta na api`;
+        - shared: `Camada de funções e serviços compartilhado`;
     - assets
         - images
         - styles
@@ -77,27 +77,37 @@ Projeto estruturado com a metodologia DDD e TDD distribuito por camadas:
 Primeiramente deve-se clonar o projeto `git clone https://github.com/jonathandsantiago/processo-seletivo-arquitetura.git` e acessar `cd processo-seletivo-arquitetura`.
 
 Para executar as aplicações é nescessario reservar as seguintes portas:
--  Para a Api `54300` para Https ou `8080` em Http;
+-  Para a Api `54300` em Https e `58080` em Http;
 - `15432` para o banco de dados postgres;
 - `6379` para o redis e `8081` para o redis commander;
 - `15672`, `5672` e `15674` para o RabbitMq;
 - `54200` para aplicação web executada pelo `docker-compose` ou `4200` pelo `ng s` do angular;
 
-- Para executar a Api:
+- Para executar ambas as aplicações simultaneamente acessando a pasta raiz `processo-seletivo-arquitetura` execute o seguinte comando:
+
+    - `docker-compose -f favodemel-api/docker-compose.prod.yml up -d --build && docker-compose -f favodemel-web/docker-compose.yml up -d --build`
+
+- Para executar individualmente a Api:
     - Acesse a pasta `favodemel-api` e exucutar o seguinte comando:      
-        `docker-compose up --build`
+        - `docker-compose -f docker-compose.prod.yml up -d --build`
 - Para executar os testes automatizado da Api:
     - Acessando a pasta `favodemel-api` e execute o seguinte comando:    
-        `dotnet test ./test/FavoDeMel.Tests`
-- Para executar a aplição Web:   
+        - `dotnet test ./test/FavoDeMel.Tests`
+- Para executar individualmente a aplição Web:   
     - Acesse a pasta `favodemel-web` e exucutar o seguinte comando:      
-    - `docker-compose up --build`
-    Caso deseje executar a aplição fora do container execute os seguintes comandos: 
-    - `npm install`
-    - `ng s` ou `ng build --prod` para executar em mode de produção;
+       - `docker-compose up -d --build`
+        - Caso deseje executar a aplição fora do container execute os seguintes comandos: 
+            - Instale os pacotes `npm install`
+            - Execute a aplicação `ng s`;
+
+### Descrição das flags utilizada no compose
+ - `up` cria e inicia os contêineres;
+ - `-d` ou `--detach` irá executar os contêineres em segundo plano;
+ - `--build` irá criar as imagens antes de iniciar os contêineres;
+ - `-f` é opcional. Se não utilizar esta flag na linha de comando, o Compose irá percorrer no diretório um arquivo `compose.yaml` ou `docker-compose.yaml`;
 
 ### Acesso aplicação após a build
-- Para visualizar ou executar uma ação direta na Api pelo Swagger acesse: [Api:54300](https://localhost:54300/swagger/index.html)
+- Para visualizar ou executar uma ação direta na Api pelo Swagger acesse: [Api:54300](https://localhost:54300/swagger/index.html) em Https ou [Api:58080](http://localhost:58080/swagger/index.html)
 - Para acessar a aplição web acesse: 
     - [Web:54200](http://localhost:54200) Caso executado a aplição pelo `docker-compose`
     - [Web:4200](http://localhost:4200) Caso executado a aplição pelo `ng s`
@@ -127,12 +137,17 @@ Para executar as aplicações é nescessario reservar as seguintes portas:
     userid=admin;
     password=Password_1;
     database=favodemel
-    ```
+    ```    
 
-### Definições técnica do sistema
-```
-```
-
+## Definições técnica e padrões dos sistemas
+### Definições técnica
+- O `Program.cs` utiliza a extensão `MigrateDbContext<FavoDeMelDbContext>()` localizada no projeto `FavoDeMel.Repository.Extensions` recebendo o tipo do DbContext.
+    Esta ação irá execultar os `Migrations` ao rodar a build.
+    Caso contenha mais de um DbContext basta reclipar a extensão passando o tipo desejado.
+- Para configurar as injeções de dependências no `Startup` da aplicação. Foi desenvolvido a extensão `.AddApiProvidersAssembly` recebendo o `Microsoft.Extensions.Configuration.IConfiguration` como paramêtro.
+Esta extensão irá injetar por convenção todos os providers criado na pasta `FavoDeMel.Api.Providers` assinado com a interface `IApiProvider`.
+    Conforme a imagem abaixo: ![alt text](images/Providers.png)
+### Padrões
 ### Definições do sistema
 ```
 ```
