@@ -2,7 +2,11 @@ version: '3.6'
 
 services:
   favodemel.api:
+    image: ${DOCKER_REGISTRY-}favodemelapi
     container_name: avaliacao-favodemel-api
+    build:
+      context: .
+      dockerfile: src/FavoDeMel.Api/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
