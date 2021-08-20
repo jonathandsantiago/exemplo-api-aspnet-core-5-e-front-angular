@@ -1,23 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using FavoDeMel.Domain.Entities.Comandas;
+using System;
 
 namespace FavoDeMel.Domain.Dtos.Filtros
 {
     public class FiltroComanda : Filtro
     {
-        public string Comandas { get; set; }
-
-        public IList<int> ComandasIds
-        {
-            get
-            {
-                if (Comandas == null)
-                {
-                    return new List<int>();
-                }
-
-                return Comandas.Split(',').Select(c => int.Parse(c)).ToList();
-            }
-        }
+        public ComandaSituacao Situacao { get; set; }
+        public DateTime Data { get; set; }
     }
 }

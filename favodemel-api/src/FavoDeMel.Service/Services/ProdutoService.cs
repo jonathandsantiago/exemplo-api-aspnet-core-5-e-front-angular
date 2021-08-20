@@ -83,13 +83,13 @@ namespace FavoDeMel.Service.Services
 
         public virtual async Task<IEnumerable<ProdutoDto>> ObterTodosAsync()
         {
-            var produtos = await _repository.ObterTodos();
+            var produtos = await _repository.ObterTodosAsync();
             return produtos?.ToListDto();
         }
 
         public async Task<PaginacaoDto<ProdutoDto>> ObterTodosPaginadoAsync(FiltroProduto filtro)
         {
-            var produtos = await _repository.ObterTodosPaginado(filtro.Pagina, filtro.Limite);
+            var produtos = await _repository.ObterTodosPaginadoAsync(filtro.Pagina, filtro.Limite);
             return produtos?.ToPaginacaoDto<PaginacaoDto<ProdutoDto>>();
         }
     }

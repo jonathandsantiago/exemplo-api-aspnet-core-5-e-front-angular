@@ -31,6 +31,7 @@
             public const string Confirmar = "confirmar";
             public const string Fechar = "fechar";
             public const string ObterTodosPorSituacao = "listar-por-situacao/{situacao}";
+            public const string ObterPaginadoPorSituacaoAsync = "listar-paginado-por-situacao";
         }
     }
 }

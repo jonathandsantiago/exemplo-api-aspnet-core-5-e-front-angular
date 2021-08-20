@@ -1,5 +1,6 @@
 ﻿using FavoDeMel.Api.Controllers.Common;
 using FavoDeMel.Domain.Dtos;
+using FavoDeMel.Domain.Dtos.Filtros;
 using FavoDeMel.Domain.Entities.Comandas;
 using FavoDeMel.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -23,21 +24,21 @@ namespace FavoDeMel.Api.Controllers
         {
             _service = service;
         }
-        
+
         [HttpPost]
         [Route(Rotas.Cadastrar)]
         public async Task<IActionResult> Cadastrar(ComandaDto dto)
         {
             return await ExecutarFuncaoAsync(() => _service.CadastrarAsync(dto));
         }
-       
+
         [HttpPut]
         [Route(Rotas.Editar)]
         public async Task<IActionResult> Editar(ComandaDto dto)
         {
             return await ExecutarFuncaoAsync(() => _service.EditarAsync(dto));
         }
-     
+
         [HttpGet]
         [Route(Rotas.ObterPorId)]
         [ProducesResponseType(typeof(ComandaDto), (int)HttpStatusCode.OK)]
@@ -53,7 +54,15 @@ namespace FavoDeMel.Api.Controllers
         {
             return await ExecutarFuncaoAsync(() => _service.ObterTodosPorSituacaoAsync(situacao));
         }
-      
+
+        [HttpGet]
+        [Route(ComandaApi.ObterPaginadoPorSituacaoAsync)]
+        [ProducesResponseType(typeof(IEnumerable<ComandaDto>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> ObterPaginadoPorSituacaoAsync([FromQuery] FiltroComanda filtro)
+        {
+            return await ExecutarFuncaoAsync(() => _service.ObterPaginadoPorSituacaoAsync(filtro));
+        }
+
         [HttpPost]
         [Route(ComandaApi.Confirmar)]
         [ProducesResponseType(typeof(ComandaDto), (int)HttpStatusCode.OK)]

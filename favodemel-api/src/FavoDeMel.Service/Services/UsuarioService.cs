@@ -39,7 +39,7 @@ namespace FavoDeMel.Service.Services
                 return null;
             }
 
-            var usuario = await _repository.Login(loginDto.Login, loginDto.PasswordHash);
+            var usuario = await _repository.LoginAsync(loginDto.Login, loginDto.PasswordHash);
             var dto = usuario?.ToDto();
             if (dto != null)
             {
@@ -123,13 +123,13 @@ namespace FavoDeMel.Service.Services
 
         public async Task<PaginacaoDto<UsuarioDto>> ObterTodosPaginadoAsync(FiltroUsuario filtro)
         {
-            var produtos = await _repository.ObterTodosPaginado(filtro.Pagina, filtro.Limite);
+            var produtos = await _repository.ObterTodosPaginadoAsync(filtro.Pagina, filtro.Limite);
             return produtos?.ToPaginacaoDto<PaginacaoDto<UsuarioDto>>();
         }
 
         public async Task<IEnumerable<UsuarioDto>> ObterTodosPorPerfilAsync(UsuarioPerfil perfil)
         {
-            var usuarios = await _repository.ObterTodosPorPerfil(perfil);
+            var usuarios = await _repository.ObterTodosPorPerfilAsync(perfil);
             return usuarios?.ToListDto();
         }
     }

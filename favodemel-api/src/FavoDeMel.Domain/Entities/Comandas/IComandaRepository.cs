@@ -1,4 +1,5 @@
-﻿using FavoDeMel.Domain.Interfaces;
+﻿using FavoDeMel.Domain.Common;
+using FavoDeMel.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,24 +9,36 @@ namespace FavoDeMel.Domain.Entities.Comandas
     public interface IComandaRepository : IRepositoryBase<Guid, Comanda>
     {
         /// <summary>
-        /// Método responsável por obter todos pela situação
+        /// Obter todas as comanda pela situação de forma assíncrona
         /// </summary>
-        /// <returns></returns>
-        Task<IEnumerable<Comanda>> ObterTodosPorSituacao(ComandaSituacao situacao);
+        /// <param name="situacao">Situação</param>
+        /// <returns>Retorna todas as comandas por situação</returns>
+        Task<IEnumerable<Comanda>> ObterTodosPorSituacaoAsync(ComandaSituacao situacao);
         /// <summary>
-        /// Método responsável por fechar a comanda
+        /// Obter todas as comanda pela situação paginada na data de forma assíncrona
         /// </summary>
-        /// <returns></returns>
-        Task<Comanda> Fechar(Guid comandaId);
+        /// <param name="situacao">Situação</param>
+        /// <param name="data">Data de cadastro</param>
+        /// <param name="page">Pagina atual</param>
+        /// <param name="pageSize">Quantidade por pagina</param>
+        /// <returns>Retorna todas as comandas por situação</returns>
+        Task<PagedList<Comanda>> ObterPaginadoPorSituacaoAsync(ComandaSituacao situacao, DateTime data, int page = 1, int pageSize = 20);
         /// <summary>
-        /// Método responsável por confirmar a comanda
+        /// Fechar a comanda pelo id de forma assíncrona
         /// </summary>
-        /// <returns></returns>
-        Task<Comanda> Confirmar(Guid comandaId);
+        /// <param name="comandaId">Id da comanda</param>
+        /// <returns>Retorna a comanda fechada</returns>
+        Task<Comanda> FecharAsync(Guid comandaId);
         /// <summary>
-        /// Método responsável por validar se existe a comanda
+        /// Confirmar a comanda pelo id de forma assíncrona
         /// </summary>
-        /// <returns></returns>
+        /// <param name="comandaId">Id da comanda</param>
+        /// <returns>Retorna a comanda confirmada</returns>
+        Task<Comanda> ConfirmarAsync(Guid comandaId);
+        /// <summary>
+        /// Validar se existe a comanda pelo id no sistema
+        /// </summary>
+        /// <returns>Retorna a validação se existe a comanda no sistem</returns>
         bool Exists(Guid comandaId);
     }
 }

@@ -8,6 +8,7 @@ import {ComandaRoutingModule} from './comanda-routing.module';
 import {CardModule} from '../../components/card/card.module';
 import {ModalModule} from 'ngx-bootstrap/modal';
 import {ComandaPedidoComponent} from './companda-pedido/comanda-pedido.component';
+import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import {ComandaPedidoComponent} from './companda-pedido/comanda-pedido.component
     SharedModule,
     CardModule,
     ModalModule.forRoot(),
+    BsDatepickerModule.forRoot()
   ],
   declarations: [
     ComandaComponent,

@@ -32,5 +32,20 @@ namespace FavoDeMel.Domain.Extensions
             query = orderByDescending ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
             return query.Skip((page - 1) * pageSize).Take(pageSize);
         }
+
+        /// <summary>
+        /// Obter query com os itens pela condição
+        /// </summary>
+        /// <param name="query">Query DbSet</param>
+        /// <param name="condition">Validação de inclusão ou não do predicado</param>
+        /// <param name="predicate">Expresão da condição de busca</param>
+        /// <returns>Retorna queryable do DbSet paginado.</returns>
+        public static IQueryable<T> WhereIf<T>(this IQueryable<T> query, bool condition, Expression<Func<T, bool>> predicate)
+        {
+            return condition
+                ? query.Where(predicate)
+                : query;
+        }
+
     }
 }

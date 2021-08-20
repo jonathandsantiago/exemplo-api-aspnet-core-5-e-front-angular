@@ -1,4 +1,5 @@
 ﻿using FavoDeMel.Domain.Dtos;
+using FavoDeMel.Domain.Dtos.Filtros;
 using FavoDeMel.Domain.Entities.Comandas;
 using FavoDeMel.Domain.Entities.Comandas.Commands;
 using FavoDeMel.Domain.Interfaces;
@@ -10,7 +11,7 @@ using static FavoDeMel.Domain.Dtos.Mappers.ComandaMappers;
 
 namespace FavoDeMel.Service.Services
 {
-    public class ComandaService: IComandaService
+    public class ComandaService : IComandaService
     {
         private readonly IServiceCache _serviceCache;
         private readonly IComandaRepository _repository;
@@ -94,8 +95,14 @@ namespace FavoDeMel.Service.Services
 
         public async Task<IEnumerable<ComandaDto>> ObterTodosPorSituacaoAsync(ComandaSituacao situacao)
         {
-            var comandas = await _repository.ObterTodosPorSituacao(situacao);
+            var comandas = await _repository.ObterTodosPorSituacaoAsync(situacao);
             return comandas?.ToListDto();
+        }
+
+        public async Task<PaginacaoDto<ComandaDto>> ObterPaginadoPorSituacaoAsync(FiltroComanda filtroComanda)
+        {
+            var comandas = await _repository.ObterPaginadoPorSituacaoAsync(filtroComanda.Situacao, filtroComanda.Data, filtroComanda.Pagina, filtroComanda.Limite);
+            return comandas?.ToPaginacaoDto<PaginacaoDto<ComandaDto>>();
         }
 
         public async Task<ComandaDto> ConfirmarAsync(Guid comandaId)
@@ -106,7 +113,7 @@ namespace FavoDeMel.Service.Services
                 return null;
             }
 
-            Comanda comanda = await _repository.Confirmar(comandaId);
+            Comanda comanda = await _repository.ConfirmarAsync(comandaId);
             ComandaDto dto = comanda.ToDto();
             await _serviceCache.SalvarAsync(dto.Id, dto);
             await _mensageriaService.EnviarAsync(new ComandaConfirmarCommand(dto));
@@ -121,7 +128,7 @@ namespace FavoDeMel.Service.Services
                 return null;
             }
 
-            Comanda comanda = await _repository.Fechar(comandaId);
+            Comanda comanda = await _repository.FecharAsync(comandaId);
             ComandaDto dto = comanda.ToDto();
             await _serviceCache.SalvarAsync(dto.Id, dto);
             await _mensageriaService.EnviarAsync(new ComandaFecharCommand(dto));

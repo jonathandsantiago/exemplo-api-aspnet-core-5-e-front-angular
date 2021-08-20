@@ -34,7 +34,7 @@ namespace FavoDeMel.Domain.Entities.Usuarios
 
             if (usuario.Id == null || usuario.Id == Guid.Empty)
             {
-                if (await _repository.ExistsLogin(usuario.Login))
+                if (await _repository.ExistsLoginAsync(usuario.Login))
                 {
                     AddMensagem(UsuarioMessage.LoginJaCadastrado);
                 }
@@ -61,7 +61,7 @@ namespace FavoDeMel.Domain.Entities.Usuarios
             {
                 AddMensagem(UsuarioMessage.SenhaObrigatoria);
             }
-            else if (!await _repository.UsuarioSenhaValido(loginDto.Login, loginDto.PasswordHash))
+            else if (!await _repository.UsuarioSenhaValidoAsync(loginDto.Login, loginDto.PasswordHash))
             {
                 AddMensagem(UsuarioMessage.UsuarioOuSenhaInvalida);
             }

@@ -9,29 +9,36 @@ namespace FavoDeMel.Domain.Entities.Usuarios
     public interface IUsuarioRepository : IRepositoryBase<Guid, Usuario>
     {
         /// <summary>
-        /// Método responsável por obter usuário pelo login e senha
+        /// Obter usuário pelo login de forma assíncrona
         /// </summary>
-        /// <returns></returns>
-        Task<Usuario> Login(string login, string password);
+        /// <param name="login">Login do usuário</param>
+        /// <param name="password">Senha do usuário</param>
+        /// <returns>Retorna o usuário pelo login</returns>
+        Task<Usuario> LoginAsync(string login, string password);
         /// <summary>
-        /// Método responsável por validar se já existe o login cadastrado
+        /// Validar se existe o login cadastrado no sistema de forma assíncrona
         /// </summary>
         /// <returns></returns>
-        Task<bool> ExistsLogin(string login);
+        Task<bool> ExistsLoginAsync(string login);
         /// <summary>
-        /// Método responsável por obter todos por perfil
+        /// Obter todos os usuários por perfil de forma assíncrona
         /// </summary>
-        /// <returns></returns>
-        Task<IEnumerable<Usuario>> ObterTodosPorPerfil(UsuarioPerfil perfil);
+        /// <param name="perfil">Perfil</param>
+        /// <returns>Retorna todos os usuários por perfil</returns>
+        Task<IEnumerable<Usuario>> ObterTodosPorPerfilAsync(UsuarioPerfil perfil);
         /// <summary>
-        /// Método responsável por validar usuário pelo login e senha
+        /// Validar se existe o usuário pelo login e senha de forma assíncrona
         /// </summary>
-        /// <returns></returns>
-        Task<bool> UsuarioSenhaValido(string login, string password);
+        /// <param name="login">Login do usuário</param>
+        /// <param name="password">Senha do usuário</param>
+        /// <returns>Retorna a validação do usuário pelo login e senha</returns>
+        Task<bool> UsuarioSenhaValidoAsync(string login, string password);
         /// <summary>
-        /// Método responsável por obter todos paginado
+        /// Obter os usuários paginados de forma assíncrona
         /// </summary>
-        /// <returns></returns>
-        Task<PagedList<Usuario>> ObterTodosPaginado(int page = 1, int pageSize = 20);
+        /// <param name="page">Pagina atual</param>
+        /// <param name="pageSize">Quantidade por pagina</param>
+        /// <returns>Retorna os usuários paginado</returns>
+        Task<PagedList<Usuario>> ObterTodosPaginadoAsync(int page = 1, int pageSize = 20);
     }
 }

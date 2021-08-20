@@ -9,20 +9,23 @@ namespace FavoDeMel.Domain.Entities.Produtos
     public interface IProdutoRepository : IRepositoryBase<Guid, Produto>
     {
         /// <summary>
-        /// Método responsável por validar se já existe produto
+        /// Validar se já existe o nome do produto de forma assíncrona
         /// </summary>
-        /// <returns></returns>
-        Task<bool> NomeJaCadastrado(Guid id, string nome);
+        /// <param name="id">Id do produto para que seja desconsiderado o mesmo na consulta</param>
+        /// <param name="nome">Nome do produto</param>
+        /// <returns>Retorna a validação se existe o produto pelo nome</returns>
+        Task<bool> NomeJaCadastradoAsync(Guid id, string nome);
         /// <summary>
-        /// Método responsável por obter todos paginado
+        /// Obter os produtos paginados de forma assíncrona
         /// </summary>
-        /// <returns></returns>
-        Task<PagedList<Produto>> ObterTodosPaginado(int page = 1, int pageSize = 20);
-
+        /// <param name="page">Pagina atual</param>
+        /// <param name="pageSize">Quantidade por pagina</param>
+        /// <returns>Retorna os produtos paginado</returns>
+        Task<PagedList<Produto>> ObterTodosPaginadoAsync(int page = 1, int pageSize = 20);
         /// <summary>
-        /// Método responsável por obter todos produtos
+        /// Obter todos os produtos de forma assíncrona
         /// </summary>
-        /// <returns></returns>
-        Task<IEnumerable<Produto>> ObterTodos();
+        /// <returns>Retorna todos os produtos</returns>
+        Task<IEnumerable<Produto>> ObterTodosAsync();
     }
 }

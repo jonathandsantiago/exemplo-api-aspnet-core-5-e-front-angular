@@ -20,7 +20,7 @@ namespace FavoDeMel.Domain.Entities.Produtos
             {
                 AddMensagem(ProdutoMessage.NomeObrigatorio);
             }
-            else if (await _repository.NomeJaCadastrado(produto.Id ?? Guid.Empty, produto.Nome))
+            else if (await _repository.NomeJaCadastradoAsync(produto.Id ?? Guid.Empty, produto.Nome))
             {
                 AddMensagem(ProdutoMessage.NomeJaCadastrado);
             }

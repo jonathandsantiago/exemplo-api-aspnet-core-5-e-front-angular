@@ -20,22 +20,22 @@ namespace FavoDeMel.Repository
         public UsuarioRepository(TDbContext dbContext) : base(dbContext)
         { }
 
-        public async Task<bool> ExistsLogin(string login)
+        public async Task<bool> ExistsLoginAsync(string login)
         {
             return await UsuarioSelect.AnyAsync(c => c.Login == login);
         }
 
-        public async Task<Usuario> Login(string login, string password)
+        public async Task<Usuario> LoginAsync(string login, string password)
         {
             return await UsuarioSelect.FirstOrDefaultAsync(c => c.Login == login && c.Password == password);
         }
 
-        public async Task<IEnumerable<Usuario>> ObterTodosPorPerfil(UsuarioPerfil perfil)
+        public async Task<IEnumerable<Usuario>> ObterTodosPorPerfilAsync(UsuarioPerfil perfil)
         {
             return await UsuarioSelect.Where(c => c.Perfil == perfil && c.Ativo).ToListAsync();
         }
 
-        public async Task<PagedList<Usuario>> ObterTodosPaginado(int page = 1, int pageSize = 20)
+        public async Task<PagedList<Usuario>> ObterTodosPaginadoAsync(int page = 1, int pageSize = 20)
         {
             var pagedList = new PagedList<Usuario>();
 
@@ -49,7 +49,7 @@ namespace FavoDeMel.Repository
             return pagedList;
         }
 
-        public async Task<bool> UsuarioSenhaValido(string login, string password)
+        public async Task<bool> UsuarioSenhaValidoAsync(string login, string password)
         {
             return await UsuarioSelect.AnyAsync(c => c.Login == login && c.Password == password);
         }

@@ -1,4 +1,5 @@
 ﻿using FavoDeMel.Domain.Dtos;
+using FavoDeMel.Domain.Dtos.Filtros;
 using FavoDeMel.Domain.Entities.Comandas;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,9 @@ namespace FavoDeMel.Service.Interfaces
         /// <summary>
         /// Obtem a comanda de forma assíncrona
         /// </summary>
-        /// <param name="idComanda">Id da comanda</param>
+        /// <param name="comandaId">Id da comanda</param>
         /// <returns>Retorna a comanda por id</returns>
-        Task<ComandaDto> ObterPorIdAsync(Guid idComanda);
+        Task<ComandaDto> ObterPorIdAsync(Guid comandaId);
         /// <summary>
         /// Cadastrar a comanda de forma assíncrona
         /// </summary>
@@ -33,16 +34,22 @@ namespace FavoDeMel.Service.Interfaces
         /// <returns>Retorna todas as comandas por situação</returns>
         Task<IEnumerable<ComandaDto>> ObterTodosPorSituacaoAsync(ComandaSituacao situacao);
         /// <summary>
+        /// Obter todas as comanda pela situação paginada na data de forma assíncrona
+        /// </summary>
+        /// <param name="filtroComanda">Filtro comanda</param>
+        /// <returns>Retorna todas as comandas por situação</returns>
+        Task<PaginacaoDto<ComandaDto>> ObterPaginadoPorSituacaoAsync(FiltroComanda filtroComanda);
+        /// <summary>
         /// Confirmar a comanda pelo id de forma assíncrona
         /// </summary>
-        /// <param name="idComanda">Id da comanda</param>
+        /// <param name="comandaId">Id da comanda</param>
         /// <returns>Retorna a comanda confirmada</returns>
-        Task<ComandaDto> ConfirmarAsync(Guid idComanda);
+        Task<ComandaDto> ConfirmarAsync(Guid comandaId);
         /// <summary>
         /// Fechar a comanda pelo id de forma assíncrona
         /// </summary>
-        /// <param name="idComanda">Id da comanda</param>
+        /// <param name="comandaId">Id da comanda</param>
         /// <returns>Retorna a comanda fechada</returns>
-        Task<ComandaDto> Fechar(Guid idComanda);      
+        Task<ComandaDto> Fechar(Guid comandaId);      
     }
 }

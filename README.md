@@ -238,15 +238,17 @@ Esta extensão irá injetar todos os providers criados na pasta `FavoDeMel.Api.P
 
 - Os componentes de layout, genéricos e reutilizaveis, estão localizados em components. Estes componentes dependendo da situação também é valido os mesmo conter seus respectivos modulo.
 
+    <img src='imagens/Components.png'>
+
 - Os `Consumers` de mensageria estão localizados em seus respectivos serviços, ex: os consumers de comanda estão localizados no serviço de comanda. Esses consumers estão "assistindo" o `exchange` de cada endpoint. 
 Como cada exchange esta configurado com tipo `fanout` isso irá replicar a mensagem para todos que estão assintindo o exchange, diferente da `queue` que ao receber a mensagem a mesma sai da fila.
 
- <img src='imagens/ConsumersMensageria.png'>
+    <img src='imagens/ConsumersMensageria.png'>
 
 ### Definições do sistema
 - O uso do `RabbitMq` na aplicação esta na atualização em tempo real das comandas, atualizando assim todas as janelas que estejam abertas na tela inicial:
 
-    <img src='imagens/atualizacaoi_pedido_real_time.gif'>
+    <img src='imagens/atualizacao_pedido_real_time.gif'>
 
 - Para garantir a integridade dos serviços esta sendo utilizado o `Health Checks Status`. Como cada serviço é essencial para funcionamento correto da aplicação, todos eles estão utilizando a tag `essential`:
 

@@ -20,7 +20,7 @@ namespace FavoDeMel.Repository
         public ProdutoRepository(TDbContext dbContext) : base(dbContext)
         { }
 
-        public async Task<bool> NomeJaCadastrado(Guid id, string nome)
+        public async Task<bool> NomeJaCadastradoAsync(Guid id, string nome)
         {
             return await ProdutoSelect.AnyAsync(c => c.Id != id && c.Nome == nome);
         }
@@ -43,7 +43,7 @@ namespace FavoDeMel.Repository
             return await ProdutoSelect.Where(c => c.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task<PagedList<Produto>> ObterTodosPaginado(int page = 1, int pageSize = 20)
+        public async Task<PagedList<Produto>> ObterTodosPaginadoAsync(int page = 1, int pageSize = 20)
         {
             var pagedList = new PagedList<Produto>();
 
@@ -57,7 +57,7 @@ namespace FavoDeMel.Repository
             return pagedList;
         }
 
-        public async Task<IEnumerable<Produto>> ObterTodos()
+        public async Task<IEnumerable<Produto>> ObterTodosAsync()
         {
             return await ProdutoSelect.ToListAsync();
         }

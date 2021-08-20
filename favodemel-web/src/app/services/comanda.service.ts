@@ -48,8 +48,8 @@ export class ComandaService extends BaseService<Comanda> {
     return body.message ? body.message.comanda : null;
   }
 
-  obterTodosPorSituao(situacao: any) {
-    return this.http.get<any>(`${this.urlApi}/listar-por-situacao/${situacao}`);
+  obterTodosPaginadoPorSituao(filtro: any) {
+    return this.http.get<any>(`${this.urlApi}/listar-paginado-por-situacao`, {params: filtro});
   }
 
   confirmar(id: any) {

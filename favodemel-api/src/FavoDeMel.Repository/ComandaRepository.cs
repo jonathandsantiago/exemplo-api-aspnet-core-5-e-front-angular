@@ -37,7 +37,7 @@ namespace FavoDeMel.Repository
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Comanda>> ObterTodosPorSituacao(ComandaSituacao situacao)
+        public async Task<IEnumerable<Comanda>> ObterTodosPorSituacaoAsync(ComandaSituacao situacao)
         {
             return await ComandaSelect
                 .Include(c => c.Garcom)
@@ -47,12 +47,32 @@ namespace FavoDeMel.Repository
                 .ToListAsync();
         }
 
+        public virtual async Task<PagedList<Comanda>> ObterPaginadoPorSituacaoAsync(ComandaSituacao situacao, DateTime data, int page = 1, int pageSize = 20)
+        {
+            var pagedList = new PagedList<Comanda>();
+
+            var comandaData = ComandaSelect.Where(x => x.Situacao == situacao && x.DataCadastro.Date == data.Date);
+            var comandaPaginada = await comandaData.PageBy(x => x.Codigo, page, pageSize)
+                .Include(c => c.Garcom)
+                .Include(c => c.Pedidos)
+                    .ThenInclude(c => c.Produto)
+                .Where(c => c.Situacao == situacao).ToListAsync();
+
+            var total = await comandaData.CountAsync();
+
+            pagedList.Data.AddRange(comandaPaginada);
+            pagedList.TotalCount = total;
+            pagedList.PageSize = pageSize;
+
+            return pagedList;
+        }
+
         public async Task<Comanda> CadastrarAsync(Comanda comanda)
         {
             comanda.Garcom = comanda.Garcom == null ? null : await UsuarioSelect.Where(c => c.Id == comanda.Garcom.Id).FirstOrDefaultAsync();
             var existe = await ComandaSelect.AnyAsync(c => c.DataCadastro.Date == comanda.DataCadastro.Date);
             comanda.Codigo = !existe ? "0001" : StringHelper.MaxAddPadLeft(ComandaSelect.Where(c => c.DataCadastro.Date == comanda.DataCadastro.Date).Max(c => c.Codigo), 4);
-          
+
             DbContext.Entry(comanda).State = EntityState.Added;
             Comanda comandaDb = ComandaCrud.Add(comanda).Entity;
             comanda.Id = comandaDb.Id;
@@ -101,7 +121,7 @@ namespace FavoDeMel.Repository
             return comanda;
         }
 
-        public async Task<Comanda> Fechar(Guid comandaId)
+        public async Task<Comanda> FecharAsync(Guid comandaId)
         {
             Comanda comanda = await ComandaCrud
                .Include(c => c.Garcom)
@@ -114,7 +134,7 @@ namespace FavoDeMel.Repository
             return comanda;
         }
 
-        public async Task<Comanda> Confirmar(Guid comandaId)
+        public async Task<Comanda> ConfirmarAsync(Guid comandaId)
         {
             Comanda comanda = await ComandaCrud
                 .Include(c => c.Garcom)

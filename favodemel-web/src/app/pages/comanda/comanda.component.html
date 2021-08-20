@@ -1,10 +1,24 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <button type="button"
-            class="btn btn-primary"
-            (click)="abrirModal(templateCadastro)">Novo</button>
+    <div class="card-header">
+      <button type="button"
+              class="btn btn-primary"
+              (click)="abrirModal(templateCadastro)">Novo
+      </button>
+      <form [formGroup]="formGroup" style="margin-left: 10px;">
+        <div class="col-3 form-group">
+          <input
+            id="dataCadastro"
+            class="form-control"
+            bsDatepicker
+            formControlName="dataCadastro"
+            [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' , showWeekNumbers: false, containerClass:'theme-default'}">
+        </div>
+      </form>
+    </div>
   </ol>
 </nav>
+
 <div style="margin: 1%" class="row">
   <div class="col-xs-12 col-md-4 border-primary">
     <div class="card card-comanda border-primary">
@@ -25,15 +39,22 @@
             <div class="card-footer bg-transparent border-primary">
               <button type="button" class="btn btn-light"
                       *ngIf="usuarioLogado.perfil !== usuarioPerfil.Cozinheiro"
-                      (click)="abrirModal(templateCadastro, {id:comanda.id, isEdicao:true}, 'Edição Comanda - ' + comanda.id) ">Editar</button>
+                      (click)="abrirModal(templateCadastro, {id:comanda.id, isEdicao:true}, 'Edição Comanda - ' + comanda.codigo) ">
+                Editar
+              </button>
               <button type="button" class="btn btn-light"
-                      (click)="abrirModal(templateCadastro, {id:comanda.id, isVisualizacao:true}, 'Detalhe Comanda - ' + comanda.id)">
+                      (click)="abrirModal(templateCadastro, {id:comanda.id, isVisualizacao:true}, 'Detalhe Comanda - ' + comanda.codigo)">
                 Visualizar
               </button>
-              <button *ngIf="usuarioLogado.perfil !== usuarioPerfil.Garcon" type="button" class="btn btn-primary" (click)="confirmarComanda(comanda.id)">Confirmar</button>
+              <button *ngIf="usuarioLogado.perfil !== usuarioPerfil.Garcon" type="button" class="btn btn-primary"
+                      (click)="confirmarComanda(comanda.id)">Confirmar
+              </button>
             </div>
           </div>
         </ng-template>
+        <div class="card-body">
+          <a class="btn btn-warning" (click)="carregarMais(comandaSituacao.Aberta)">Carregar mais {{comandasAberta.length}} de {{totalEmAberto}}</a>
+        </div>
       </div>
     </div>
   </div>
@@ -56,17 +77,23 @@
             <div class="card-footer bg-transparent border-secondary">
               <button type="button" class="btn btn-light"
                       *ngIf="usuarioLogado.perfil !== usuarioPerfil.Cozinheiro"
-                      (click)="abrirModal(templateCadastro, {id:comanda.id, isEdicao:true}, 'Edição Comanda - ' + comanda.id) ">Editar</button>
+                      (click)="abrirModal(templateCadastro, {id:comanda.id, isEdicao:true}, 'Edição Comanda - ' + comanda.codigo) ">
+                Editar
+              </button>
               <button type="button" class="btn btn-light"
-                      (click)="abrirModal(templateCadastro, {id:comanda.id, isVisualizacao:true}, 'Detalhe Comanda - ' + comanda.id)">
+                      (click)="abrirModal(templateCadastro, {id:comanda.id, isVisualizacao:true}, 'Detalhe Comanda - ' + comanda.codigo)">
                 Visualizar
               </button>
               <button type="button" class="btn btn-secondary"
                       *ngIf="usuarioLogado.perfil !== usuarioPerfil.Cozinheiro"
-                      (click)="fecharComanda(comanda.id)">Fechar</button>
+                      (click)="fecharComanda(comanda.id)">Fechar
+              </button>
             </div>
           </div>
         </ng-template>
+        <div class="card-body">
+          <a class="btn btn-warning" (click)="carregarMais(comandaSituacao.EmAndamento)">Carregar mais {{comandasEmAndamento.length}} de {{totalEmAndamento}}</a>
+        </div>
       </div>
     </div>
   </div>
@@ -86,7 +113,7 @@
                 </div>
               </ng-template>
               <div class="row">
-                <div class="col-9"><strong>Gorjeta Garçom:</strong> </div>
+                <div class="col-9"><strong>Gorjeta Garçom:</strong></div>
                 <div class="col-3"><strong>R$: {{comanda.gorjetaGarcom}}</strong></div>
                 <div class="col-9"><strong>Total Pago:</strong></div>
                 <div class="col-3"><strong>R$: {{comanda.totalAPagar}}</strong></div>
@@ -100,6 +127,9 @@
             </div>
           </div>
         </ng-template>
+        <div class="card-body">
+          <a class="btn btn-warning" (click)="carregarMais(comandaSituacao.Fechada)">Carregar mais {{comandasFechada.length}} de {{totalFechada}}</a>
+        </div>
       </div>
     </div>
   </div>
@@ -114,7 +144,7 @@
   </div>
   <div class="modal-body">
     <app-comanda-edit [modalRef]="modalRef"
-                          (callbackCadastro)="inserirOuAtualizarComanda($event)"
-                          (callbackEdicao)="atualizarComanda($event)"></app-comanda-edit>
+                      (callbackCadastro)="inserirOuAtualizarComanda($event)"
+                      (callbackEdicao)="atualizarComanda($event)"></app-comanda-edit>
   </div>
 </ng-template>
