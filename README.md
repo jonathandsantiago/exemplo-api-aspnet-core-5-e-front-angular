@@ -50,6 +50,7 @@ O sistema foi arquitetado e distribuido com a estrutura distribuida no Backend e
 - Aplicação Web com Nginx;
 - Banco de dados PostgreSql;
 - RabbitMq;
+- Health Checks;
 - Flyway para executar os scripts de banco de dados default do sistema;
 - Redis;
 
@@ -81,6 +82,7 @@ Para executar as aplicações é nescessario reservar as seguintes portas:
 - `15432` para o banco de dados postgres;
 - `6379` para o redis e `8081` para o redis commander;
 - `15672`, `5672` e `15674` para o RabbitMq;
+- `5080` para o Health Checks;
 - `54200` para aplicação web executada pelo `docker-compose` ou `4200` pelo `ng s` do angular;
 
 - Para executar ambas as aplicações simultaneamente acessando a pasta raiz `processo-seletivo-arquitetura` execute o seguinte comando:
@@ -127,6 +129,7 @@ Para executar as aplicações é nescessario reservar as seguintes portas:
                     Login: Cozinheiro
                     Senha: Cozinheiro
 - Para visualizar ou gerencias os cache da aplicação [Redis:8081](http://localhost:8081)
+- Para visualizar Health Checks Status [Health Checks:5080](http://localhost:5080)
 - Para acessar o RabbitMq, serviço de mensageria [RabbitMq:15672](http://localhost:15672/#/queues)
     - Usuário: `guest`
     - Senha: `guest`
@@ -217,8 +220,15 @@ Esta extensão irá injetar por convenção todos os providers criado na pasta `
 
         Nela encontra-se os `Commands` do serviço de mensageria, o validator e a interface de repositório da entidade.
 
-- `Validator`
+- Para centralizar um ponto de validações nos dto vindo da requisição na api e validações de banco de dados foi desenvolvido `Validator`. Cada entidade poderá ou não conter o validator, porem caso o endpoint nescessite de validação no serviço, esta validação deverá estar em um validator. Isso é necessário para que haja um padrão de centralização de validações.
+
+    <img src='imagens/Validator.png'>
 
 ### Definições do sistema
-```
-```
+- O uso do `RabbitMq` na aplicação esta na atualização em tempo real de comandas, atualizando assim todas as janelas que estam abertas na tela inicial:
+
+    <img src='imagens/atualizacaoi_pedido_real_time.gif'>
+
+- Para garantir a integridade dos serviços esta sendo utilizado o `Health Checks Status`, como cada serviço é essencial para funcionamento correto da aplicação, todos eles estão utilizando a tag `essential`:
+
+    <img src='imagens/HealthChecks.png'>

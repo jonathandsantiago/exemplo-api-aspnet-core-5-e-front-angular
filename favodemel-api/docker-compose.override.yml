@@ -17,6 +17,28 @@ services:
       - favodemel.api.postgres
     networks: 
       - net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://host.docker.internal:58080/health"]
+      interval: 10s
+      timeout: 30s
+      retries: 3
+      start_period: 60s
+
+  healthcheck-ui:
+    image: xabarilcoding/healthchecksui:latest
+    environment:
+      - Logging__LogLevel__Default=Debug
+      - Logging__Loglevel__Microsoft=Warning
+      - Logging__LogLevel__HealthChecks=Debug
+      - ui_path=/
+      - ui_api_path=/api
+      - ui_webhooks_path=/webhooks
+      - HealthChecksUI__HealthChecks__0__Name=favodemel-api
+      - HealthChecksUI__HealthChecks__0__Uri=http://host.docker.internal:58080/healthz
+    depends_on:
+      - favodemel.api
+    ports:
+      - "5080:80"
 
   favodemel.api.postgres:
     image: postgres:11-alpine

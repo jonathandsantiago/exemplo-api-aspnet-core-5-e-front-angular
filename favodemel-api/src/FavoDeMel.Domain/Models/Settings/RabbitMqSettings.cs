@@ -11,6 +11,7 @@ namespace FavoDeMel.Domain.Models.Settings
         public string Usuario { get; set; }
         public string Senha { get; set; }
         public string Vhost { get; set; }
+        public int Port { get; set; }
 
         public RabbitMqSettings(IConfiguration configuration)
         {
