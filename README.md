@@ -144,10 +144,81 @@ Para executar as aplicações é nescessario reservar as seguintes portas:
 - O `Program.cs` utiliza a extensão `MigrateDbContext<FavoDeMelDbContext>()` localizada no projeto `FavoDeMel.Repository.Extensions` recebendo o tipo do DbContext.
     Esta ação irá execultar os `Migrations` ao rodar a build.
     Caso contenha mais de um DbContext basta reclipar a extensão passando o tipo desejado.
+
+    <img src='imagens/ProgramApi.png'>
+
 - Para configurar as injeções de dependências no `Startup` da aplicação. Foi desenvolvido a extensão `.AddApiProvidersAssembly` recebendo o `Microsoft.Extensions.Configuration.IConfiguration` como paramêtro.
 Esta extensão irá injetar por convenção todos os providers criado na pasta `FavoDeMel.Api.Providers` assinado com a interface `IApiProvider`.
-    Conforme a imagem abaixo: ![alt text](images/Providers.png)
+    <img src='imagens/ConfigureServices.png'>
+
+    <img src='imagens/Providers.png'>
+
+    A interface `IApiProvider` contem o método void `void AddProvider(IServiceCollection services, ISettings<string, object> settings)`:
+
+    <img src='imagens/Provider.png'>
+
+    Este método adiciona todas as injeções de dependência da aplicação. O método espera em parâmetro o `Microsoft.Extensions.DependencyInjection.IServiceCollection` e o `FavoDeMel.Domain.Interfaces.ISettings<TKey, TValue>`.
+    
+    O `settings` contem todas as chaves e valores dos objetos assinado com a interface `ISettings` esses objetos estão localizados em `FavoDeMel.Domain.Models.Settings`
+
+    <img src='imagens/Settings.png'>
+
+    O valores serão atribuidos ao objeto conforme as configurações no `appsettings`:
+
+    <img src='imagens/Appsettings.png'>
+
+    Construindo o objeto com `Microsoft.Extensions.Options.ConfigureFromConfigurationOptions<TOptions>` passando o nome do objeto no `configuration.GetSection()` no exemplo abaixo estou atribuindo os valores do `RabbitMq` do `appsettings` para o objeto `RabbitMqSettings`:
+
+    <img src='imagens/RabbitMqSettings.png'>
+    
+    Todos os demais `Settings` deverá seguir o mesmo padrão.
+
+    Os `Settings` faz override em `ToString()` retornando `StringHelper.ConcatLogConfig(this)`, está ação irá printar no log ao levantar a aplicação os valores atribuidos em cada `Settings`:
+    
+    <img src='imagens/LogSettings.png'>
+
+- O mesmo procedimento é aplicado no `Configure` do `Startup`, utilizando a extensão `.AddApiConfigsAssembly(env, Configuration)`. A extensão espera como parâmetro o `Microsoft.AspNetCore.Builder.IApplicationBuilder` e `Microsoft.AspNetCore.Hosting.IWebHostEnvironment` e irá adicionar todos as configurações localizadas na pasta `FavoDeMel.Api.Configs` assinado com a interface `IApiConfigure`.
+
+    <img src='imagens/Configure.png'>
+
+    <img src='imagens/Configs.png'>
+ 
+    A interface `IApiConfigure` recebe como parâmetro o `IApplicationBuilder`, `IWebHostEnvironment` e `ISettings<string, object>` o settings é o mesmo informado a cima na interface `IApiProvider`.
+
+    <img src='imagens/SwaggerConfigure.png'>
+
+- O provider de mensageria utilizando o `RabbitMq` cria na inicializando os `Endpoint` de recebimento de todos os commands assinado `FavoDeMel.Domain.Interfaces.IMensageriaCommand`. Esta ação irá para cada command um `Exchanges` do tipo `fanout` no `RabbitMq`:
+
+    <img src='imagens/ProviderRabbitMq.png'>
+
+    <img src='imagens/ExchangeRabbitMq.png'>
+
+    Esta ação é necessária para configurar no frontend os serviços de `consumer` webstomp, a atualização em tempo real de cada ação. Caso não aplicado esta configuração, o frontend só vai conseguir se comunicar de forma correta com o rabbitmq após o envio de uma mensage na fila de cada `Command`, que por sua vês o evio na fila cria o `Exchanges` do tipo `fanout`.
+
+    Outra configuração importante para funcionamento da comunicação do fronted com o rabbitmq é no compose. No compose o serviço `favodemel.api.rabbitmq` copia para o volume `/etc/rabbitmq/enabled_plugins` o enabled_plugins localizada na pasta `config` da raiz `favodemel-api`. O arquivo enabled_plugins contem a seguinte configuração `[rabbitmq_management, rabbitmq_web_stomp].` esta ação irá habilitar o `rabbitmq_web_stomp` que por sua vês habilita o uso do STOMP em um contexto de navegador web.
 ### Padrões
+ - No projeto `FavoDeMel.Api` na pasta `Controllers` contem a pasta `Common` onde se localiza todos as controller base e na raiz contem apenas as `Controller` da aplicação.
+    As controllers com nescessidade de acesso registro utiliza `[Authorize(JwtBearerDefaults.AuthenticationScheme)]` e as rotas deverá ser criada na classe `FavoDeMel.Domain.Models.Routes.Endpoints`.
+
+    A classe estatica `Recursos` é para definição de nome de cada controller e a classe estatica `Rotas` são as nomenclatura das rotas genérica "Que vai ser a nomenclatura padrão", caso deseje uma nomenclatura especifica de um endpoint de uma controller. 
+    Deve-se criar a classe estatica com o nome da controller api ex: `ComandaApi` e dentro dela a nomenclatura de cada endpoint especifico.
+    Este modelo é utilizado para centralizar as rotas da api e mantendo um padrão de nomenclatura seguindo em base das já existentes.
+
+    As controllers não deverão ter regras de negócio e nem consulta direta em banco de dados.
+    Esta ações deverá ser distruida em serviços, validadores e repositórios.
+
+- No projeto `FavoDeMel.Domain` contem as pastas:
+    - `Common` onde contem todas as classes base ou comum
+    - `Dtos` onde contem todos os Dtos que serão exposto na api, os `Filtros` e `Mappers`.
+        - `Mappers` centraliza todas configurações de mapeamento da entidade com o dto e vice-versa.
+    - `Entities` onde contem todos as entidades mapeada no banco de dados. Cada entidade contem sua pasta com a nomenclatura no plural. Ex: `Comandas`:
+
+        <img src='imagens/Entities.png'>
+
+        Nela encontra-se os `Commands` do serviço de mensageria, o validator e a interface de repositório da entidade.
+
+- `Validator`
+
 ### Definições do sistema
 ```
 ```

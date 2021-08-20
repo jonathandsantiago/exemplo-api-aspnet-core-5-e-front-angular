@@ -30,7 +30,7 @@ namespace FavoDeMel.Api.Extensions
         }
 
         /// <summary>
-        /// Configura as injeções de dependências da aplicação, buscando todos as classes assinadas com IApiProvider
+        /// Adiciona as configurações na aplicação de build assinadas com IApiConfigure
         /// </summary>
         /// <param name="app">IApplicationBuilder da aplicação</param>
         /// <param name="env">IWebHostEnvironment da aplicação</param>

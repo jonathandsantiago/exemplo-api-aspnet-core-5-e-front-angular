@@ -1,6 +1,6 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <a type="button" class="btn btn-primary" routerLink="cadastrar">Novo</a>
+    <a *ngIf="usuarioLogado.perfil === usuarioPerfil.Administrador" type="button" class="btn btn-primary" routerLink="cadastrar">Novo</a>
   </ol>
 </nav>
 
