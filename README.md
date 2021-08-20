@@ -187,7 +187,7 @@ Esta extensão irá injetar todos os providers criados na pasta `FavoDeMel.Api.P
 
     <img src='imagens/SwaggerConfigure.png'>
 
-- O provider de mensageria utilizando o `RabbitMq` cria na inicializando os `Endpoint` de recebimento de todos os commands assinado `FavoDeMel.Domain.Interfaces.IMensageriaCommand`. Esta ação irá criar para cada `Command` um `Exchanges` do tipo `fanout` no `RabbitMq`:
+- O provider de mensageria utilizando o `RabbitMq` criando na inicialização os `Endpoint` de recebimento de todos os commands assinado `FavoDeMel.Domain.Interfaces.IMensageriaCommand`. Esta ação irá criar para cada `Command` um `Exchanges` do tipo `fanout` no `RabbitMq`:
 
     <img src='imagens/ProviderRabbitMq.png'>
 
@@ -200,6 +200,8 @@ Esta extensão irá injetar todos os providers criados na pasta `FavoDeMel.Api.P
 ### Padrões
  - No projeto `FavoDeMel.Api` na pasta `Controllers` contem a pasta `Common` onde se localiza todos as controller base e na raiz contem apenas as `Controller` da aplicação.
     As controllers com nescessidade de acesso registro utiliza `[Authorize(JwtBearerDefaults.AuthenticationScheme)]` e as rotas deverá ser criada na classe `FavoDeMel.Domain.Models.Routes.Endpoints`.
+
+    <img src='imagens/Endpoints.png'>
 
     A classe estática `Recursos` é para definição de nome de cada controller e a classe estática `Rotas` são as nomenclatura das rotas genéricas "Que vai ser a nomenclatura padrão", caso deseje uma nomenclatura específica de um endpoint de uma controller. 
     Deve-se criar a classe estática com o nome da controller api ex: `ComandaApi` e dentro dela a nomenclatura de cada endpoint especifico.
@@ -221,6 +223,25 @@ Esta extensão irá injetar todos os providers criados na pasta `FavoDeMel.Api.P
 - Para centralizar um ponto de validações nos dto vindo da requisição na api e validações de banco de dados foi desenvolvido `Validator`. Cada entidade poderá ou não conter o validator, porem caso o endpoint nescessite de validação no serviço, esta validação deverá estar em um validator. Isso é necessário para que haja um padrão de centralização de validações.
 
     <img src='imagens/Validator.png'>
+
+- No Frontend cada pagina deverá conter seu `module` e o `rouing.module`, no `app-routing.module.ts` a navegação de cada rota faz o lazy loading dos modulos, carregando assim somente os modulos usado em cada pagina.
+
+    <img src='imagens/RoutingEModulePaginas.png'>
+    
+     <img src='imagens/LazyLoading.png'>
+
+- Caso necessite de diretivas e pipes os mesmos deverá ser criados em suas pastas no `shared`, no projeto não contem as pastas por não aver a necessidade no primeiro momento.
+
+    <img src='imagens/shared.png'>
+
+- Os arquivos de auto guard e interceptors também estão localizados nas pastas shared.
+
+- Os componentes de layout, genéricos e reutilizaveis, estão localizados em components. Estes componentes dependendo da situação também é valido os mesmo conter seus respectivos modulo.
+
+- Os `Consumers` de mensageria estão localizados em seus respectivos serviços, ex: os consumers de comanda estão localizados no serviço de comanda. Esses consumers estão "assistindo" o `exchange` de cada endpoint. 
+Como cada exchange esta configurado com tipo `fanout` isso irá replicar a mensagem para todos que estão assintindo o exchange, diferente da `queue` que ao receber a mensagem a mesma sai da fila.
+
+ <img src='imagens/ConsumersMensageria.png'>
 
 ### Definições do sistema
 - O uso do `RabbitMq` na aplicação esta na atualização em tempo real das comandas, atualizando assim todas as janelas que estejam abertas na tela inicial:
