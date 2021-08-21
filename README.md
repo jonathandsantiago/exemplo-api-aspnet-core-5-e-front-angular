@@ -100,7 +100,8 @@ Para executar as aplicações é nescessario reservar as seguintes portas:
             - Execute a aplicação `ng s`;
 - Para executar os testes automatizado da aplicação Web:
     - Acessando a pasta `favodemel-web` e execute o seguinte comando:    
-        - `ng test`
+       - Instale os pacotes `npm install`
+       - Execute a aplicação `ng test`
 
 ### Descrição das flags utilizada no compose
  - `up` cria e inicia os contêineres;
