@@ -32,7 +32,7 @@
                 <div class="row">
                   <div class="col-7"><strong>Produto:</strong> {{pedido.produtoNome}}</div>
                   <div class="col-2"><strong>Qtd: {{pedido.quantidade}}</strong></div>
-                  <div class="col-3"><strong>R$: {{pedido.produtoPreco}}</strong></div>
+                  <div class="col-3"><strong>R$: {{pedido.produtoPreco | DECIMAL}}</strong></div>
                 </div>
               </ng-template>
             </div>
@@ -70,7 +70,7 @@
                 <div class="row">
                   <div class="col-7"><strong>Produto:</strong> {{pedido.produtoNome}}</div>
                   <div class="col-2"><strong>Qtd: {{pedido.quantidade}}</strong></div>
-                  <div class="col-3"><strong>R$: {{pedido.produtoPreco}}</strong></div>
+                  <div class="col-3"><strong>R$: {{pedido.produtoPreco | DECIMAL}}</strong></div>
                 </div>
               </ng-template>
             </div>
@@ -109,14 +109,14 @@
                 <div class="row">
                   <div class="col-7"><strong>Produto:</strong> {{pedido.produtoNome}}</div>
                   <div class="col-2"><strong>Qtd: {{pedido.quantidade}}</strong></div>
-                  <div class="col-3"><strong>R$: {{pedido.produtoPreco}}</strong></div>
+                  <div class="col-3"><strong>R$: {{pedido.produtoPreco| DECIMAL}}</strong></div>
                 </div>
               </ng-template>
               <div class="row">
                 <div class="col-9"><strong>Gorjeta Garçom:</strong></div>
-                <div class="col-3"><strong>R$: {{comanda.gorjetaGarcom}}</strong></div>
+                <div class="col-3"><strong>R$: {{comanda.gorjetaGarcom | DECIMAL}}</strong></div>
                 <div class="col-9"><strong>Total Pago:</strong></div>
-                <div class="col-3"><strong>R$: {{comanda.totalAPagar}}</strong></div>
+                <div class="col-3"><strong>R$: {{comanda.totalAPagar | DECIMAL}}</strong></div>
               </div>
             </div>
             <div class="card-footer bg-transparent border-success">

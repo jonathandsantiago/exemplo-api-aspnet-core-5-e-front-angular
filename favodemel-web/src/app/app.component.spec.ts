@@ -1,6 +1,10 @@
-import { TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { AppComponent } from './app.component';
+import {TestBed} from '@angular/core/testing';
+import {RouterTestingModule} from '@angular/router/testing';
+import {AppComponent} from './app.component';
+import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from '@stomp/ng2-stompjs';
+import {environment} from '../environments/environment';
+
+const rxStompConfigFactory = (): InjectableRxStompConfig => environment.mensageriaConfig;
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -11,6 +15,10 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent
       ],
+      providers: [
+        {provide: InjectableRxStompConfig, useFactory: rxStompConfigFactory},
+        {provide: RxStompService, useFactory: rxStompServiceFactory, deps: [InjectableRxStompConfig]},
+      ]
     }).compileComponents();
   });
 
@@ -18,12 +26,5 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('favodemel-web app is running!');
   });
 });

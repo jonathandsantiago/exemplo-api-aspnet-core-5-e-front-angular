@@ -1,7 +1,7 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <div class="card-header">
-      <a *ngIf="usuarioLogado.perfil === usuarioPerfil.Administrador" type="button" class="btn btn-primary"
+      <a *ngIf="usuarioLogado?.perfil === usuarioPerfil.Administrador" type="button" class="btn btn-primary"
          routerLink="cadastrar">Novo</a>
     </div>
   </ol>
@@ -28,7 +28,7 @@
             <td style="text-align: left;">{{produto.preco}}</td>
             <td style="text-align: center; min-width: 10%">
               <div class="action-grid">
-                <a *ngIf="usuarioLogado.perfil === usuarioPerfil.Administrador"
+                <a *ngIf="usuarioLogado?.perfil === usuarioPerfil.Administrador"
                    class="btn-floating btn-sm btn-primary"
                    tooltip="Editar"
                    placement="bottom"
